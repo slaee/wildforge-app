@@ -2,6 +2,7 @@ import React from 'react'
 import Navbar from '../../../Utils/Nav/Navbar'
 import './CreateClass.scss'
 import CreateButton from '../../../Utils/Button/CreateButton';
+import Search from '../../../Utils/Search/Search';
 
 function CreateClass() {
     const buttons = [
@@ -19,6 +20,7 @@ function CreateClass() {
             <h1>Create Class</h1>
             <h2>Date</h2>
           </div>
+          <Search />
           <CreateButton />
         </div>
       </div>
