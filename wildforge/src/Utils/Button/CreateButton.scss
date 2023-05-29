@@ -1,0 +1,18 @@
+@use '../../Styles/variables.scss' as vars;
+
+.create-button{
+    height: 50px;
+    width: 50px;
+    border-radius: 20%;
+    background-color: vars.$yellowish;
+    content: "";
+    background-image: url("../../Images/add.png");
+    background-size: cover;
+    border: 15px solid vars.$yellowish;
+    position: relative;
+
+    &:hover{
+        cursor: pointer;
+        box-shadow: 0 0 5px vars.$yellowish;
+    }
+}
