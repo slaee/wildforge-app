@@ -1,6 +1,7 @@
 import React from 'react'
-import Navbar from '../../../Utils/Navbar'
-import './styles.module.scss'
+import Navbar from '../../../Utils/Nav/Navbar'
+import './CreateClass.scss'
+import CreateButton from '../../../Utils/Button/CreateButton';
 
 function CreateClass() {
     const buttons = [
@@ -10,10 +11,17 @@ function CreateClass() {
         { id: 4, label: 'Logout', className: 'logout' }
       ];
   return (
-    <div>
-        <Navbar buttons={buttons} />
-        <div>
+    <div className='create-class-container'>
+      <Navbar buttons={buttons} />
+      <div className='class-dashboard'>
+        <div className='class-dashboard-header'>
+          <div className='header-content'>
+            <h1>Create Class</h1>
+            <h2>Date</h2>
+          </div>
+          <CreateButton />
         </div>
+      </div>
     </div>
   )
 }
