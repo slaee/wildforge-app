@@ -34,6 +34,21 @@
         box-shadow: 0 0 5px variables.$yellowish;
       }
     }
+    &.selected{
+      color: variables.$yellowish;
+      cursor: pointer;
+      &::before {
+        width: 20px;
+        height: 20px;
+        background-color: variables.$yellowish;
+        $type-select: $type + "-select";
+        background-image: map-get(variables.$icons, $type-select);
+        border: 5px solid variables.$yellowish;
+        border-radius: 10px;
+        padding: 2px;
+        box-shadow: 0 0 5px variables.$yellowish;
+      }
+    }
   }
   
 @mixin logout{
