@@ -1,11 +1,11 @@
 import React from 'react'
 import './Search.scss'
 
-function Search() {
+function Search({placeholder}) {
   return (
     <div className='search-bar'>
         <h2>Search</h2>
-        <input type="text" placeholder="Enter class info"/>
+        <input type="text" placeholder={placeholder}/>
     </div>
   )
 }
