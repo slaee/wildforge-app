@@ -1,0 +1,28 @@
+@use '../../Styles/variables.scss' as vars;
+
+input{
+    height: 45px;
+    width: 340px;
+    border-radius: 10px;
+    border: 1px solid vars.$brownish;
+    padding: 0 20px;
+    font-size: 16px;
+    color: vars.$black;
+
+    &:focus{
+        outline: none;
+    }
+}
+
+.search-bar{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    
+    h2 {
+        font-size: 16px;
+        margin: 0;
+        color: vars.$black;
+        margin-bottom: 5px;
+    }
+}
