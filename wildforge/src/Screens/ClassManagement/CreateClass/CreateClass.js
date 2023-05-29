@@ -20,7 +20,7 @@ function CreateClass() {
             <h1>Create Class</h1>
             <h2>Date</h2>
           </div>
-          <Search />
+          <Search placeholder={'Enter Class Info'}/>
           <CreateButton />
         </div>
       </div>
