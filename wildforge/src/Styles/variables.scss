@@ -1,0 +1,19 @@
+//Colors
+$brownish: #9c7b16;
+$yellowish: #fecc00;
+$black: #000000 ;
+$white: #fff;
+$grey: #B3B3B3;
+$light-grey: #F3F3F3;
+$red: #FF0000;
+
+//Icons
+$icons: (
+    class: url("../Images/class.png"), 
+    class-select: url("../Images/class-hover.png"), 
+    peer: url("../Images/peer.png"), 
+    peer-select: url("../Images/peer-hover.png"),
+    profile: url("../Images/profile.png"),
+    profile-select: url("../Images/profile-hover.png"),
+    logout: url("../Images/logout.png")
+);
