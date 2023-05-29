@@ -3,6 +3,7 @@ import Navbar from '../../../Utils/Nav/Navbar'
 import './CreateClass.scss'
 import CreateButton from '../../../Utils/Button/CreateButton';
 import Search from '../../../Utils/Search/Search';
+import Card from '../../../Utils/Cards/Card';
 
 function CreateClass() {
     const buttons = [
@@ -22,6 +23,12 @@ function CreateClass() {
           </div>
           <Search placeholder={'Enter Class Info'}/>
           <CreateButton />
+        </div>
+        <div className='class-dashboard-body'>
+          <Card />
+          <Card />
+          <Card />
+          <Card />
         </div>
       </div>
     </div>
