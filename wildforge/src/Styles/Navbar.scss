@@ -46,3 +46,15 @@
 .logout{
     @include mixins.logout;
 }
+
+.students{
+    @include mixins.button(students);
+}
+
+.teams{
+    @include mixins.button(teams);
+}
+
+.delete{
+    @include mixins.button(delete);
+}
