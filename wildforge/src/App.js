@@ -2,18 +2,18 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.scss';
 import CreateClass from './Screens/ClassManagement/CreateClass/CreateClass';
 import ViewClass from './Screens/ClassManagement/ViewClass/ViewClass';
-import Dashboard from './Screens/ClassManagement/ViewClass/Dashboard';
+import ViewDashboard from './Screens/ClassManagement/ViewClass/ClassDashboard';
 
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/create" element={<CreateClass />} />
-        <Route path="/view" element={<ViewClass/>}>
-          
+        <Route path="/admin" element={<CreateClass />} />
+        <Route path="/class" element={<ViewClass/>}>
+          <Route path="dashboard" element={<ViewDashboard/>} />
+          <Route path="students" element={<ViewDashboard/>} />
         </Route>
-        <Route path="/dashboard" element={<Dashboard/>} />
       </Routes>
     </Router>
   );
