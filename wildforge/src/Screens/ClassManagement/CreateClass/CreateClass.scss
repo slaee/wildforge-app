@@ -38,3 +38,12 @@
     color: vars.$brownish;
     margin: 0;
 }
+
+.class-dashboard-body{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0 45px;
+    flex-wrap: wrap;
+}
