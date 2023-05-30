@@ -3,9 +3,9 @@ import Navbar from '../../../Utils/Nav/Navbar';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import Students from './Students';
-import Teams from './Teams';
-import EditClass from './EditClass';
-import DeleteClass from './DeleteClass';
+// import Teams from './Teams';
+// import EditClass from './EditClass';
+// import DeleteClass from './DeleteClass';
 import './ViewClass.scss';
 
 function ViewClass() {
@@ -26,10 +26,10 @@ function ViewClass() {
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/students" element={<Students />} />
-            <Route path="/teams" element={<Teams />} />
+            {/* <Route path="/teams" element={<Teams />} />
             <Route path="/editclass" element={<EditClass />} />
             <Route path="/deleteclass" element={<DeleteClass />} />
-            <Route path="/logout" element={<DeleteClass />} />
+            <Route path="/logout" element={<DeleteClass />} /> */}
           </Routes>
         </div>
       </div>
