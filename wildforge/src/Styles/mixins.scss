@@ -1,0 +1,75 @@
+@use './variables';
+
+@mixin button($type) {
+    width: 182px;
+    height: 30px;
+    color: variables.$grey;
+    font-size: 18px;
+    margin-bottom: 35px;
+    display: flex;
+    align-items: center;
+    &::before {
+      content: "";
+      background-image: map-get(variables.$icons, $type);
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      margin-right: 17px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }  
+    &:hover {
+      color: variables.$yellowish;
+      cursor: pointer;
+      &::before {
+        width: 20px;
+        height: 20px;
+        background-color: variables.$yellowish;
+        $type-select: $type + "-select";
+        background-image: map-get(variables.$icons, $type-select);
+        border: 5px solid variables.$yellowish;
+        border-radius: 10px;
+        padding: 2px;
+        box-shadow: 0 0 5px variables.$yellowish;
+      }
+    }
+    &.selected{
+      color: variables.$yellowish;
+      cursor: pointer;
+      &::before {
+        width: 20px;
+        height: 20px;
+        background-color: variables.$yellowish;
+        $type-select: $type + "-select";
+        background-image: map-get(variables.$icons, $type-select);
+        border: 5px solid variables.$yellowish;
+        border-radius: 10px;
+        padding: 2px;
+        box-shadow: 0 0 5px variables.$yellowish;
+      }
+    }
+  }
+  
+@mixin logout{
+    width: 182px;
+    height: 30px;
+    color: variables.$red;
+    font-size: 18px;
+    margin-top: 350px;
+    display: flex;
+    align-items: center;
+    position: relative; /* Add position relative */  
+    &::before {
+      content: "";
+      background-image: map-get(variables.$icons, logout);
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      margin-right: 17px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+}
+    

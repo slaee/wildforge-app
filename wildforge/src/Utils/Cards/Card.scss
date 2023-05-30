@@ -1,0 +1,44 @@
+@use '../../Styles/variables.scss' as var;
+
+.card-container {
+    width: 375px;
+    height: 170px;
+    background-color: var.$white;
+    border-radius: 10px;
+    padding: 2%;
+    margin: 10px 10px;
+
+    h1{
+        font-size: 20px;
+        font-weight: 600;
+        color: var.$black;
+        margin: 0;
+    }
+
+    h3{
+        font-size: 16px;
+        font-weight: 600;
+        color: var.$brownish;
+        margin-top: 15px;
+    }
+
+    p{
+        font-size: 16px;
+        font-weight: 600;
+        color: var.$grey;
+        margin-left: 20px;
+    }
+}
+
+.card-subheading{
+    display: flex;
+    flex-direction: row;
+}
+
+.end-label{
+    font-size: 16px;
+    font-weight: 600;
+    color: var.$grey;
+    margin-top: 50px;
+    text-align: right;
+}
