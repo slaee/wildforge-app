@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Search from '../../../Utils/Search/Search';
-import './Dashboard.scss';
+import './ClassDashboard.scss';
 
-function Dashboard() {
+function ClassDashboard() {
     const navigate = useNavigate();
   const [studentsInClass, setStudentsInClass] = useState(28);
   const [pendingRequests, setPendingRequests] = useState(0);
@@ -12,7 +12,7 @@ function Dashboard() {
   const [teams, setTeams] = useState(2);
 
   const handleBackButton = () => {
-    navigate(-1);
+    navigate('/admin');
   };
 
   return (
@@ -43,4 +43,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default ClassDashboard;
