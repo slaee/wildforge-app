@@ -19,7 +19,7 @@ function ViewClass() {
     ];
 
   return (
-    <Router>
+    <>
       <div className="view-class">
         <Navbar buttons={buttons} />
         <div className="content-wrapper">
@@ -33,7 +33,7 @@ function ViewClass() {
           </Routes>
         </div>
       </div>
-    </Router>
+    </>
   )
 }
 

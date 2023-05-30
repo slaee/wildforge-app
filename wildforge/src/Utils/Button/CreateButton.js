@@ -1,9 +1,9 @@
 import React from 'react'
 import './CreateButton.scss'
 
-const CreateButton = () => {
+const CreateButton = ( { handlerOnClick } ) => {
   return (
-    <div className='create-button'/>
+    <div className='create-button' onClick={handlerOnClick}></div>
   )
 };
 

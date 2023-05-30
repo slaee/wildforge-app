@@ -1,0 +1,28 @@
+@use '../../Styles/variables.scss' as vars;
+
+.input-text{
+    height: 48px;
+    border-radius: 10px;
+    border: 1px solid vars.$grey;
+    padding: 0 20px;
+    font-size: 16px;
+    color: vars.$black;
+
+    &:focus{
+        outline: none;
+    }
+}
+ 
+.input-title{
+    font-size: 16px;
+    font-weight: 600;
+    color: vars.$black;
+    margin: 0;
+}
+
+.input-container{
+    width: 395px;
+    height: 76px;
+    display: flex;
+    flex-direction: column;
+}
