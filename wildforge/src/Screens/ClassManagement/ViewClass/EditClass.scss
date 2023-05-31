@@ -1,0 +1,73 @@
+.editclass {
+    display: flex;
+    justify-content: space-between;
+}
+
+.class-log-whitebox {
+    border: 1px solid #ddd;
+    background-color: white;
+    height: 100%;
+    width: 70vh;
+    margin-left: 20px;
+}
+
+.white-box {
+    background-color: white;
+    border-radius: 10px;
+    height: 80%;
+    width: 50%;
+    margin-top: 3%;
+    margin-left: 3%;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    button {
+        height: 48.09px;
+    }
+
+    label {
+
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    h1 {
+        font-size: 30px;
+        font-weight: 700;
+        margin-top: 60px;
+    }
+}
+
+.input-container {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.back-column-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.back-container {
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+.class-logs-text {
+    margin-left: 40px;
+    margin-top: 30px;
+}
+
+.center-container {
+    height: 100%;
+    margin-left: 40px;
+    width: 100vh;
+    align-items: center;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+  }
