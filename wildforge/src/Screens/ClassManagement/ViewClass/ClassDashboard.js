@@ -17,29 +17,31 @@ function ClassDashboard() {
 
   return (
     <div className='dashboard'>
-      <button onClick={handleBackButton}>Back</button>
-
-      <div className='status-boxes'>
-        <div className='status-box'>
-          <h3>Students in class</h3>
-          <p>Pending requests: {pendingRequests}</p>
-          <h1>{studentsInClass}/28</h1>
-        </div>
-        <div className='status-box'>
-          <h3>Teams</h3>
-          <p>Identified Leaders: {identifiedLeaders}</p>
-          <p>Students with no team: {studentsWithNoTeam}</p>
-          <h1>{teams}/5</h1>
+      <div className='center-container'>
+        <button onClick={handleBackButton} className='back'>Back</button>
+      
+        <div className='status-boxes'>
+          <div className='status-box'>
+            <h3>Students in class</h3>
+            <p>Pending requests: {pendingRequests}</p>
+            <h1>{studentsInClass}/28</h1>
+          </div>
+          <div className='status-box'>
+            <h3>Teams</h3>
+            <p>Identified Leaders: {identifiedLeaders}</p>
+            <p>Students with no team: {studentsWithNoTeam}</p>
+            <h1>{teams}/5</h1>
+          </div>
         </div>
       </div>
 
       <div className='class-logs'>
         <h2>Class Logs</h2>
-        <Search />
-        {/* Here you can add the list of logs */}
+        <Search placeholder={'Search logs'}/>
       </div>
 
     </div>
+    
   );
 }
 
