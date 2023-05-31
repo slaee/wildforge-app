@@ -3,7 +3,9 @@
 
 .parent {
     width: 268px;
-    height: 830px;
+    // maximize the height of the parent div
+    height: 100vh;
+    
     background-color: variables.$white;
     font-size: 18px;
     position: relative;
