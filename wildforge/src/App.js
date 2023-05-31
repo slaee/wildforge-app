@@ -3,6 +3,8 @@ import './App.scss';
 import CreateClass from './Screens/ClassManagement/CreateClass/CreateClass';
 import ViewClass from './Screens/ClassManagement/ViewClass/ViewClass';
 import ViewDashboard from './Screens/ClassManagement/ViewClass/ClassDashboard';
+import EditClass from './Screens/ClassManagement/ViewClass/EditClass';
+import BackButton from './Utils/Button/BackButton';
 
 
 function App() {
@@ -13,6 +15,7 @@ function App() {
         <Route path="/class" element={<ViewClass/>}>
           <Route path="dashboard" element={<ViewDashboard/>} />
           <Route path="students" element={<ViewDashboard/>} />
+          <Route path="edit" element={<EditClass/>} />
         </Route>
       </Routes>
     </Router>
