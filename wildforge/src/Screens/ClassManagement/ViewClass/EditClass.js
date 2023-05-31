@@ -4,6 +4,7 @@ import Search from '../../../Utils/Search/Search';
 import './EditClass.scss';
 import InputBox from '../../../Utils/Input/InputBox';
 import FilledButton from '../../../Utils/Button/FilledButton';
+import BackButton from '../../../Utils/Button/BackButton';
 
 function EditClass() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ function EditClass() {
     <div className='editclass'>
       <div className='back-column-container'>
         <div className='back-container'>
-            <button onClick={handleBackButton}>Back</button>
+            <BackButton handlerOnClick={handleBackButton} />
           </div>
         
           <div className='center-container'>
@@ -55,7 +56,6 @@ function EditClass() {
           <Search />
         </div>
       </div>
-
     </div>
   );
 }
