@@ -1,3 +1,5 @@
+@use '../../../Styles/variables.scss' as vars;
+
 .editclass {
     display: flex;
     justify-content: space-between;
@@ -5,14 +7,14 @@
 
 .class-log-whitebox {
     border: 1px solid #ddd;
-    background-color: white;
+    background-color: vars.$white;
     height: 100%;
     width: 70vh;
     margin-left: 20px;
 }
 
 .white-box {
-    background-color: white;
+    background-color: vars.$white;
     border-radius: 10px;
     height: 80%;
     width: 50%;

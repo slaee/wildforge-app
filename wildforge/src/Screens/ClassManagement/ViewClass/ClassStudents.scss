@@ -1,9 +1,11 @@
+@use '../../../Styles/variables.scss' as vars;
+
 .students {
     .WhiteBox {
-      background-color: #ffffff;
+      background-color: vars.$white;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0px 4px 8px vars.$black;
     }
   
     .Header {
@@ -28,7 +30,7 @@
   
     .table-container {
       margin-top: 20px;
-      border: 1px solid #ddd;
+      border: 1px solid vars.$light-grey;
       border-radius: 10px;
       padding: 20px;
   
@@ -36,7 +38,7 @@
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         font-weight: bold;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid vars.$light-grey;
         padding-bottom: 10px;
         margin-bottom: 10px;
       }
@@ -45,7 +47,7 @@
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         align-items: center;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid vars.$light-grey;
         padding: 10px 0;
   
         div:last-child {
@@ -56,14 +58,14 @@
     }
   
     .JoinRequests-Yellow {
-      background-color: yellow;
+      background-color: vars.$yellowish;
       padding: 10px;
       border-radius: 5px;
       margin-bottom: 10px;
     }
   
     .Students-Yellow {
-      background-color: yellow;
+      background-color: vars.$yellowish;
       padding: 10px;
       border-radius: 5px;
       margin-top: 10px;

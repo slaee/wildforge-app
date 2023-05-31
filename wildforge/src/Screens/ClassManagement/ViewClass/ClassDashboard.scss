@@ -1,4 +1,4 @@
-$back-icon: url('../../../Images/back.png');
+@use '../../../Styles/variables.scss' as vars;
 
 .dashboard {
   display: flex;
@@ -17,7 +17,7 @@ $back-icon: url('../../../Images/back.png');
 }
 
 .status-box {
-  background-color: white;
+  background-color: vars.$white;
   margin-top: 20px;
   width: 435px;
   height: 226px;
@@ -51,8 +51,8 @@ $back-icon: url('../../../Images/back.png');
 }
 
 .class-logs-whitebox {
-  border: 1px solid #ddd;
-  background-color: white;
+  border: 1px solid vars.$light-grey;
+  background-color: vars.$white;
   height: 100vh;
   width: 50%;
   margin-left: 20px;
