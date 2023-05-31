@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Search from '../../../Utils/Search/Search';
 import './ClassDashboard.scss';
+import BackButton from '../../../Utils/Button/BackButton';
 
 function ClassDashboard() {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ function ClassDashboard() {
   return (
     <div className='dashboard'>
       <div className='center-container'>
-        <button onClick={handleBackButton} className='back'>Back</button>
+        <BackButton handlerOnClick={handleBackButton} />
       
         <div className='status-boxes'>
           <div className='status-box'>
