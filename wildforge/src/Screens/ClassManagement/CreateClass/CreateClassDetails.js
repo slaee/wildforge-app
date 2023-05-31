@@ -16,7 +16,7 @@ function CreateClassDetails({ handlerOnClick }) {
 
   return (
     <div className='create-class-details-container' onClick={handlerOnClick}>
-      <div className='create-class-container' onClick={handleContainerClick}>
+      <div className='create-details-container' onClick={handleContainerClick}>
         <p className='create-class-container-title'>Create Class</p>
         <InputBox title='Class Name' placeholder='Enter class name' />
         <InputBox title='Class Section' placeholder='Enter sections. e.g F1 - F2' />

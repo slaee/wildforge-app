@@ -11,7 +11,7 @@
     z-index: 1;
 }
 
-.create-class-container{
+.create-details-container{
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -20,8 +20,7 @@
     justify-content: center;
     align-items: center;
     transform: translate(-50%, -50%);
-    width: 515vw;
-    height: 60vh;
+    width: 515px;
     background-color: vars.$white;
     border-radius: 10px;
     z-index: 100; /* Updated z-index value */
