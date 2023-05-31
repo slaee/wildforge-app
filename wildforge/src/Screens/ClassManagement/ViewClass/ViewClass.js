@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../../../Utils/Nav/Navbar';
 import './ViewClass.scss';
 import ClassDashboard from './ClassDashboard';
+import ClassStudents from './ClassStudents';
+import EditClass from './EditClass';
 
 function ViewClass() {
   const [selectedContent, setSelectedContent] = useState('dashboard');
@@ -10,8 +12,8 @@ function ViewClass() {
     { id: 1, label: 'Dashboard', className: 'classes', path: 'dashboard' },
     { id: 2, label: 'Students', className: 'students', path: 'students' },
     { id: 3, label: 'Teams', className: 'teams', path: 'teams' },
-    { id: 4, label: 'Edit Class', className: 'profile', path: 'editclass' },
-    { id: 5, label: 'Delete Class', className: 'delete', path: 'deleteclass' },
+    { id: 4, label: 'Edit Class', className: 'profile', path: 'edit' },
+    { id: 5, label: 'Delete Class', className: 'delete', path: 'delete' },
     { id: 6, label: 'Logout', className: 'logout', path: 'logout' },
   ];
 
@@ -34,9 +36,8 @@ function ViewClass() {
         <Navbar buttons={buttons} onButtonClick={handleButtonClick} />
         <div className="content-wrapper">
           {selectedContent === 'dashboard' && <ClassDashboard />}
-          {/* {selectedContent === 'students' && <ClassStudents />}
-          {selectedContent === 'teams' && <ClassTeams />} */}
-          {/* Add other content based on the selectedContent value */}
+          {selectedContent === 'students' && <ClassStudents />}
+          {selectedContent === 'edit' && <EditClass />}
         </div>
       </div>
     </>
