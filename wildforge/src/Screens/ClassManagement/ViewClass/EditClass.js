@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Search from '../../../Utils/Search/Search';
 import './EditClass.scss';
 import InputBox from '../../../Utils/Input/InputBox';
 import FilledButton from '../../../Utils/Button/FilledButton';
 import BackButton from '../../../Utils/Button/BackButton';
+import ClassLog from '../../../Utils/ClassLog/ClassLog';
 
 function EditClass() {
   const navigate = useNavigate();
@@ -50,12 +50,8 @@ function EditClass() {
       </div>
         
       
-      <div className='class-log-whitebox'>
-        <div className='class-logs-text'>
-          <h2>Class Logs</h2>
-          <Search />
-        </div>
-      </div>
+      <ClassLog />
+
     </div>
   );
 }

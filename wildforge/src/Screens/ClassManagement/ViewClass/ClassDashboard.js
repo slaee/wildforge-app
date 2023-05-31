@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Search from '../../../Utils/Search/Search';
 import './ClassDashboard.scss';
 import BackButton from '../../../Utils/Button/BackButton';
+import ClassLog from '../../../Utils/ClassLog/ClassLog';
 
 function ClassDashboard() {
     const navigate = useNavigate();
@@ -40,12 +40,7 @@ function ClassDashboard() {
         </div>
       </div>
 
-      <div className='class-logs-whitebox'>
-        <div className='class-logs-text'>
-          <h2>Class Logs</h2>
-          <Search placeholder={'Search logs'}/>
-        </div>
-      </div>
+      <ClassLog />
 
     </div>
     
