@@ -24,8 +24,8 @@ function EditClass() {
             <BackButton handlerOnClick={handleBackButton} />
           </div>
         
-          <div className='center-container'>
-            <div className='white-box'>
+          <div className='edit-center-container'>
+            <div className='edit-white-container'>
 
               <h1>Edit Class</h1>
 
