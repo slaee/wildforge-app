@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Search from '../../../Utils/Search/Search';
+import './ClassStudents.scss';
 
 function Students() {
   const navigate = useNavigate();
@@ -13,19 +14,13 @@ function Students() {
     <div className="students">
       <button onClick={handleBackButton}>Back</button>
       <div className='WhiteBox'>
-        <table className="header-table">
-          <thead>
-            <tr>
-              <th colSpan="2">Students</th>
-              <th colSpan="3">
-                <div className="search-bar">
-                  <h3>Search</h3>
-                  <Search />
-                </div>
-              </th>
-            </tr>
-          </thead>
-        </table>
+        <div className="header-table">
+          <h1>Students</h1>
+            <div className="search-bar">
+              <h3>Search</h3>
+              <Search placeholder={'Enter student info'} />
+            </div>
+        </div>
 
         <div className="table-container">
           <div className="table-header">
