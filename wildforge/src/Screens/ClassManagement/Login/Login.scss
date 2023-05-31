@@ -1,0 +1,25 @@
+@use '../../../Styles/variables.scss';
+
+.Login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.Logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Logo-container h1 {
+    width: 155px;
+    height: 63px;
+}
+
+img {
+    width: 50px;
+    height: 50px;
+    align-items: center;
+}
