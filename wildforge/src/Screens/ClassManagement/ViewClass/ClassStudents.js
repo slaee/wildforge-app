@@ -11,7 +11,7 @@ function Students() {
   };
 
   return (
-    <div className="students">
+    <div>
       <button onClick={handleBackButton}>Back</button>
       <div className='WhiteBox'>
         <div className="header-table">

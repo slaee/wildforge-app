@@ -36,9 +36,8 @@ function ViewClass() {
         <Navbar buttons={buttons} onButtonClick={handleButtonClick} />
         <div className="content-wrapper">
           {selectedContent === 'dashboard' && <ClassDashboard />}
-          {selectedContent === 'students' && <EditClass />}
+          {selectedContent === 'students' && <ClassStudents />}
           {selectedContent === 'edit' && <EditClass />}
-
         </div>
       </div>
     </>

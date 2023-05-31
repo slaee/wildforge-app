@@ -18,7 +18,7 @@ function ClassDashboard() {
 
   return (
     <div className='dashboard'>
-      <div className='center-container'>
+      <div className='dashboard-center-container'>
         <BackButton handlerOnClick={handleBackButton} />
       
         <div className='status-boxes'>
