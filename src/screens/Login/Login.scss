@@ -35,12 +35,12 @@
 .yellow-on-focus{
     height: 48.25px;
     border: 1px solid variables.$shadow-normal;
-        &:hover{
-            border: 1px solid variables.$wild-yellow;
-        }
-        &:focus{
-            border: 1px solid variables.$wild-yellow;
-        }
+    &:hover{
+        border: 1px solid variables.$wild-yellow;
+    }
+    &:focus{
+        border: 3px solid variables.$wild-yellow;
+    }
 }
 
 .btn-wild-primary{
