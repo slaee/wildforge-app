@@ -39,7 +39,7 @@ function Signup() {
 
   const renderEmailAndPasswordInputs = () => (
     <>
-      <div className="d-flex flex-column pt-2 pb-2">
+      <div className="d-flex flex-column">
         <span className="fs-5 fw-bold pt-2 pb-2">Email</span>
         <InputText
           className="yellow-on-focus"
