@@ -27,7 +27,7 @@ function Login() {
       </div>
       <div className="login-container">
         <div className="login-form">
-          <span className="fs-3 fw-bold pt-3 pb-3">Login</span>
+          <span className="fs-3 fw-bold pb-3">Login</span>
           <div className="d-flex flex-column">
             <span className="fs-5 fw-bold pt-2 pb-2">Email</span>
             <InputText
@@ -38,7 +38,7 @@ function Login() {
             />
           </div>
           <div className="d-flex flex-column pt-3 pb-3">
-            <span className="fs-5 fw-bold pt-2 pb-2">Password</span>
+            <span className="fs-5 fw-bold pb-2">Password</span>
             <InputText
               className="yellow-on-focus"
               type="password"
