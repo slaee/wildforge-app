@@ -1,13 +1,15 @@
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Login from './screens/Login/Login';
-import Signup from './screens/Signup/Signup';
+import ViewClass from './screens/class-management/ViewClass';
 
 function App() {
   return (
-    <>
-    
-    <Signup/>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/dashboard" element={<ViewClass/>}>
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 

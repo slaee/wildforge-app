@@ -1,0 +1,51 @@
+@use '../../styles/variables';
+@use '../../styles/mixins';
+
+*,*:focus,*:hover{
+    outline:none;
+  }
+
+.app-name{
+    height: 20vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.header{
+    width: 100%;
+    height: 20vh;
+}
+
+.yellow-text{
+    color: variables.$wild-yellow;
+}
+
+.brown-text{
+    color: variables.$wild-brown;
+}
+
+.red-text{
+    color: variables.$wild-red;
+}
+
+.grey-text{
+    color: variables.$wild-grey;
+}
+
+.search-input{
+    width: 215px;
+    height: 40px;
+    border: 2px solid variables.$wild-yellow;
+}
+
+.btn-wild-primary{
+    background-color: variables.$wild-yellow;
+    color: variables.$wild-white;
+    height: 40px;
+    width: 40px;
+
+    &:hover{
+        background-color: variables.$shadow-wild-yellow;
+        color: variables.$wild-black;
+    }
+}
