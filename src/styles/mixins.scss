@@ -2,17 +2,9 @@
     box-shadow: #{$x-offset}px #{$y-offset}px #{$blur}px #{$spread}px #{$color};
 }
 
-@mixin make-container( $w, $h, $bg-color, $f-color, $padding-x, $padding-y, $margin-x, $margin-y) {
+@mixin make-container( $w, $h, $bg-color, $f-color) {
     width: $w;
     height: $h;
-    padding-right: $padding-x;
-    padding-left: $padding-x;
-    padding-top: $padding-y;
-    padding-bottom: $padding-y;
-    margin-right: $margin-x;
-    margin-left: $margin-x;
-    margin-top: $margin-y;
-    margin-bottom: $margin-y;
     background-color: $bg-color;
     color: $f-color;
 }
