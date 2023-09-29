@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
-import './Login.scss';
+import './index.scss';
+import { Link } from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -45,9 +46,9 @@ function Login() {
               value={password}
               onChange={handlePasswordChange}
             />
-            <a href="/" className="d-flex justify-content-end fs-5 redirect-text">
+            <Link to="/forgot-password" className="d-flex justify-content-end fs-5 redirect-text">
               Forgot Password
-            </a>
+            </Link>
           </div>
           <div className="d-grid gap-2 pt-3 pb-3">
             <button
@@ -60,7 +61,7 @@ function Login() {
           </div>
           <div className="d-flex justify-content-center pt-3 pb-3">
             <span className="fs-5">
-              Don't have an account? <a href="/" className="redirect-text">Sign Up</a>
+              Don't have an account? <Link to="/signup" className="redirect-text">Sign Up</Link>
             </span>
           </div>
         </div>
