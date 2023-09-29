@@ -5,7 +5,7 @@ import WildCards from '../../components/cards/WildCards';
 import 'primeicons/primeicons.css';
 import './index.scss';
 
-function ViewClass() {
+function Classes() {
     const buttons = [
         { id: 1, label: 'Classes', className: 'classes', path: '/classes' },
         { id: 2, label: 'Peer Evaluation', className: 'peer-eval', path: '/peer-eval' },
@@ -45,4 +45,4 @@ function ViewClass() {
   )
 }
 
-export default ViewClass
+export default Classes

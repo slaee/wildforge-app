@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import ViewClass from './screens/class-management/ViewClass';
+import Classes from './screens/class-management/Classes';
 import Login from './screens/login/Login';
 import Signup from './screens/signup/Signup';
 import ForgotPassword from './screens/forgot-password/ForgotPassword';
@@ -12,7 +12,7 @@ function App() {
         <Route path="/login" element={<Login/>}/>
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/forgotpassword" element={<ForgotPassword/>}/>
-        <Route path="/dashboard" element={<ViewClass/>}>
+        <Route path="/classes" element={<Classes/>}>
         </Route>
       </Routes>
     </Router>
