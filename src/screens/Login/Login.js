@@ -46,7 +46,7 @@ function Login() {
               value={password}
               onChange={handlePasswordChange}
             />
-            <Link to="/forgot-password" className="d-flex justify-content-end fs-5 redirect-text">
+            <Link to="/forgotpassword" className="d-flex justify-content-end fs-5 redirect-text">
               Forgot Password
             </Link>
           </div>
