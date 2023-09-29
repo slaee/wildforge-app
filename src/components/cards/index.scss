@@ -1,0 +1,10 @@
+@use '../../styles/variables';
+@use '../../styles/mixins';
+
+.class-card{
+    @include mixins.make-container(
+        290px, 
+        150px, 
+        variables.$wild-yellow, 
+        variables.$wild-white, 10px, 10px, 5px, 5px);
+}

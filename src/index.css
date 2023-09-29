@@ -12,10 +12,6 @@ code {
     monospace;
 }
 
-div {
-  border: 1px dotted red;
-}
-
 *,*:focus,*:hover{
   outline:none;
 }
