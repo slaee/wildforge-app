@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './Navbar.scss';
+import './index.scss';
 
 function Navbar({buttons, onButtonClick }) {
   const [selectedButton, setSelectedButton] = useState(buttons[0]?.id);

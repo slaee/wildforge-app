@@ -1,8 +1,9 @@
 import React from 'react'
 import { InputText } from 'primereact/inputtext';
-import Navbar from '../../components/navbar/Navbar'
+import Navbar from '../../components/navbar/Navbar';
+import WildCards from '../../components/cards/WildCards';
 import 'primeicons/primeicons.css';
-import './ViewClass.scss'
+import './index.scss';
 
 function ViewClass() {
     const buttons = [
@@ -30,13 +31,14 @@ function ViewClass() {
             <span className='brown-text fw-bold py-2 mx-4'>Classes</span>
             <div className="d-flex ms-auto mx-5">
               <InputText className='search-input me-4' placeholder='Search'/>
-              <button className='btn btn-wild-primary'>
+              <button className='btn btn-add-primary'>
                 <i className="pi pi-plus"/>
               </button>
             </div>
           </div>
           <div className='d-flex justify-content-center pt-2 pb-2'>
             <span className='grey-text fw-semibold py-2 mx-4'>No Classes. Create a new Class</span>
+            <WildCards/>
           </div>
       </div>
     </div>
