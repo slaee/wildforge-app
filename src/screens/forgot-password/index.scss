@@ -56,4 +56,7 @@
 
 .redirect-text{
     color: variables.$wild-yellow;
+    &:hover{
+        cursor: pointer;
+    }
 }
