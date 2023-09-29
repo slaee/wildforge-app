@@ -149,10 +149,7 @@ function Signup() {
 
 return (
   <>
-    {showEmailVerification ? (
-      renderVerification()
-      
-    ) : 
+    {showEmailVerification ? ( renderVerification()) : 
     <>
         <div className="app-name">
           <span className="wild fs-3 fw-bold">Wild</span>
