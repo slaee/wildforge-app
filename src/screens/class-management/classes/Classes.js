@@ -1,15 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
-import Navbar from '../../components/navbar/Navbar';
-import WildCards from '../../components/cards/WildCards';
+import Navbar from '../../../components/navbar/Navbar';
+import WildCards from '../../../components/cards/WildCards';
 import 'primeicons/primeicons.css';
 import './index.scss';
+import CreateClass from '../create-class/CreateClass';
 
 function Classes() {
     const buttons = [
         { id: 1, label: 'Classes', className: 'classes', path: '/classes' },
         { id: 2, label: 'Peer Evaluation', className: 'peer-eval', path: '/peer-eval' },
       ];
+    const [isCreateClassModalOpen, setCreateClassModalOpen] = useState(false);
+
+    const openCreateClassModal = () => {
+      setCreateClassModalOpen(true);
+      console.log('open')
+    };
+  
+    const closeCreateClassModal = () => {
+      setCreateClassModalOpen(false);
+    };
 
   return (
     <div className='d-flex'>
@@ -31,7 +42,7 @@ function Classes() {
             <span className='brown-text fw-bold py-2 mx-4'>Classes</span>
             <div className="d-flex ms-auto mx-5">
               <InputText className='search-input me-4' placeholder='Search'/>
-              <button className='btn btn-add-primary'>
+              <button className='btn btn-add-primary' onClick={openCreateClassModal}>
                 <i className="pi pi-plus"/>
               </button>
             </div>
@@ -41,6 +52,9 @@ function Classes() {
             <WildCards/>
           </div>
       </div>
+      {isCreateClassModalOpen && (
+        <CreateClass visible={isCreateClassModalOpen} handleModal={closeCreateClassModal} />
+      )}
     </div>
   )
 }

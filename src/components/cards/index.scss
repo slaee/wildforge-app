@@ -7,4 +7,17 @@
         150px, 
         variables.$wild-yellow, 
         variables.$wild-white);
+
+    &:hover{
+        @include mixins.make-container(
+            290px, 
+            150px, 
+            variables.$shadow-wild-yellow, 
+            variables.$wild-white);
+        cursor: pointer;
+    }
+}
+
+span:hover{
+    cursor: pointer;
 }
