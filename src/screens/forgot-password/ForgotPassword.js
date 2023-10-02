@@ -51,7 +51,11 @@ function ForgotPassword() {
         </button>
       </div>
       <div className="d-flex justify-content-start pt-3 pb-3">
-        <span onClick={() => nav(-1)} className="fs-5 redirect-text">
+        <span
+          className="fs-5 redirect-text"
+          aria-hidden="true"
+          onClick={() => nav(-1)}
+        >
           Back to Login
         </span>
       </div>
@@ -88,7 +92,11 @@ function ForgotPassword() {
         </button>
       </div>
       <div className="d-flex justify-content-start pt-3">
-        <span onClick={() => setStep(1)} className="fs-5 redirect-text">
+        <span
+          className="fs-5 redirect-text"
+          aria-hidden="true"
+          onClick={() => setStep(1)}
+        >
           Back
         </span>
       </div>
