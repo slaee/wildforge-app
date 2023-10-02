@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import './index.scss';
 
 function Navbar({ buttons, onButtonClick }) {
@@ -29,5 +30,22 @@ function Navbar({ buttons, onButtonClick }) {
     </div>
   );
 }
+
+Navbar.defaultProps = {
+  buttons: [],
+  onButtonClick: () => {},
+};
+
+Navbar.propTypes = {
+  buttons: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      label: PropTypes.string,
+      className: PropTypes.string,
+      path: PropTypes.string,
+    })
+  ),
+  onButtonClick: PropTypes.func,
+};
 
 export default Navbar;

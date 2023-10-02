@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
 import './index.scss';
@@ -66,7 +67,11 @@ function CreateClass({ visible, handleModal }) {
         showHeader={false}
       >
         <div className="d-flex flex-column">
-          <button className="btn btn-close ms-auto" onClick={handleModal} />
+          <button
+            aria-label="Close Modal"
+            className="btn btn-close ms-auto"
+            onClick={handleModal}
+          />
           <span className="fw-bold text-center fs-5">Create Class</span>
           <InputText
             className="input-container"
@@ -104,5 +109,15 @@ function CreateClass({ visible, handleModal }) {
     </>
   );
 }
+
+CreateClass.defaultProps = {
+  visible: false,
+  handleModal: () => {},
+};
+
+CreateClass.propTypes = {
+  visible: PropTypes.bool,
+  handleModal: PropTypes.func,
+};
 
 export default CreateClass;
