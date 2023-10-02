@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Classes from './screens/class-management/classes/Classes';
-import Login from './screens/login/Login';
-import Signup from './screens/signup/Signup';
+import Classes from './screens/class-management/classes';
+import Login from './screens/login';
+import Signup from './screens/signup';
 import ForgotPassword from './screens/forgot-password/ForgotPassword';
 
 function App() {
