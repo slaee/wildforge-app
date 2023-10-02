@@ -81,7 +81,10 @@ function Signup() {
       </div>
       <div className="d-flex justify-content-center pt-3 pb-3">
         <span className="fs-5">
-          Already have an account? <Link to="/login" className="redirect-text">Login</Link>
+          Already have an account?{' '}
+          <Link to="/login" className="redirect-text">
+            Login
+          </Link>
         </span>
       </div>
     </>
@@ -137,33 +140,35 @@ function Signup() {
   );
 
   const renderVerification = () => (
-    <>
-      <div class="d-grid bg-wild">
-        <span>Please verify your email by checking your inbox. If you haven't received an email, please click{' '}
-          <Link to="/signup">Resend</Link> 
-          {/* idk unsa dapat here @Sly */}
-        </span>
-      </div>
-    </> 
+    <div className="d-grid bg-wild">
+      <span>
+        Please verify your email by checking your inbox. If you haven't received
+        an email, please click <Link to="/signup">Resend</Link>
+        {/* idk unsa dapat here @Sly */}
+      </span>
+    </div>
   );
 
-return (
-  <>
-    {showEmailVerification ? ( renderVerification()) : 
+  return (
     <>
-        <div className="app-name">
-          <span className="wild fs-3 fw-bold">Wild</span>
-          <span className="fs-3 fw-bolder">FORGE</span>
-        </div>
-        <div className="login-container">
-          <div className="login-form">
-            <span className="fs-3 fw-bold pb-2">Sign Up</span>
-            {step === 1 ? renderStep1() : renderStep2()}
+      {showEmailVerification ? (
+        renderVerification()
+      ) : (
+        <>
+          <div className="app-name">
+            <span className="wild fs-3 fw-bold">Wild</span>
+            <span className="fs-3 fw-bolder">FORGE</span>
           </div>
-        </div>
-      </>}
-  </>
-);
+          <div className="login-container">
+            <div className="login-form">
+              <span className="fs-3 fw-bold pb-2">Sign Up</span>
+              {step === 1 ? renderStep1() : renderStep2()}
+            </div>
+          </div>
+        </>
+      )}
+    </>
+  );
 }
 
 export default Signup;

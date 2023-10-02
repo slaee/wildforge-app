@@ -46,7 +46,10 @@ function Login() {
               value={password}
               onChange={handlePasswordChange}
             />
-            <Link to="/forgotpassword" className="d-flex justify-content-end fs-5 redirect-text">
+            <Link
+              to="/forgotpassword"
+              className="d-flex justify-content-end fs-5 redirect-text"
+            >
               Forgot Password
             </Link>
           </div>
@@ -61,7 +64,10 @@ function Login() {
           </div>
           <div className="d-flex justify-content-center pt-3 pb-3">
             <span className="fs-5">
-              Don't have an account? <Link to="/signup" className="redirect-text">Sign Up</Link>
+              Don't have an account?{' '}
+              <Link to="/signup" className="redirect-text">
+                Sign Up
+              </Link>
             </span>
           </div>
         </div>
