@@ -94,8 +94,9 @@ function ForgotPassword() {
       <div className="d-flex justify-content-start pt-3">
         <span
           className="fs-5 redirect-text"
-          aria-hidden="true"
-          onClick={() => setStep(1)}
+          role="button"
+          tabIndex={0}
+          onMouseDown={() => setStep(1)}
         >
           Back
         </span>

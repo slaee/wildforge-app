@@ -3,7 +3,7 @@ import { InputText } from 'primereact/inputtext';
 
 import Navbar from '../../../components/navbar/Navbar';
 import WildCards from '../../../components/cards/WildCards';
-import CreateClass from '../create-class';
+import CreateClass from '../create_class';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
