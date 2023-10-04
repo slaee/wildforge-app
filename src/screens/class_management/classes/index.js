@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 
 import Navbar from '../../../components/navbar/Navbar';
+import Header from '../../../components/header';
 import WildCards from '../../../components/cards/WildCards';
 import CreateClass from '../create_class';
 
@@ -33,20 +34,9 @@ function Classes() {
     <div className="d-flex">
       <Navbar {...{ buttons }} />
       <div className="container-fluid d-flex flex-column">
-        <div className="d-flex flex-row">
-          <div className="d-flex header">
-            <div className="py-5 px-4 app-name">
-              <span className="yellow-text fs-3 fw-bold">Wild</span>
-              <span className="fs-3 fw-bolder">FORGE</span>
-            </div>
-            <div className="p-5 ms-auto">
-              <span className="brown-text fw-bold px-3">Account Settings</span>
-              <span className="red-text fw-bold px-3">Logout</span>
-            </div>
-          </div>
-        </div>
+        <Header />
         <div className="d-flex pt-2 pb-2">
-          <span className="brown-text fw-bold py-2 mx-4">Classes</span>
+          <div className="brown-text fw-bold py-2 mx-4">Classes</div>
           <div className="d-flex ms-auto mx-5">
             <InputText className="search-input me-4" placeholder="Search" />
             <button
