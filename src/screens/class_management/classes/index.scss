@@ -3,29 +3,6 @@
 
 *,*:focus,*:hover{
     outline:none;
-  }
-
-.app-name{
-    height: 20vh;
-    display: flex;
-    flex-direction: row;
-}
-
-.header{
-    width: 100%;
-    height: 20vh;
-}
-
-.yellow-text{
-    color: variables.$wild-yellow;
-}
-
-.brown-text{
-    color: variables.$wild-brown;
-}
-
-.red-text{
-    color: variables.$wild-red;
 }
 
 .grey-text{
