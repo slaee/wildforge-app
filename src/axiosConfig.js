@@ -54,36 +54,38 @@ export const configureAxios = () => {
   );
 
   axios.interceptors.response.use(null, async (error) => {
+    console.log(error);
     if (error.config && error.response) {
       if (
         error.response.data === 'Forbidden access' &&
         error.response.status === 401
       ) {
         // Get refresh token when 401 response status
+        const accessToken = cookies.get('accessToken');
         const refreshToken = cookies.get('refreshToken');
 
         // Get payload of refreshToken
         let payload;
 
         try {
-          payload = jwt(refreshToken);
+          payload = jwt(accessToken);
         } catch (e) {
-          // If refreshToken is invalid, logout the user
+          // If accessToken is invalid, logout the user
           loginRestart();
           return;
         }
 
         // We are certain that the access token already expired.
-        // We'll check if REFRESH TOKEN has also expired.
+        // We'll check if ACCESS TOKEN has also expired.
         const { data: verifyResponse } = await TokensService.verify({
-          refreshToken,
+          accessToken,
         });
 
         if (!verifyResponse?.isValid) {
-          // if the REFRESH TOKEN has already expired as well, logout the user
+          // if the ACCESS TOKEN has already expired as well, logout the user
           // and throw an error to exit this Promise chain
           loginRestart();
-          throw new Error('refresh token has already expired');
+          throw new Error('Access token has already expired');
         }
 
         // If the REFRESH TOKEN is still active, renew the ACCESS TOKEN and the REFRESH TOKEN
