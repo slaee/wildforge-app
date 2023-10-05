@@ -22,7 +22,7 @@ function WildCards({ id, name, classCode, section, schedule }) {
 }
 
 WildCards.defaultProps = {
-  id: '',
+  id: 0,
   name: '',
   classCode: '',
   section: '',
@@ -30,7 +30,7 @@ WildCards.defaultProps = {
 };
 
 WildCards.propTypes = {
-  id: PropTypes.string,
+  id: PropTypes.number,
   name: PropTypes.string,
   classCode: PropTypes.string,
   section: PropTypes.string,

@@ -41,7 +41,7 @@ Navbar.defaultProps = {
 Navbar.propTypes = {
   buttons: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string,
+      id: PropTypes.number,
       label: PropTypes.string,
       className: PropTypes.string,
       path: PropTypes.string,

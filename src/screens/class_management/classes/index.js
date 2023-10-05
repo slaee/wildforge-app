@@ -53,8 +53,6 @@ function Classes() {
 
   const { classes } = useClasses();
 
-  console.log(classes);
-
   const buttons = [
     { id: 1, label: 'Classes', className: 'classes', path: '/classes' },
     {
@@ -102,6 +100,7 @@ function Classes() {
             {classes &&
               classes.map((Class) => (
                 <WildCards
+                  key={Class.id}
                   id={Class.id}
                   name={Class.name}
                   classCode={Class.class_code}
