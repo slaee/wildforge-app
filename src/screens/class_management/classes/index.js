@@ -1,15 +1,54 @@
 import React, { useState } from 'react';
-import { InputText } from 'primereact/inputtext';
 
-import Navbar from '../../../components/navbar/Navbar';
+import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
-import WildCards from '../../../components/cards/WildCards';
+import WildCards from '../../../components/cards';
+import Table from '../../../components/table';
 import CreateClass from '../create_class';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
+import Search from '../../../components/search';
 
 function Classes() {
+  const headers = ['name', 'team', 'role'];
+  const data = [
+    { id: 1, name: 'John Doe', team: 'CyberPunk', role: 'Leader' },
+    { id: 2, name: 'Marry Doe', team: 'None', role: 'Member' },
+    { id: 3, name: 'Lebron James', team: 'None', role: 'KICK' },
+    { id: 4, name: 'James Yap', team: 'None', role: 'KICK' },
+    { id: 5, name: 'Tsu Ya', team: 'Mynah', role: 'Member' },
+    { id: 6, name: 'Mynah', team: 'Mynah', role: 'KICK' },
+    { id: 7, name: 'None', team: 'CyberPunk', role: 'KICK' },
+  ];
+
+  const actions = [
+    {
+      id: 1,
+      label: 'ACCEPT',
+      handler: () => {
+        /* Handle edit action */
+      },
+      style: {
+        color: 'green',
+        fontWeight: 'bold',
+        textDecoration: 'none',
+      },
+    },
+    {
+      id: 2,
+      label: 'DECLINE',
+      handler: () => {
+        /* Handle delete action */
+      },
+      style: {
+        color: 'red',
+        fontWeight: 'bold',
+        textDecoration: 'none',
+      },
+    },
+  ];
+
   const buttons = [
     { id: 1, label: 'Classes', className: 'classes', path: '/classes' },
     {
@@ -38,7 +77,7 @@ function Classes() {
         <div className="d-flex pt-2 pb-2">
           <div className="brown-text fw-bold py-2 mx-4">Classes</div>
           <div className="d-flex ms-auto mx-5">
-            <InputText className="search-input me-4" placeholder="Search" />
+            <Search />
             <button
               className="btn btn-add-primary"
               onClick={openCreateClassModal}
@@ -48,10 +87,11 @@ function Classes() {
           </div>
         </div>
         <div className="d-flex justify-content-center pt-2 pb-2">
-          <span className="grey-text fw-semibold py-2 mx-4">
+          <div className="grey-text fw-semibold py-2 mx-4">
             No Classes. Create a new Class
-          </span>
+          </div>
           <WildCards />
+          <Table headers={headers} data={data} actions={actions} />;
         </div>
       </div>
       {isCreateClassModalOpen && (
