@@ -9,7 +9,6 @@ import ControlInput from '../../components/controlinput';
 import './index.scss';
 import { isObjectEmpty } from '../../utils/object';
 import useSignup from '../../hooks/useSignup';
-import useLogin from '../../hooks/useLogin';
 import { useAcquireTokens } from '../../hooks';
 
 const validate = (values) => {
@@ -60,7 +59,6 @@ function Signup() {
   const cookies = new Cookies();
 
   const { loginUpdate } = useAuth();
-  const { loginUser } = useLogin();
   const { signupUser } = useSignup();
   const { acquireTokens } = useAcquireTokens();
 
