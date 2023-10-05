@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
 
 import { AuthProvider } from './contexts/AuthContext';
@@ -14,38 +14,36 @@ import { PrivateRoute } from './hocs/PrivateRoute';
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/logout" element={<Logout />} />
+      <Routes>
+        <Route path="/logout" element={<Logout />} />
 
-          <Route
-            path="/login"
-            element={
-              <NoAuthRoute>
-                <Login />
-              </NoAuthRoute>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <NoAuthRoute>
-                <Signup />
-              </NoAuthRoute>
-            }
-          />
-          <Route path="/forgotpassword" element={<ForgotPassword />} />
-          <Route
-            path="/classes"
-            element={
-              <PrivateRoute>
-                <Classes />
-              </PrivateRoute>
-            }
-          />
-          <Route path="/view" element={<ViewClass />} />
-        </Routes>
-      </Router>
+        <Route
+          path="/login"
+          element={
+            <NoAuthRoute>
+              <Login />
+            </NoAuthRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <NoAuthRoute>
+              <Signup />
+            </NoAuthRoute>
+          }
+        />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route
+          path="/classes"
+          element={
+            <PrivateRoute>
+              <Classes />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/view" element={<ViewClass />} />
+      </Routes>
     </AuthProvider>
   );
 }
