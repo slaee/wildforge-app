@@ -74,9 +74,9 @@ function Classes() {
       <Navbar {...{ buttons }} />
       <div className="container-fluid d-flex flex-column">
         <Header />
-        <div className="d-flex pt-2 pb-2">
-          <div className="brown-text fw-bold py-2 mx-4">Classes</div>
-          <div className="d-flex ms-auto mx-5">
+        <div className="d-flex pt-3 pb-3">
+          <div className="brown-text fw-bold fs-5 py-2 mx-5">Classes</div>
+          <div className="d-flex align-items-center ms-auto mx-5">
             <Search />
             <button
               className="btn btn-add-primary"
@@ -86,12 +86,12 @@ function Classes() {
             </button>
           </div>
         </div>
-        <div className="d-flex justify-content-center pt-2 pb-2">
-          <div className="grey-text fw-semibold py-2 mx-4">
+        <div className="d-flex justify-content-center pt-3 pb-3 px-5">
+          <div className="grey-text fw-semibold py-2">
             No Classes. Create a new Class
           </div>
           <WildCards />
-          <Table headers={headers} data={data} actions={actions} />;
+          <Table headers={headers} data={data} actions={actions} />
         </div>
       </div>
       {isCreateClassModalOpen && (
