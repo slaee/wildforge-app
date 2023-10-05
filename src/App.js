@@ -9,6 +9,7 @@ import Signup from './screens/signup';
 import ForgotPassword from './screens/forgot_password';
 import { NoAuthRoute } from './hocs/NoAuthRoute';
 import { PrivateRoute } from './hocs/PrivateRoute';
+import GLOBALS from './app_globals';
 
 function App() {
   return (

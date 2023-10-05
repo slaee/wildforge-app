@@ -4,10 +4,10 @@ import Cookies from 'universal-cookie';
 import { useAuth } from '../../contexts/AuthContext';
 import { isValidEmail } from '../../utils/strings';
 import { isObjectEmpty } from '../../utils/object';
-import useLogin from '../../hooks/useLogin';
 import ControlInput from '../../components/controlinput';
 
 import './index.scss';
+import { useAcquireTokens, useLogin } from '../../hooks';
 
 const validate = (values) => {
   const errors = {};
@@ -30,13 +30,11 @@ const validate = (values) => {
 };
 
 function Login() {
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-
   const cookies = new Cookies();
 
   const { loginUpdate } = useAuth();
   const { loginUser } = useLogin();
+  const { acquireTokens } = useAcquireTokens();
 
   return (
     <>
@@ -80,7 +78,7 @@ function Login() {
 
               const loginUserCallbacks = {
                 loggedIn: async ({ retrievedUser }) => {
-                  await loginUser({
+                  await acquireTokens({
                     email: values.email,
                     password: values.password,
                     callbacks: acquireTokensCallbacks,
@@ -90,7 +88,7 @@ function Login() {
                 },
                 invalidFields: () =>
                   setErrors({
-                    overall: 'Invalid email address or password.',
+                    overall: 'Invalid email address and/or password.',
                   }),
                 internalError: () =>
                   setErrors({

@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'universal-cookie';
 import jwt from 'jwt-decode';
 import config from './services/config';
-import GLOBALS from './app_globals';
+import { TokensService } from './services';
 
 const cookies = new Cookies();
 
@@ -75,38 +75,30 @@ export const configureAxios = () => {
 
         // We are certain that the access token already expired.
         // We'll check if REFRESH TOKEN has also expired.
-        // const { data: verifyResponse } = await TokensService.verify({
-        //   refreshToken,
-        // });
+        const { data: verifyResponse } = await TokensService.verify({
+          refreshToken,
+        });
 
-        // if (!verifyResponse?.isValid) {
-        //   // if the REFRESH TOKEN has already expired as well, logout the user
-        //   // and throw an error to exit this Promise chain
-        //   loginRestart();
-        //   throw new Error('refresh token has already expired');
-        // }
+        if (!verifyResponse?.isValid) {
+          // if the REFRESH TOKEN has already expired as well, logout the user
+          // and throw an error to exit this Promise chain
+          loginRestart();
+          throw new Error('refresh token has already expired');
+        }
 
         // If the REFRESH TOKEN is still active, renew the ACCESS TOKEN and the REFRESH TOKEN
-        // let renewResponse;
-
-        // if (payload?.typ === GLOBALS.USER_TYPES.ANONYMOUS) {
-        //   ({ data: renewResponse } = await RoomsService.renew({
-        //     refreshToken,
-        //   }));
-        // } else {
-        //   ({ data: renewResponse } = await TokensService.renew({
-        //     refreshToken,
-        //   }));
-        // }
+        const renewResponse = await TokensService.renew({
+          refreshToken,
+        });
 
         // Store the new tokens to cookies
-        // cookies.set('accessToken', renewResponse.accessToken, { path: '/' });
-        // cookies.set('refreshToken', renewResponse.refreshToken, {
-        //   path: '/',
-        // });
+        cookies.set('accessToken', renewResponse.accessToken, { path: '/' });
+        cookies.set('refreshToken', renewResponse.refreshToken, {
+          path: '/',
+        });
 
-        // // Modify the Authorization Header using the NEW ACCESS TOKEN
-        // error.config.headers.authorization = renewResponse.accessToken;
+        // Modify the Authorization Header using the NEW ACCESS TOKEN
+        error.config.headers.authorization = renewResponse.accessToken;
 
         return axios.request(error.config);
       }

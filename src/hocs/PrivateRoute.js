@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import GLOBALS from '../app_globals';
-import Header from '../components/header';
 
 export function PrivateRoute({ forUserType, children }) {
   const { user } = useAuth();
@@ -13,7 +12,8 @@ export function PrivateRoute({ forUserType, children }) {
 
   if (
     user &&
-    (forUserType === GLOBALS.USER_TYPES.TEACHER ||
+    (forUserType === GLOBALS.USER_TYPES.ANY ||
+      forUserType === GLOBALS.USER_TYPES.TEACHER ||
       forUserType === GLOBALS.USER_TYPES.ADMIN ||
       forUserType === GLOBALS.USER_TYPES.TEAM_LEADER ||
       forUserType === GLOBALS.USER_TYPES.STUDENT)
@@ -21,12 +21,7 @@ export function PrivateRoute({ forUserType, children }) {
     return <Navigate to="/classes" />;
   }
 
-  return (
-    <>
-      <Header />
-      {children}
-    </>
-  );
+  return [children];
 }
 
 PrivateRoute.defaultProps = {

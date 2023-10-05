@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { TokensService } from '../services';
+
+import { UsersService } from '../services';
 
 const useLogin = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -11,7 +12,7 @@ const useLogin = () => {
     let retrievedUser;
 
     try {
-      const { status, data } = await TokensService.acquire({
+      const { status, data } = await UsersService.login({
         email,
         password,
       });
@@ -27,9 +28,6 @@ const useLogin = () => {
         await callbacks.loggedIn({ retrievedUser });
         break;
       case 401:
-        await callbacks.invalidFields();
-        break;
-      case 404:
         await callbacks.invalidFields();
         break;
       case 500:
