@@ -19,8 +19,8 @@ const useAcquireTokens = () => {
       });
 
       responseCode = status;
-      accessToken = data.accessToken;
-      refreshToken = data.refreshToken;
+      accessToken = data.access;
+      refreshToken = data.refresh;
     } catch (error) {
       responseCode = error.response.status;
     }
