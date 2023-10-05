@@ -11,8 +11,8 @@ function WildCards({ id, name, classCode, section, schedule }) {
         <span className="text-center fw-bold fs-5 my-1">{name}</span>
         <div className="d-flex flex-row justify-content-center my-1">
           <span className="text-center fw-semibold mx-1">{section}</span>
-          <span className="text-center fw-semibold mx-1">{schedule}</span>
         </div>
+        <span className="text-center fw-semibold mx-1">{schedule}</span>
         <span className="text-center fw-semibold mx-1">
           Class Code: {classCode}
         </span>
