@@ -98,7 +98,7 @@ function Classes() {
               No Classes. Create a new Class
             </div>
           )}
-          <div className="d-flex flex-row justify-content-start py-2 gap-5">
+          <div className="d-flex flex-row justify-content-start py-2 gap-5 flex-wrap">
             {classes &&
               classes.map((Class) => (
                 <WildCards
