@@ -10,45 +10,50 @@ import 'primeicons/primeicons.css';
 import './index.scss';
 import Search from '../../../components/search';
 import TeamDetails from '../../../components/team_details';
+import { useClasses } from '../../../hooks';
 
 function Classes() {
-  const headers = ['name', 'team', 'role'];
-  const data = [
-    { id: 1, name: 'John Doe', team: 'CyberPunk', role: 'Leader' },
-    { id: 2, name: 'Marry Doe', team: 'None', role: 'Member' },
-    { id: 3, name: 'Lebron James', team: 'None', role: 'KICK' },
-    { id: 4, name: 'James Yap', team: 'None', role: 'KICK' },
-    { id: 5, name: 'Tsu Ya', team: 'Mynah', role: 'Member' },
-    { id: 6, name: 'Mynah', team: 'Mynah', role: 'KICK' },
-    { id: 7, name: 'None', team: 'CyberPunk', role: 'KICK' },
-  ];
+  // const headers = ['name', 'team', 'role'];
+  // const data = [
+  //   { id: 1, name: 'John Doe', team: 'CyberPunk', role: 'Leader' },
+  //   { id: 2, name: 'Marry Doe', team: 'None', role: 'Member' },
+  //   { id: 3, name: 'Lebron James', team: 'None', role: 'KICK' },
+  //   { id: 4, name: 'James Yap', team: 'None', role: 'KICK' },
+  //   { id: 5, name: 'Tsu Ya', team: 'Mynah', role: 'Member' },
+  //   { id: 6, name: 'Mynah', team: 'Mynah', role: 'KICK' },
+  //   { id: 7, name: 'None', team: 'CyberPunk', role: 'KICK' },
+  // ];
 
-  const actions = [
-    {
-      id: 1,
-      label: 'ACCEPT',
-      handler: () => {
-        /* Handle edit action */
-      },
-      style: {
-        color: 'green',
-        fontWeight: 'bold',
-        textDecoration: 'none',
-      },
-    },
-    {
-      id: 2,
-      label: 'DECLINE',
-      handler: () => {
-        /* Handle delete action */
-      },
-      style: {
-        color: 'red',
-        fontWeight: 'bold',
-        textDecoration: 'none',
-      },
-    },
-  ];
+  // const actions = [
+  //   {
+  //     id: 1,
+  //     label: 'ACCEPT',
+  //     handler: () => {
+  //       /* Handle edit action */
+  //     },
+  //     style: {
+  //       color: 'green',
+  //       fontWeight: 'bold',
+  //       textDecoration: 'none',
+  //     },
+  //   },
+  //   {
+  //     id: 2,
+  //     label: 'DECLINE',
+  //     handler: () => {
+  //       /* Handle delete action */
+  //     },
+  //     style: {
+  //       color: 'red',
+  //       fontWeight: 'bold',
+  //       textDecoration: 'none',
+  //     },
+  //   },
+  // ];
+
+  const { classes } = useClasses();
+
+  console.log(classes);
 
   const buttons = [
     { id: 1, label: 'Classes', className: 'classes', path: '/classes' },
@@ -88,12 +93,25 @@ function Classes() {
           </div>
         </div>
         <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
-          <div className="grey-text text-center fw-semibold py-2">
-            No Classes. Create a new Class
+          {classes && classes.length === 0 && (
+            <div className="grey-text text-center fw-semibold py-2">
+              No Classes. Create a new Class
+            </div>
+          )}
+          <div className="d-flex flex-row justify-content-start py-2 gap-5">
+            {classes &&
+              classes.map((Class) => (
+                <WildCards
+                  id={Class.id}
+                  name={Class.name}
+                  classCode={Class.class_code}
+                  section={Class.sections}
+                  schedule={Class.schedule}
+                />
+              ))}
           </div>
-          <WildCards />
-          <Table headers={headers} data={data} actions={actions} />
-          <TeamDetails />
+          {/* <Table headers={headers} data={data} actions={actions} /> */}
+          {/* <TeamDetails /> */}
         </div>
       </div>
       {isCreateClassModalOpen && (
