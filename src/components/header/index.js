@@ -12,7 +12,7 @@ function Header() {
         </div>
         <div className="d-flex p-5 ms-auto">
           <div className="brown-text fw-bold fs-6 px-3">Account Settings</div>
-          <Link to="/logout">
+          <Link to="/logout" className="text-decoration-none">
             <div className="red-text fw-bold fs-6 px-3">Logout</div>
           </Link>
         </div>
