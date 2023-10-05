@@ -96,7 +96,8 @@ function ForgotPassword() {
           className="fs-5 redirect-text"
           role="button"
           tabIndex={0}
-          onMouseDown={() => setStep(1)}
+          aria-hidden="true"
+          onClick={() => setStep(1)}
         >
           Back
         </span>

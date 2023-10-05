@@ -82,7 +82,7 @@ function Signup() {
       <div className="d-flex justify-content-center pt-3 pb-3">
         <span className="fs-5">
           Already have an account?{' '}
-          <Link to="/" className="redirect-text">
+          <Link to="/login" className="redirect-text">
             Login
           </Link>
         </span>
