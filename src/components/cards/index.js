@@ -1,16 +1,40 @@
 import React from 'react';
-import './index.scss';
+import PropTypes from 'prop-types';
 
-function WildCards() {
+import './index.scss';
+import { Link } from 'react-router-dom';
+
+function WildCards({ id, name, classCode, section, schedule }) {
   return (
-    <div className="class-card d-flex flex-column justify-content-center p-5">
-      <span className="text-center fw-bold fs-5 my-1">Class Name</span>
-      <div className="d-flex flex-row justify-content-center my-1">
-        <span className="text-center fw-semibold mx-1">Section</span>
-        <span className="text-center fw-semibold mx-1">Schedule</span>
+    <Link to={`/classes/${id}`} className="text-decoration-none">
+      <div className="class-card d-flex flex-column justify-content-center p-5">
+        <span className="text-center fw-bold fs-5 my-1">{name}</span>
+        <div className="d-flex flex-row justify-content-center my-1">
+          <span className="text-center fw-semibold mx-1">{section}</span>
+          <span className="text-center fw-semibold mx-1">{schedule}</span>
+        </div>
+        <span className="text-center fw-semibold mx-1">
+          Class Code: {classCode}
+        </span>
       </div>
-    </div>
+    </Link>
   );
 }
+
+WildCards.defaultProps = {
+  id: '',
+  name: '',
+  classCode: '',
+  section: '',
+  schedule: '',
+};
+
+WildCards.propTypes = {
+  id: PropTypes.string,
+  name: PropTypes.string,
+  classCode: PropTypes.string,
+  section: PropTypes.string,
+  schedule: PropTypes.string,
+};
 
 export default WildCards;
