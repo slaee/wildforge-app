@@ -1,10 +1,12 @@
 import React from 'react';
 
+import './index.scss';
+
 function TeamDetails() {
   return (
     <div>
-      <div>[Team Name]</div>
-      <div>
+      <div className="fw-bold fs-1 px-5 py-3">[Team Name]</div>
+      <div className="px-5 py-3 lh-lg text-justify">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
         lacinia nisl vel nisl feugiat vestibulum. Praesent finibus lacus
         scelerisque nibh dapibus pellentesque. Morbi eget urna id metus finibus

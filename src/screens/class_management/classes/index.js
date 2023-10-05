@@ -9,6 +9,7 @@ import CreateClass from '../create_class';
 import 'primeicons/primeicons.css';
 import './index.scss';
 import Search from '../../../components/search';
+import TeamDetails from '../../../components/team_details';
 
 function Classes() {
   const headers = ['name', 'team', 'role'];
@@ -86,12 +87,13 @@ function Classes() {
             </button>
           </div>
         </div>
-        <div className="d-flex justify-content-center pt-3 pb-3 px-5">
-          <div className="grey-text fw-semibold py-2">
+        <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
+          <div className="grey-text text-center fw-semibold py-2">
             No Classes. Create a new Class
           </div>
           <WildCards />
           <Table headers={headers} data={data} actions={actions} />
+          <TeamDetails />
         </div>
       </div>
       {isCreateClassModalOpen && (

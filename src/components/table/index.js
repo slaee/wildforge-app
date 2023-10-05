@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import './index.scss';
+
 function Table({ headers, data, actions }) {
   return (
     <table className="table table-striped">
