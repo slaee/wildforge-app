@@ -4,6 +4,7 @@ import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import WildCards from '../../../components/cards';
 import CreateClass from '../create_class';
+import JoinClass from '../join_class';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
@@ -13,33 +14,6 @@ import { useClasses } from '../../../hooks';
 import { useAuth } from '../../../contexts/AuthContext';
 
 function Classes() {
-  // const actions = [
-  //   {
-  //     id: 1,
-  //     label: 'ACCEPT',
-  //     handler: () => {
-  //       /* Handle edit action */
-  //     },
-  //     style: {
-  //       color: 'green',
-  //       fontWeight: 'bold',
-  //       textDecoration: 'none',
-  //     },
-  //   },
-  //   {
-  //     id: 2,
-  //     label: 'DECLINE',
-  //     handler: () => {
-  //       /* Handle delete action */
-  //     },
-  //     style: {
-  //       color: 'red',
-  //       fontWeight: 'bold',
-  //       textDecoration: 'none',
-  //     },
-  //   },
-  // ];
-
   const { classes } = useClasses();
   const { user } = useAuth();
 
@@ -53,6 +27,15 @@ function Classes() {
     },
   ];
   const [isCreateClassModalOpen, setCreateClassModalOpen] = useState(false);
+  const [isJoinClassModalOpen, setJoinClassModalOpen] = useState(false);
+
+  const openJoinClassModal = () => {
+    setJoinClassModalOpen(true);
+  };
+
+  const closeJoinClassModal = () => {
+    setJoinClassModalOpen(false);
+  };
 
   const openCreateClassModal = () => {
     setCreateClassModalOpen(true);
@@ -83,7 +66,12 @@ function Classes() {
                 <i className="pi pi-plus" />
               </button>
             ) : (
-              <button className="btn btn-join-primary">Join a class</button>
+              <button
+                className="btn btn-join-primary"
+                onClick={openJoinClassModal}
+              >
+                Join a class
+              </button>
             )}
           </div>
         </div>
@@ -113,6 +101,12 @@ function Classes() {
         <CreateClass
           visible={isCreateClassModalOpen}
           handleModal={closeCreateClassModal}
+        />
+      )}
+      {isJoinClassModalOpen && (
+        <JoinClass
+          visible={isJoinClassModalOpen}
+          handleModal={closeJoinClassModal}
         />
       )}
     </div>

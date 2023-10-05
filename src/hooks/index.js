@@ -5,3 +5,4 @@ export { default as useClasses } from './useClasses';
 export { default as useCreateClass } from './useCreateClass';
 export { default as useClass } from './useClass';
 export { default as useClassMembers } from './useClassMembers';
+export { default as useJoinClass } from './useJoinClass';

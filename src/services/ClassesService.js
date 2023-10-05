@@ -10,6 +10,7 @@ const ClassesService = {
   create: (data) => axios.post(BASE_URL, data),
   retrieve: (id) => axios.get(`${BASE_URL}/${id}`),
   retrieveMembers: (id) => axios.get(`${BASE_URL}/${id}/members`),
+  join: (data) => axios.post(`${BASE_URL}/join`, data),
 };
 
 export default ClassesService;
