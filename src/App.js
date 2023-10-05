@@ -10,6 +10,7 @@ import ForgotPassword from './screens/forgot_password';
 import Logout from './screens/logout';
 import { NoAuthRoute } from './hocs/NoAuthRoute';
 import { PrivateRoute } from './hocs/PrivateRoute';
+import ViewClassMembers from './screens/class_management/view_class_members';
 
 function App() {
   return (
@@ -47,6 +48,14 @@ function App() {
           element={
             <PrivateRoute>
               <ViewClass />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/classes/:id/members"
+          element={
+            <PrivateRoute>
+              <ViewClassMembers />
             </PrivateRoute>
           }
         />
