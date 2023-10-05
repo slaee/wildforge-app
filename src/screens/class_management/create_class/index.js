@@ -1,53 +1,74 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { InputText } from 'primereact/inputtext';
+import { Formik } from 'formik';
 import { Dialog } from 'primereact/dialog';
+import ControlInput from '../../../components/controlinput';
+import { isObjectEmpty } from '../../../utils/object';
+import { useCreateClass } from '../../../hooks';
 import './index.scss';
+
+const validate = (values) => {
+  const errors = {};
+
+  if (!values.name) {
+    errors.name = 'This field is required.';
+  } else if (values.name.length > 50) {
+    errors.name = 'The maximum length of this field is 50 characters.';
+  }
+
+  if (!values.sections) {
+    errors.sections = 'This field is required.';
+  } else if (values.sections.length > 50) {
+    errors.sections = 'The maximum length of this field is 50 characters.';
+  }
+
+  if (!values.schedule) {
+    errors.schedule = 'This field is required.';
+  } else if (values.schedule.length > 50) {
+    errors.schedule = 'The maximum length of this field is 50 characters.';
+  } else if (
+    !values.schedule.match(
+      /^[0-9]{1,2}:[0-9]{2}[AP]M - [0-9]{1,2}:[0-9]{2}[AP]M$/
+    )
+  ) {
+    errors.schedule = 'The format of this field is invalid.';
+  }
+
+  return errors;
+};
 
 function CreateClass({ visible, handleModal }) {
   const [showCode, setShowCode] = useState(false);
+  const [classCode, setClassCode] = useState('');
 
-  const [formData, setFormData] = useState({
-    className: '',
-    classSection: '',
-    classSchedule: '',
-  });
+  const { createClass } = useCreateClass();
 
   const openShowCodeModal = () => {
     setShowCode(true);
-    console.log('open code');
   };
 
   const closeShowCodeModal = () => {
     setShowCode(false);
-    console.log('close code');
+    window.location.reload();
   };
 
-  const handleCopyCode = () => {
-    navigator.clipboard.writeText('SAMPL3-C0D3');
+  const handleCopyCode = (code) => {
+    navigator.clipboard.writeText(code);
     setShowCode(false);
     handleModal();
-    console.log('copy code');
+    window.location.reload();
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const renderShowCode = () => (
+  const renderShowCode = (code) => (
     <Dialog
-      className="code-modal p-3"
+      className="code-modal p-4"
       visible={showCode}
       onHide={closeShowCodeModal}
       showHeader={false}
     >
       <span className="fw-bold fs-6">Join Code</span>
       <div className="d-flex flex-row my-3 justify-content-center">
-        <span className="code-content text-center p-2">SAMPL3-C0D3</span>
+        <span className="code-content text-center p-2">{code}</span>
         <button
           className="btn btn-create-primary fw-semibold ms-2"
           onClick={handleCopyCode}
@@ -73,39 +94,85 @@ function CreateClass({ visible, handleModal }) {
             onClick={handleModal}
           />
           <span className="fw-bold text-center fs-5">Create Class</span>
-          <InputText
-            className="input-container"
-            title="Class Name"
-            name="className"
-            placeholder="Enter class name"
-            value={formData.className}
-            onChange={handleInputChange}
-          />
-          <InputText
-            className="input-container"
-            title="Class Section"
-            name="classSection"
-            placeholder="Enter sections. e.g F1 - F2"
-            value={formData.classSection}
-            onChange={handleInputChange}
-          />
-          <InputText
-            className="input-container"
-            title="Class Schedule"
-            name="classSchedule"
-            placeholder="DD/MM/YYYY"
-            value={formData.classSchedule}
-            onChange={handleInputChange}
-          />
-          <button
-            className="btn btn-create-primary ms-auto fw-semibold my-3"
-            onClick={openShowCodeModal}
+          <Formik
+            initialValues={{
+              name: '',
+              sections: '',
+              schedule: '',
+            }}
+            onSubmit={async (values, { setErrors }) => {
+              const errors = validate(values);
+              if (!isObjectEmpty(errors)) {
+                setErrors(errors);
+                return;
+              }
+
+              const createClassCallbacks = {
+                created: async ({ retrievedClass }) => {
+                  if (retrievedClass) {
+                    setClassCode(retrievedClass.class_code);
+                    openShowCodeModal();
+                  }
+                },
+                invalidFields: () =>
+                  setErrors({
+                    overall: 'Invalid class name.',
+                  }),
+                internalError: () =>
+                  setErrors({
+                    overall: 'Oops, something went wrong.',
+                  }),
+              };
+
+              // Create Class
+              await createClass({
+                name: values.name,
+                sections: values.sections,
+                schedule: values.schedule,
+                callbacks: createClassCallbacks,
+              });
+            }}
           >
-            Create
-          </button>
+            {({ errors, values, handleSubmit, setFieldValue }) => (
+              <form onSubmit={handleSubmit}>
+                <ControlInput
+                  name="name"
+                  label="Class Name"
+                  className="yellow-on-focus"
+                  value={values.name}
+                  onChange={(e) => setFieldValue('name', e.target.value)}
+                  error={errors.name}
+                />
+
+                <ControlInput
+                  name="sections"
+                  label="Class Sections"
+                  className="yellow-on-focus"
+                  value={values.sections}
+                  onChange={(e) => setFieldValue('sections', e.target.value)}
+                  error={errors.sections}
+                />
+
+                <ControlInput
+                  name="schedule"
+                  label="Schedule (format: 1:00PM - 2:00PM)"
+                  className="yellow-on-focus"
+                  value={values.schedule}
+                  onChange={(e) => setFieldValue('schedule', e.target.value)}
+                  error={errors.schedule}
+                />
+                <button
+                  type="submit"
+                  className="btn btn-create-primary ms-auto fw-semibold my-3"
+                >
+                  Create
+                </button>
+              </form>
+            )}
+          </Formik>
         </div>
       </Dialog>
-      {showCode && renderShowCode()}
+      {showCode && renderShowCode(classCode)}
     </>
   );
 }
