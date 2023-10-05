@@ -42,7 +42,14 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path="/view" element={<ViewClass />} />
+        <Route
+          path="/classes/:id"
+          element={
+            <PrivateRoute>
+              <ViewClass />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </AuthProvider>
   );

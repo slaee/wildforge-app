@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import './index.scss';
 
-function Navbar({ buttons, onButtonClick }) {
+function Navbar({ buttons, name, hasBackButton, onButtonClick }) {
   const [selectedButton, setSelectedButton] = useState(buttons[0]?.id);
 
   const handleButtonClick = (buttonId) => {
@@ -15,7 +15,12 @@ function Navbar({ buttons, onButtonClick }) {
 
   return (
     <div className="position-relative top-0 start-0 d-flex flex-column p-3 nav-bar">
-      <div className="ps-4 fw-semibold pt-5 pb-5">Sample Role</div>{' '}
+      {hasBackButton && (
+        <Link to="/classes" className="nav-button text-decoration-none">
+          {'< Back'}
+        </Link>
+      )}
+      <div className="ps-4 fw-semibold pt-5 pb-5">{name}</div>{' '}
       {/* to be updated once there are roles/tokens? */}
       {buttons.map((button) => (
         <Link
@@ -34,11 +39,15 @@ function Navbar({ buttons, onButtonClick }) {
 }
 
 Navbar.defaultProps = {
+  name: '',
+  hasBackButton: false,
   buttons: [],
   onButtonClick: () => {},
 };
 
 Navbar.propTypes = {
+  name: PropTypes.string,
+  hasBackButton: PropTypes.bool,
   buttons: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,

@@ -8,6 +8,7 @@ const instance = axios.create();
 const ClassesService = {
   list: () => axios.get(BASE_URL),
   create: (data) => axios.post(BASE_URL, data),
+  retrieve: (id) => axios.get(`${BASE_URL}/${id}`),
 };
 
 export default ClassesService;

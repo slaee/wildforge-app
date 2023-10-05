@@ -11,6 +11,7 @@ import './index.scss';
 import Search from '../../../components/search';
 import TeamDetails from '../../../components/team_details';
 import { useClasses } from '../../../hooks';
+import { useAuth } from '../../../contexts/AuthContext';
 
 function Classes() {
   // const headers = ['name', 'team', 'role'];
@@ -52,6 +53,7 @@ function Classes() {
   // ];
 
   const { classes } = useClasses();
+  const { user } = useAuth();
 
   const buttons = [
     { id: 1, label: 'Classes', className: 'classes', path: '/classes' },
@@ -75,7 +77,10 @@ function Classes() {
 
   return (
     <div className="d-flex">
-      <Navbar {...{ buttons }} />
+      <Navbar
+        name={`${user?.first_name} ${user?.last_name}`}
+        buttons={buttons}
+      />
       <div className="container-fluid d-flex flex-column">
         <Header />
         <div className="d-flex pt-3 pb-3">
