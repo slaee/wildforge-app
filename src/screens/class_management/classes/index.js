@@ -75,12 +75,16 @@ function Classes() {
           <div className="brown-text fw-bold fs-5 py-2 mx-5">Classes</div>
           <div className="d-flex align-items-center ms-auto mx-5">
             <Search />
-            <button
-              className="btn btn-add-primary"
-              onClick={openCreateClassModal}
-            >
-              <i className="pi pi-plus" />
-            </button>
+            {user.is_staff ? (
+              <button
+                className="btn btn-add-primary"
+                onClick={openCreateClassModal}
+              >
+                <i className="pi pi-plus" />
+              </button>
+            ) : (
+              <button className="btn btn-join-primary">Join a class</button>
+            )}
           </div>
         </div>
         <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">

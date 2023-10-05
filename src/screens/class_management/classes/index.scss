@@ -20,3 +20,16 @@
         color: variables.$wild-black;
     }
 }
+
+.btn-join-primary {
+    background-color: variables.$wild-yellow;
+    color: variables.$wild-white;
+    height: 40px;
+    outline: none;
+    border: none;
+
+    &:hover{
+        background-color: variables.$shadow-wild-yellow;
+        color: variables.$wild-black;
+    }
+}
