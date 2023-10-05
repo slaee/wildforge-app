@@ -10,6 +10,7 @@ import './index.scss';
 import { isObjectEmpty } from '../../utils/object';
 import useSignup from '../../hooks/useSignup';
 import useLogin from '../../hooks/useLogin';
+import { useAcquireTokens } from '../../hooks';
 
 const validate = (values) => {
   const errors = {};
@@ -61,6 +62,7 @@ function Signup() {
   const { loginUpdate } = useAuth();
   const { loginUser } = useLogin();
   const { signupUser } = useSignup();
+  const { acquireTokens } = useAcquireTokens();
 
   const nextStep = () => {
     setStep(step + 1);
@@ -242,7 +244,7 @@ function Signup() {
 
               const signupUserCallbacks = {
                 signedUp: async ({ retrievedUser }) => {
-                  await loginUser({
+                  await acquireTokens({
                     email: values.email,
                     password: values.password,
                     callbacks: acquireTokensCallbacks,

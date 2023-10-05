@@ -5,9 +5,9 @@ import { useAuth } from '../../contexts/AuthContext';
 import { isValidEmail } from '../../utils/strings';
 import { isObjectEmpty } from '../../utils/object';
 import ControlInput from '../../components/controlinput';
+import { useAcquireTokens, useLogin } from '../../hooks';
 
 import './index.scss';
-import { useAcquireTokens, useLogin } from '../../hooks';
 
 const validate = (values) => {
   const errors = {};
@@ -33,8 +33,8 @@ function Login() {
   const cookies = new Cookies();
 
   const { loginUpdate } = useAuth();
-  const { loginUser } = useLogin();
-  const { acquireTokens } = useAcquireTokens();
+  const { isLoggingIn, loginUser } = useLogin();
+  const { isAcquiring, acquireTokens } = useAcquireTokens();
 
   return (
     <>
@@ -138,8 +138,9 @@ function Login() {
                   <button
                     type="submit"
                     className="btn btn-wild-primary btn-large fw-bold fs-5"
+                    disabled={isLoggingIn || isAcquiring}
                   >
-                    Login
+                    {isLoggingIn || isAcquiring ? 'Logging In...' : 'Login'}
                   </button>
                 </div>
               </form>

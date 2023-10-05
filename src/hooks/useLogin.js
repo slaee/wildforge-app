@@ -27,6 +27,7 @@ const useLogin = () => {
       case 200:
         await callbacks.loggedIn({ retrievedUser });
         break;
+      case 400:
       case 401:
         await callbacks.invalidFields();
         break;
