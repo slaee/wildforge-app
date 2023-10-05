@@ -7,15 +7,17 @@ import ViewClass from './screens/class_management/view_class';
 import Login from './screens/login';
 import Signup from './screens/signup';
 import ForgotPassword from './screens/forgot_password';
+import Logout from './screens/logout';
 import { NoAuthRoute } from './hocs/NoAuthRoute';
 import { PrivateRoute } from './hocs/PrivateRoute';
-import GLOBALS from './app_globals';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/logout" element={<Logout />} />
+
           <Route
             path="/login"
             element={

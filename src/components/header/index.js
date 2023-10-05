@@ -1,5 +1,6 @@
 import React from 'react';
 import './index.scss';
+import { Link } from 'react-router-dom';
 
 function Header() {
   return (
@@ -11,7 +12,9 @@ function Header() {
         </div>
         <div className="d-flex p-5 ms-auto">
           <div className="brown-text fw-bold fs-6 px-3">Account Settings</div>
-          <div className="red-text fw-bold fs-6 px-3">Logout</div>
+          <Link to="/logout">
+            <div className="red-text fw-bold fs-6 px-3">Logout</div>
+          </Link>
         </div>
       </div>
     </div>
