@@ -1,8 +1,8 @@
 import { isLocal } from '../utils/destination';
 
 let apiUrl = null;
-const apiHost = process.env.BACKEND_CONTAINER_HOST ?? '0.0.0.0';
-const apiPort = process.env.BACKEND_CONTAINER_PORT ?? '8000';
+const apiHost = process.env.REACT_LOCAL_HOST ?? '127.0.0.1';
+const apiPort = process.env.REACT_LOCAL_HOST_PORT ?? '8000';
 
 if (isLocal) {
   // Development
