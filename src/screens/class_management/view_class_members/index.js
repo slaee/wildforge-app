@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useAuth } from '../../../contexts/AuthContext';
@@ -6,7 +6,7 @@ import Search from '../../../components/search';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import Table from '../../../components/table';
-import { useClassMembers } from '../../../hooks';
+import { useClassMembers, useSemiPersistentState } from '../../../hooks';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
@@ -112,15 +112,33 @@ function ViewClassMembers() {
       return tb_data;
     });
 
-  const [search, setSearch] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
 
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
+  useEffect(() => {
+    const filterData = () => {
+      if (!data || data.length === 0) {
+        setFilteredData(data); // Handle empty data case
+        return;
+      }
+
+      const filteredResult = data.filter(
+        (item) =>
+          item.name.toLowerCase().includes(searchValue) ||
+          item.team.toLowerCase().includes(searchValue) ||
+          item.role.toLowerCase().includes(searchValue)
+      );
+
+      setFilteredData(filteredResult);
+    };
+
+    filterData();
+  }, [searchValue]);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchValue(value);
   };
-
-  const filteredData = data.filter((d) =>
-    d.name.toLowerCase().includes(search.toLowerCase())
-  );
 
   const buttons = [
     {
@@ -139,7 +157,7 @@ function ViewClassMembers() {
 
   const renderTable = () => (
     <>
-      <Table headers={headers} data={filteredData} className="mt-3" />
+      <Table headers={headers} data={data} className="mt-3" />
       {data && data.length === 0 && (
         <div className="d-flex justify-content-center align-items-center">
           <div className="brown-text fw-bold fs-5 py-2 mx-5">
@@ -162,7 +180,7 @@ function ViewClassMembers() {
         <div className="d-flex pt-3 pb-3">
           <div className="brown-text fw-bold fs-5 py-2 mx-5">Classes</div>
           <div className="d-flex align-items-center ms-auto mx-5">
-            <Search />
+            <Search value={searchValue} onChange={handleSearchChange} />
           </div>
         </div>
         <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
