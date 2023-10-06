@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import './index.scss';
 
-function Table({ headers, data, actions }) {
+function Table({ headers, data }) {
   return (
-    <table className="table table-striped">
+    <table className="table table-striped table-hover">
       <thead>
         <tr>
           {headers.map((header) => (
@@ -13,7 +13,6 @@ function Table({ headers, data, actions }) {
               {header.toUpperCase()}
             </th>
           ))}
-          <th className="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -22,19 +21,6 @@ function Table({ headers, data, actions }) {
             {headers.map((header) => (
               <td key={header}>{row[header]}</td>
             ))}
-            <td className="text-center">
-              {actions.map((action) => (
-                <button
-                  type="btn"
-                  className="btn btn-link btn-sm"
-                  key={action.id}
-                  onClick={() => action.handler(row)}
-                  style={action.style}
-                >
-                  {action.label}
-                </button>
-              ))}
-            </td>
           </tr>
         ))}
       </tbody>
@@ -45,13 +31,6 @@ function Table({ headers, data, actions }) {
 Table.propTypes = {
   headers: PropTypes.arrayOf(PropTypes.string).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
-  actions: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      label: PropTypes.string.isRequired,
-      handler: PropTypes.func.isRequired,
-    })
-  ).isRequired,
 };
 
 export default Table;

@@ -16,43 +16,66 @@ function ViewClassMembers() {
   const { user } = useAuth();
   const { classMembers } = useClassMembers(classId);
 
-  const headers = ['name', 'team', 'role'];
+  const headers = ['id', 'name', 'team', 'role', 'status', 'actions'];
   // filter out teacher from classMembers
   const data = classMembers
     .filter((member) => member.role !== 't')
-    .map((member) => ({
-      id: member.id,
-      name: `${member.first_name} ${member.last_name}`,
-      team: 'Under construction',
-      role: member.role,
-    }));
+    .map((member) => {
+      const { id, first_name, last_name, team, status, role } = member;
 
-  const actions = [
-    {
-      id: 1,
-      label: 'ACCEPT',
-      handler: () => {
-        /* Handle edit action */
-      },
-      style: {
-        color: 'green',
-        fontWeight: 'bold',
-        textDecoration: 'none',
-      },
-    },
-    {
-      id: 2,
-      label: 'DECLINE',
-      handler: () => {
-        /* Handle delete action */
-      },
-      style: {
-        color: 'red',
-        fontWeight: 'bold',
-        textDecoration: 'none',
-      },
-    },
-  ];
+      let tb_data = {};
+
+      const actions =
+        status === 'pending' ? (
+          <>
+            <button
+              type="button"
+              className="btn btn-sm text-success"
+              onClick={() => console.log('approve')}
+            >
+              ACCEPT
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm text-danger"
+              onClick={() => console.log('reject')}
+            >
+              REJECT
+            </button>
+          </>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-sm text-danger"
+            onClick={() => console.log('Kick')}
+          >
+            KICK
+          </button>
+        );
+
+      if (role === 's') {
+        tb_data = {
+          id,
+          name: `${first_name} ${last_name}`,
+          team: team || 'N/A',
+          status,
+          role: 'Student',
+          actions,
+        };
+      }
+      if (role === 'tl') {
+        tb_data = {
+          id,
+          name: `${first_name} ${last_name}`,
+          team: team || 'N/A',
+          status,
+          role: 'Team Leader',
+          actions,
+        };
+      }
+
+      return tb_data;
+    });
 
   const [search, setSearch] = useState('');
 
@@ -81,12 +104,7 @@ function ViewClassMembers() {
 
   const renderTable = () => (
     <>
-      <Table
-        headers={headers}
-        data={filteredData}
-        actions={actions}
-        className="mt-3"
-      />
+      <Table headers={headers} data={filteredData} className="mt-3" />
       {data && data.length === 0 && (
         <div className="d-flex justify-content-center align-items-center">
           <div className="brown-text fw-bold fs-5 py-2 mx-5">
