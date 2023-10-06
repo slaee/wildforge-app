@@ -14,9 +14,14 @@ import './index.scss';
 function ViewClassMembers() {
   const { id: classId } = useParams();
   const { user } = useAuth();
-  const { classMembers } = useClassMembers(classId);
+  const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
 
-  const headers = ['id', 'name', 'team', 'role', 'status', 'actions'];
+  let headers;
+  if (user.is_staff) {
+    headers = ['id', 'name', 'team', 'role', 'status', 'actions'];
+  } else {
+    headers = ['id', 'name', 'team', 'role', 'status'];
+  }
   // filter out teacher from classMembers
   const data = classMembers
     .filter((member) => member.role !== 't')
@@ -31,14 +36,20 @@ function ViewClassMembers() {
             <button
               type="button"
               className="btn btn-sm text-success"
-              onClick={() => console.log('approve')}
+              onClick={() => {
+                acceptMember(id);
+                window.location.reload();
+              }}
             >
               ACCEPT
             </button>
             <button
               type="button"
               className="btn btn-sm text-danger"
-              onClick={() => console.log('reject')}
+              onClick={() => {
+                deleteMember(id);
+                window.location.reload();
+              }}
             >
               REJECT
             </button>
@@ -47,31 +58,55 @@ function ViewClassMembers() {
           <button
             type="button"
             className="btn btn-sm text-danger"
-            onClick={() => console.log('Kick')}
+            onClick={() => {
+              deleteMember(id);
+              window.location.reload();
+            }}
           >
             KICK
           </button>
         );
 
-      if (role === 's') {
-        tb_data = {
-          id,
-          name: `${first_name} ${last_name}`,
-          team: team || 'N/A',
-          status,
-          role: 'Student',
-          actions,
-        };
-      }
-      if (role === 'tl') {
-        tb_data = {
-          id,
-          name: `${first_name} ${last_name}`,
-          team: team || 'N/A',
-          status,
-          role: 'Team Leader',
-          actions,
-        };
+      if (user.is_staff) {
+        if (role === 's') {
+          tb_data = {
+            id,
+            name: `${first_name} ${last_name}`,
+            team: team || 'N/A',
+            status,
+            role: 'Student',
+            actions,
+          };
+        }
+        if (role === 'tl') {
+          tb_data = {
+            id,
+            name: `${first_name} ${last_name}`,
+            team: team || 'N/A',
+            status,
+            role: 'Team Leader',
+            actions,
+          };
+        }
+      } else {
+        if (role === 's') {
+          tb_data = {
+            id,
+            name: `${first_name} ${last_name}`,
+            team: team || 'N/A',
+            status,
+            role: 'Student',
+          };
+        }
+        if (role === 'tl') {
+          tb_data = {
+            id,
+            name: `${first_name} ${last_name}`,
+            team: team || 'N/A',
+            status,
+            role: 'Team Leader',
+          };
+        }
       }
 
       return tb_data;
