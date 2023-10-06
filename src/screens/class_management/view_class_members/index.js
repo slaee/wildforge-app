@@ -6,7 +6,7 @@ import Search from '../../../components/search';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import Table from '../../../components/table';
-import { useClassMembers, useSemiPersistentState } from '../../../hooks';
+import { useClassMembers } from '../../../hooks';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
