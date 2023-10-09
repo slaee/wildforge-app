@@ -71,7 +71,7 @@ function CreateClass({ visible, handleModal }) {
         <span className="code-content text-center p-2">{code}</span>
         <button
           className="btn btn-create-primary fw-semibold ms-2"
-          onClick={handleCopyCode}
+          onClick={() => handleCopyCode(classCode)}
         >
           Copy
         </button>
@@ -143,30 +143,38 @@ function CreateClass({ visible, handleModal }) {
                   onChange={(e) => setFieldValue('name', e.target.value)}
                   error={errors.name}
                 />
-
-                <ControlInput
-                  name="sections"
-                  label="Class Sections"
-                  className="yellow-on-focus"
-                  value={values.sections}
-                  onChange={(e) => setFieldValue('sections', e.target.value)}
-                  error={errors.sections}
-                />
-
-                <ControlInput
-                  name="schedule"
-                  label="Schedule (format: 1:00PM - 2:00PM)"
-                  className="yellow-on-focus"
-                  value={values.schedule}
-                  onChange={(e) => setFieldValue('schedule', e.target.value)}
-                  error={errors.schedule}
-                />
-                <button
-                  type="submit"
-                  className="btn btn-create-primary ms-auto fw-semibold my-3"
-                >
-                  Create
-                </button>
+                <div>
+                  <ControlInput
+                    name="sections"
+                    label="Class Sections"
+                    className="yellow-on-focus"
+                    value={values.sections}
+                    onChange={(e) => setFieldValue('sections', e.target.value)}
+                    error={errors.sections}
+                  />
+                  <div className="format-instructions">
+                    e.g F1-F2, E2, Honesty
+                  </div>
+                  <ControlInput
+                    name="schedule"
+                    label="Schedule"
+                    className="yellow-on-focus"
+                    value={values.schedule}
+                    onChange={(e) => setFieldValue('schedule', e.target.value)}
+                    error={errors.schedule}
+                  />
+                  <div className="format-instructions">
+                    Sample Format: 1:00PM - 2:00PM
+                  </div>
+                </div>
+                <div className="d-flex flex-row justify-content-center">
+                  <button
+                    type="submit"
+                    className="btn btn-create-primary ms-auto fw-semibold my-3 mx-auto"
+                  >
+                    Create
+                  </button>
+                </div>
               </form>
             )}
           </Formik>

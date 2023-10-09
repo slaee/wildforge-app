@@ -8,7 +8,7 @@ import './index.scss';
 function Search({ value, onChange }) {
   return (
     <InputText
-      className="search-input me-4"
+      className="search-input"
       placeholder="Search"
       value={value}
       onChange={onChange}

@@ -76,14 +76,14 @@ function Classes() {
             <Search value={searchQuery} onChange={handleSearchChange} />
             {user.is_staff ? (
               <button
-                className="btn btn-add-primary"
+                className="btn btn-add-primary ms-4"
                 onClick={openCreateClassModal}
               >
                 <i className="pi pi-plus" />
               </button>
             ) : (
               <button
-                className="btn btn-join-primary"
+                className="btn btn-join-primary ms-4"
                 onClick={openJoinClassModal}
               >
                 Join a class
