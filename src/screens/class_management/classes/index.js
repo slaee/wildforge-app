@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
@@ -28,6 +28,8 @@ function Classes() {
   ];
   const [isCreateClassModalOpen, setCreateClassModalOpen] = useState(false);
   const [isJoinClassModalOpen, setJoinClassModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredClasses, setFilteredClasses] = useState([]);
 
   const openJoinClassModal = () => {
     setJoinClassModalOpen(true);
@@ -46,6 +48,20 @@ function Classes() {
     setCreateClassModalOpen(false);
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  useEffect(() => {
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    const filtered = classes.filter((Class) => {
+      const classInfo =
+        `${Class.name} ${Class.class_code} ${Class.sections} ${Class.schedule}`.toLowerCase();
+      return classInfo.includes(lowerCaseQuery);
+    });
+    setFilteredClasses(filtered);
+  }, [searchQuery, classes]);
+
   return (
     <div className="d-flex">
       <Navbar
@@ -57,7 +73,7 @@ function Classes() {
         <div className="d-flex pt-3 pb-3">
           <div className="brown-text fw-bold fs-5 py-2 mx-5">Classes</div>
           <div className="d-flex align-items-center ms-auto mx-5">
-            <Search />
+            <Search value={searchQuery} onChange={handleSearchChange} />
             {user.is_staff ? (
               <button
                 className="btn btn-add-primary"
@@ -83,7 +99,7 @@ function Classes() {
           )}
           <div className="d-flex flex-row justify-content-start py-2 gap-5 flex-wrap">
             {classes &&
-              classes.map((Class) => (
+              filteredClasses.map((Class) => (
                 <WildCards
                   key={Class.id}
                   id={Class.id}
