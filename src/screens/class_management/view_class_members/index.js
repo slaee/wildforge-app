@@ -112,34 +112,6 @@ function ViewClassMembers() {
       return tb_data;
     });
 
-  const [filteredData, setFilteredData] = useState([]);
-  const [searchValue, setSearchValue] = useState('');
-
-  useEffect(() => {
-    const filterData = () => {
-      if (!data || data.length === 0) {
-        setFilteredData(data); // Handle empty data case
-        return;
-      }
-
-      const filteredResult = data.filter(
-        (item) =>
-          item.name.toLowerCase().includes(searchValue) ||
-          item.team.toLowerCase().includes(searchValue) ||
-          item.role.toLowerCase().includes(searchValue)
-      );
-
-      setFilteredData(filteredResult);
-    };
-
-    filterData();
-  }, [searchValue]);
-
-  const handleSearchChange = (e) => {
-    const value = e.target.value.toLowerCase();
-    setSearchValue(value);
-  };
-
   const buttons = [
     {
       id: 1,
@@ -155,23 +127,44 @@ function ViewClassMembers() {
     },
   ];
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    console.log(e.target.value);
+  };
+
+  useEffect(() => {
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    const filtered = data.filter(
+      (item) =>
+        item.name.toLowerCase().includes(lowerCaseQuery) ||
+        item.team.toLowerCase().includes(lowerCaseQuery) ||
+        item.role.toLowerCase().includes(lowerCaseQuery) ||
+        item.status.toLowerCase().includes(lowerCaseQuery)
+    );
+    setFilteredData(filtered);
+  }, [searchQuery, data]);
+
   const renderTable = () => (
-    <>
-      <Table headers={headers} data={data} className="mt-3" />
-      {data && data.length === 0 && (
+    <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
+      {data && filteredData.length === 0 ? (
         <div className="d-flex justify-content-center align-items-center">
           <div className="brown-text fw-bold fs-5 py-2 mx-5">
             No members found
           </div>
         </div>
+      ) : (
+        <Table headers={headers} data={filteredData} className="mt-3" />
       )}
-    </>
+    </div>
   );
 
   return (
     <div className="d-flex">
       <Navbar
-        name={`${user?.first_name} ${user?.last_name}`}
+        name={`${user?.first_name} ${user?.last_name} Test`}
         buttons={buttons}
         hasBackButton
       />
@@ -180,12 +173,10 @@ function ViewClassMembers() {
         <div className="d-flex pt-3 pb-3">
           <div className="brown-text fw-bold fs-5 py-2 mx-5">Classes</div>
           <div className="d-flex align-items-center ms-auto mx-5">
-            <Search value={searchValue} onChange={handleSearchChange} />
+            <Search value={searchQuery} onChange={handleSearchChange} />
           </div>
         </div>
-        <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
-          {renderTable()}
-        </div>
+        {renderTable()}
       </div>
     </div>
   );
