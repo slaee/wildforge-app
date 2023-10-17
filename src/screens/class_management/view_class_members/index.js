@@ -123,7 +123,7 @@ function ViewClassMembers() {
       id: 2,
       label: 'Members',
       className: 'members',
-      path: ``,
+      path: `/classes/${classId}/members`,
     },
   ];
 
@@ -164,7 +164,7 @@ function ViewClassMembers() {
   return (
     <div className="d-flex">
       <Navbar
-        name={`${user?.first_name} ${user?.last_name} Test`}
+        name={`${user?.first_name} ${user?.last_name}`}
         buttons={buttons}
         hasBackButton
       />

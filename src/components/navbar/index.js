@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 
@@ -7,6 +7,17 @@ import './index.scss';
 
 function Navbar({ buttons, name, hasBackButton, onButtonClick }) {
   const [selectedButton, setSelectedButton] = useState(buttons[0]?.id);
+  const location = useLocation();
+
+  useEffect(() => {
+    // Determine the selected button based on the current location
+    const currentButton = buttons.find(
+      (button) => button.path === location.pathname
+    );
+    if (currentButton) {
+      setSelectedButton(currentButton.id);
+    }
+  }, [location.pathname, buttons]);
 
   const handleButtonClick = (buttonId) => {
     setSelectedButton(buttonId);
