@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './index.scss';
 import { Link } from 'react-router-dom';
 
-function WildCards({ id, name, classCode, section, schedule }) {
+function ClassCards({ id, name, classCode, section, schedule }) {
   return (
     <Link to={`/classes/${id}`} className="text-decoration-none">
       <div className="class-card d-flex flex-column justify-content-center p-5">
@@ -21,7 +21,7 @@ function WildCards({ id, name, classCode, section, schedule }) {
   );
 }
 
-WildCards.defaultProps = {
+ClassCards.defaultProps = {
   id: 0,
   name: '',
   classCode: '',
@@ -29,7 +29,7 @@ WildCards.defaultProps = {
   schedule: '',
 };
 
-WildCards.propTypes = {
+ClassCards.propTypes = {
   id: PropTypes.number,
   name: PropTypes.string,
   classCode: PropTypes.string,
@@ -37,4 +37,4 @@ WildCards.propTypes = {
   schedule: PropTypes.string,
 };
 
-export default WildCards;
+export default ClassCards;

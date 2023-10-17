@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
-import WildCards from '../../../components/cards';
+import WildCards from '../../../components/class_cards';
 import CreateClass from '../create_class';
 import JoinClass from '../join_class';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
 import Search from '../../../components/search';
-import TeamDetails from '../../../components/team_details';
 import { useClasses } from '../../../hooks';
 import { useAuth } from '../../../contexts/AuthContext';
 
@@ -110,7 +109,6 @@ function Classes() {
                 />
               ))}
           </div>
-          {/* <TeamDetails /> */}
         </div>
       </div>
       {isCreateClassModalOpen && (
