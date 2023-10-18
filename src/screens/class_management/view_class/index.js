@@ -7,6 +7,7 @@ import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 
 import './index.scss';
+import Search from '../../../components/search';
 
 function ViewClass() {
   const { id: classId } = useParams();
@@ -28,27 +29,42 @@ function ViewClass() {
 
   const { isLoading: isClassLoading, classRoom } = useClass(classId);
 
-  const buttons = [
-    {
-      id: 1,
-      label: 'Dashboard',
-      className: 'classes',
-      path: `/classes/${classId}`,
-    },
-    {
-      id: 2,
-      label: 'Members',
-      className: 'members',
-      path: `members`,
-    },
-  ];
+  const buttons = user.is_staff
+    ? [
+        {
+          id: 1,
+          label: 'Dashboard',
+          className: 'classes',
+          path: `/classes/${classId}`,
+        },
+        {
+          id: 2,
+          label: 'Members',
+          className: 'members',
+          path: `members`,
+        },
+      ]
+    : [
+        {
+          id: 1,
+          label: 'Teams',
+          className: 'teams',
+          path: `/teams/${classId}`,
+        },
+        {
+          id: 2,
+          label: 'Class Requests (?)',
+          className: 'class-requests',
+          path: `members`,
+        },
+      ];
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
     console.log('copied');
   };
 
-  const renderSubheader = () => (
+  const renderSubheaderStaff = () => (
     <div className="d-flex pt-2 pb-2">
       <div className="mx-5">
         <div className="fw-bold fs-5 brown-text">
@@ -71,7 +87,22 @@ function ViewClass() {
     </div>
   );
 
-  const renderBody = () => (
+  const renderSubheaderStudent = () => (
+    <div className="d-flex pt-2 pb-2">
+      <div className="mx-5">
+        <div className="fw-bold fs-5 brown-text">{classRoom?.name}</div>
+        <div className="d-flex py-2">
+          <div className="fw-semibold fs-6">{classRoom?.sections}</div>
+          <div className="fw-semibold fs-6 mx-4">{classRoom?.schedule}</div>
+          <div>
+            <Search />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderBodyStaff = () => (
     <div className="d-flex">
       <div className="d-flex flex-column">
         <div className="mx-5 my-3 students-container">
@@ -102,8 +133,8 @@ function ViewClass() {
       />
       <div className="container-fluid d-flex flex-column">
         <Header />
-        {renderSubheader()}
-        {renderBody()}
+        {user.is_staff ? renderSubheaderStaff() : renderSubheaderStudent()}
+        {renderBodyStaff()}
       </div>
     </div>
   );

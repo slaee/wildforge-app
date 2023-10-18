@@ -1,0 +1,26 @@
+@use '../../styles/variables';
+@use '../../styles/mixins';
+
+.add-leaders-modal{
+    width: 25vw;
+    height: 30vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: variables.$wild-white;
+    @include mixins.box-shadow(0, 8, 50, -5, variables.$wild-grey);
+}
+
+.manual-add-modal{
+    width: 50vw;
+    height: 80vh;
+    position: absolute;
+    z-index: 1000;
+    top: 50%;
+    left: 50%;
+    padding: 2rem;
+    transform: translate(-50%, -50%);
+    background-color: variables.$wild-white;
+    @include mixins.box-shadow(0, 8, 50, -5, variables.$wild-grey);
+}

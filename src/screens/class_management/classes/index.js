@@ -11,6 +11,7 @@ import './index.scss';
 import Search from '../../../components/search';
 import { useClasses } from '../../../hooks';
 import { useAuth } from '../../../contexts/AuthContext';
+import AddLeaders from '../../../components/add_leaders';
 
 function Classes() {
   const { classes } = useClasses();
@@ -118,7 +119,7 @@ function Classes() {
         />
       )}
       {isJoinClassModalOpen && (
-        <JoinClass
+        <AddLeaders
           visible={isJoinClassModalOpen}
           handleModal={closeJoinClassModal}
         />
