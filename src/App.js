@@ -11,6 +11,7 @@ import Logout from './screens/logout';
 import { NoAuthRoute } from './hocs/NoAuthRoute';
 import { PrivateRoute } from './hocs/PrivateRoute';
 import ViewClassMembers from './screens/class_management/view_class_members';
+import Teams from './screens/team_management/teams';
 
 function App() {
   return (
@@ -56,6 +57,14 @@ function App() {
           element={
             <PrivateRoute>
               <ViewClassMembers />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/teams/:id"
+          element={
+            <PrivateRoute>
+              <Teams />
             </PrivateRoute>
           }
         />

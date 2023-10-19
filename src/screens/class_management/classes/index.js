@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
-import WildCards from '../../../components/class_cards';
+import ClassCards from '../../../components/class_cards';
 import CreateClass from '../create_class';
 import JoinClass from '../join_class';
 
@@ -11,7 +11,6 @@ import './index.scss';
 import Search from '../../../components/search';
 import { useClasses } from '../../../hooks';
 import { useAuth } from '../../../contexts/AuthContext';
-import AddLeaders from '../../../components/add_leaders';
 
 function Classes() {
   const { classes } = useClasses();
@@ -100,7 +99,7 @@ function Classes() {
           <div className="d-flex flex-row justify-content-start py-2 gap-5 flex-wrap">
             {classes &&
               filteredClasses.map((Class) => (
-                <WildCards
+                <ClassCards
                   key={Class.id}
                   id={Class.id}
                   name={Class.name}
@@ -119,7 +118,7 @@ function Classes() {
         />
       )}
       {isJoinClassModalOpen && (
-        <AddLeaders
+        <JoinClass
           visible={isJoinClassModalOpen}
           handleModal={closeJoinClassModal}
         />

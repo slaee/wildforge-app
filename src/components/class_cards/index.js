@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import './index.scss';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 function ClassCards({ id, name, classCode, section, schedule }) {
+  const { user } = useAuth();
+  const isStaff = user.is_staff;
+
+  const cardLink = isStaff ? `/classes/${id}` : `/teams/${id}`;
+
   return (
-    <Link to={`/classes/${id}`} className="text-decoration-none">
+    <Link to={cardLink} className="text-decoration-none">
       <div className="class-card d-flex flex-column justify-content-center p-5">
         <span className="text-center fw-bold fs-5 my-1">{name}</span>
         <div className="d-flex flex-row justify-content-center my-1">

@@ -12,9 +12,11 @@
     @include mixins.box-shadow(0, 8, 50, -5, variables.$wild-grey);
 }
 
-.manual-add-modal{
+.option-modal{
     width: 50vw;
     height: 80vh;
+    max-height: 80vh;
+    overflow-y: auto;
     position: absolute;
     z-index: 1000;
     top: 50%;

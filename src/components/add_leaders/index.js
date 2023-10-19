@@ -15,7 +15,7 @@ function AddLeaders({ visible, handleModal }) {
 
   const manualHeaders = ['id', 'name', 'actions'];
   const automaticHeaders = ['id', 'activity', 'actions'];
-  // unya na ang actions kay kalimot ko hehe
+  // unya na ang actions kay kalimot ko - Jhen
 
   const openManualModal = () => {
     setShowManualModal(true);
@@ -52,7 +52,7 @@ function AddLeaders({ visible, handleModal }) {
 
   const renderManualModal = () => (
     <Dialog
-      className="manual-add-modal"
+      className="option-modal"
       visible={showManualModal}
       onHide={closeManualModal}
       showHeader={false}
@@ -72,7 +72,7 @@ function AddLeaders({ visible, handleModal }) {
 
   const renderAutoModal = () => (
     <Dialog
-      className="manual-add-modal"
+      className="option-modal"
       visible={showAutomaticModal}
       onHide={closeAutomaticModal}
       showHeader={false}
