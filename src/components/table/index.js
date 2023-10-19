@@ -4,22 +4,33 @@ import PropTypes from 'prop-types';
 import './index.scss';
 
 function Table({ headers, data }) {
+  const filteredHeaders = headers.filter((header) => header !== 'id');
+
   return (
-    <table className="table table-striped table-hover">
+    <table className="table table-hover">
       <thead>
         <tr>
-          {headers.map((header) => (
-            <th scope="col" key={header}>
+          {filteredHeaders.map((header) => (
+            <th
+              scope="col"
+              key={header}
+              className={header === 'actions' ? 'text-center' : ''}
+            >
               {header.toUpperCase()}
             </th>
           ))}
         </tr>
       </thead>
-      <tbody>
+      <tbody className="table-group-divider">
         {data.map((row) => (
           <tr key={row.id}>
-            {headers.map((header) => (
-              <td key={header}>{row[header]}</td>
+            {filteredHeaders.map((header) => (
+              <td
+                key={header}
+                className={header === 'actions' ? 'text-center' : ''}
+              >
+                {row[header]}
+              </td>
             ))}
           </tr>
         ))}

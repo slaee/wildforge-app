@@ -48,3 +48,10 @@
     background-color: variables.$wild-white;
     @include mixins.box-shadow(0, 8, 50, -5, variables.$wild-grey);
 }
+
+.format-instructions {
+    margin-top: 8px;
+    font-size: 14px;
+    color: gray;
+  }
+  

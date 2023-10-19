@@ -43,6 +43,11 @@ function ViewClass() {
     },
   ];
 
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(classRoom?.class_code);
+    console.log('copied');
+  };
+
   const renderSubheader = () => (
     <div className="d-flex pt-2 pb-2">
       <div className="mx-5">
@@ -54,7 +59,11 @@ function ViewClass() {
           <div className="ms-4 me-2 fw-semibold fs-6">
             {classRoom?.class_code}
           </div>
-          <button type="button" className="btn btn-secondary btn-sm">
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={handleCopyCode}
+          >
             Copy
           </button>
         </div>
