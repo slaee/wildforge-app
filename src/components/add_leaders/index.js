@@ -16,6 +16,7 @@ function AddLeaders({ visible, handleModal }) {
   const manualHeaders = ['id', 'name', 'actions'];
   const automaticHeaders = ['id', 'activity', 'actions'];
   // unya na ang actions kay kalimot ko - Jhen
+  // test lang ni
 
   const openManualModal = () => {
     setShowManualModal(true);
