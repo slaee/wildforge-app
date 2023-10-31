@@ -27,7 +27,7 @@ function ViewClassMembers() {
       id: 2,
       label: 'Members',
       className: 'members',
-      path: ``,
+      path: `/classes/${classId}/members`,
     },
   ];
 
@@ -167,14 +167,14 @@ function ViewClassMembers() {
   return (
     <div className="d-flex">
       <Navbar
-        name={`${user?.first_name} ${user?.last_name} Test`}
+        name={`${user?.first_name} ${user?.last_name}`}
         buttons={buttons}
         hasBackButton
       />
       <div className="container-fluid d-flex flex-column">
         <Header />
         <div className="d-flex pt-3 pb-3">
-          <div className="brown-text fw-bold fs-5 py-2 mx-5">Classes</div>
+          <div className="brown-text fw-bold fs-5 py-2 mx-5">Members</div>
           <div className="d-flex align-items-center ms-auto mx-5">
             <Search value={searchQuery} onChange={handleSearchChange} />
           </div>
