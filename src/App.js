@@ -1,6 +1,7 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 
+import PropTypes from 'prop-types';
 import { AuthProvider } from './contexts/AuthContext';
 import Classes from './screens/class_management/classes';
 import ViewClass from './screens/class_management/view_class';
@@ -14,9 +15,16 @@ import ViewClassMembers from './screens/class_management/view_class_members';
 import Teams from './screens/team_management/teams';
 
 function App() {
+  const isAuthenticated = true;
+
   return (
     <AuthProvider>
       <Routes>
+        <Route
+          path="/"
+          element={<AuthWrapper isAuthenticated={isAuthenticated} />}
+        />
+
         <Route path="/logout" element={<Logout />} />
 
         <Route
@@ -72,5 +80,21 @@ function App() {
     </AuthProvider>
   );
 }
+
+function AuthWrapper({ isAuthenticated }) {
+  return isAuthenticated ? (
+    <Navigate to="/classes" replace />
+  ) : (
+    <Navigate to="/login" replace />
+  );
+}
+
+AuthWrapper.defaultProps = {
+  isAuthenticated: false,
+};
+
+AuthWrapper.propTypes = {
+  isAuthenticated: PropTypes.bool,
+};
 
 export default App;
