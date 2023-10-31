@@ -148,7 +148,7 @@ function ViewClassMembers() {
       );
       setFilteredData(filtered);
     }
-  }, [searchQuery, data, filteredData]);
+  }, [searchQuery, data]);
 
   const renderTable = () => (
     <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
