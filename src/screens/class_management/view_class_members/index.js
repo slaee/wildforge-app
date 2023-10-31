@@ -16,6 +16,21 @@ function ViewClassMembers() {
   const { user } = useAuth();
   const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
 
+  const buttons = [
+    {
+      id: 1,
+      label: 'Dashboard',
+      className: 'classes',
+      path: `/classes/${classId}`,
+    },
+    {
+      id: 2,
+      label: 'Members',
+      className: 'members',
+      path: ``,
+    },
+  ];
+
   let headers;
   if (user.is_staff) {
     headers = ['id', 'name', 'team', 'role', 'status', 'actions'];
@@ -112,40 +127,28 @@ function ViewClassMembers() {
       return tb_data;
     });
 
-  const buttons = [
-    {
-      id: 1,
-      label: 'Dashboard',
-      className: 'classes',
-      path: `/classes/${classId}`,
-    },
-    {
-      id: 2,
-      label: 'Members',
-      className: 'members',
-      path: ``,
-    },
-  ];
-
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    console.log(e.target.value);
   };
 
   useEffect(() => {
     const lowerCaseQuery = searchQuery.toLowerCase();
-    const filtered = data.filter(
-      (item) =>
-        item.name.toLowerCase().includes(lowerCaseQuery) ||
-        item.team.toLowerCase().includes(lowerCaseQuery) ||
-        item.role.toLowerCase().includes(lowerCaseQuery) ||
-        item.status.toLowerCase().includes(lowerCaseQuery)
-    );
-    setFilteredData(filtered);
-  }, [searchQuery, data]);
+    if (data.length === 0) {
+      setFilteredData([]);
+    } else {
+      const filtered = data.filter(
+        (item) =>
+          item.name.toLowerCase().includes(lowerCaseQuery) ||
+          item.team.toLowerCase().includes(lowerCaseQuery) ||
+          item.role.toLowerCase().includes(lowerCaseQuery) ||
+          item.status.toLowerCase().includes(lowerCaseQuery)
+      );
+      setFilteredData(filtered);
+    }
+  }, [searchQuery, data, filteredData]);
 
   const renderTable = () => (
     <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
