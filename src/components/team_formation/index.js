@@ -1,33 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Dialog } from 'primereact/dialog';
 import ControlInput from '../controlinput';
 
 import './index.scss';
 
-function TeamFormation() {
-  const [showModal, setShowModal] = useState(false);
-
-  const openModal = () => {
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
-  const renderMdodal = () => (
+function TeamFormation({ visible, handleModal }) {
+  return (
     <Dialog
       className="team-formation-modal"
-      visible={showModal}
-      onHide={closeModal}
+      visible={visible}
+      onHide={handleModal}
       showHeader={false}
     >
       <div className="d-grid gap-4">
         <button
           aria-label="Close Modal"
           className="btn btn-close ms-auto"
-          onClick={closeModal}
+          onClick={handleModal}
         />
         <ControlInput
           name="name"
@@ -42,26 +33,20 @@ function TeamFormation() {
         <button
           aria-label="Start"
           className="btn btn-wild-primary fs-5 fw-semibold"
-          onClick={closeModal}
+          onClick={handleModal}
         >
           Start
         </button>
       </div>
     </Dialog>
   );
-
-  return (
-    <div className="container">
-      <button
-        type="btn"
-        className="btn btn-wild-primary fs-4 fw-semibold"
-        onClick={openModal}
-      >
-        Start Team Formation
-      </button>
-      {renderMdodal()}
-    </div>
-  );
 }
+
+TeamFormation.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  handleModal: PropTypes.func.isRequired,
+};
+
+TeamFormation.defaultProps = {};
 
 export default TeamFormation;
