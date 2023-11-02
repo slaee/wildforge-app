@@ -12,7 +12,9 @@ import Logout from './screens/logout';
 import { NoAuthRoute } from './hocs/NoAuthRoute';
 import { PrivateRoute } from './hocs/PrivateRoute';
 import ViewClassMembers from './screens/class_management/view_class_members';
+import Teams from './screens/team_management/teams';
 import TeamLeaders from './screens/team_management/team_leaders';
+import Hirings from './screens/team_management/hirings';
 
 function App() {
   const isAuthenticated = true;
@@ -73,6 +75,22 @@ function App() {
           element={
             <PrivateRoute>
               <TeamLeaders />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/classes/:id/teams"
+          element={
+            <PrivateRoute>
+              <Teams />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/classes/:id/hirings"
+          element={
+            <PrivateRoute>
+              <Hirings />
             </PrivateRoute>
           }
         />

@@ -36,6 +36,12 @@ function TeamLeaders() {
       className: 'team-leaders',
       path: `/classes/${classId}/teamleaders`,
     },
+    {
+      id: 4,
+      label: 'Hirings',
+      className: 'team-leaders',
+      path: `/classes/${classId}/hirings`,
+    },
   ];
 
   const headers = ['id', 'name', 'status'];
@@ -82,7 +88,7 @@ function TeamLeaders() {
       />
       <div className="container-fluid d-flex flex-column">
         <Header />
-        <div className="d-flex pt-3 pb-3">
+        <div className="d-flex pt-2 pb-2">
           <div className="brown-text fw-bold fs-5 py-2 mx-5">Team Leaders</div>
           <div className="d-flex align-items-center ms-auto mx-5">
             <button

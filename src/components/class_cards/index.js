@@ -9,7 +9,7 @@ function ClassCards({ id, name, classCode, section, schedule }) {
   const { user } = useAuth();
   const isStaff = user.is_staff;
 
-  const cardLink = isStaff ? `/classes/${id}` : `/teams/${id}`;
+  const cardLink = isStaff ? `/classes/${id}` : `/classes/${id}/teams`;
 
   return (
     <Link to={cardLink} className="text-decoration-none">

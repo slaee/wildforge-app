@@ -32,7 +32,7 @@ function TeamFormation({ visible, handleModal }) {
         />
         <button
           aria-label="Start"
-          className="btn btn-wild-primary fs-5 fw-semibold"
+          className="btn btn-join-primary fs-5 fw-semibold"
           onClick={handleModal}
         >
           Start

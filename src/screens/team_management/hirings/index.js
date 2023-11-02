@@ -1,22 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useClass, useClasses } from '../../../hooks';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useClass, useClasses } from '../../../hooks';
 
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import Search from '../../../components/search';
-import Table from '../../../components/table';
-import TeamFormation from '../../../components/team_formation';
+import HiringCard from '../../../components/hiring_cards';
+import HiringPost from '../../../components/hiring_post_modal';
 
-function Teams() {
-  const { id: classId } = useParams();
+function Hirings() {
   const { user } = useAuth();
+  const { id: classId } = useParams();
   const navigate = useNavigate();
   const { isLoading: isClassesLoading, classes } = useClasses();
   const { isLoading: isClassLoading, classRoom } = useClass(classId);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
+  const [isPostingsModalOpen, setPostingsModalOpen] = useState(false);
+
+  const openPostingModal = () => {
+    setPostingsModalOpen(true);
+  };
+
+  const closePostingModal = () => {
+    setPostingsModalOpen(false);
+  };
+
+  const postings = [];
+
   let buttons = [];
 
   if (user.is_staff) {
@@ -63,7 +75,6 @@ function Teams() {
     ];
   }
 
-  const headers = ['id', 'team name', 'leader', '# of members', 'actions'];
   const data = [];
 
   useEffect(() => {
@@ -76,22 +87,22 @@ function Teams() {
     }
   }, [isClassesLoading]);
 
+  // For Search
+  // useEffect(() => {
+  //   const lowerCaseQuery = searchQuery.toLowerCase();
+  //   const filtered = data.filter(
+  //     (item) =>
+  //       item.name.toLowerCase().includes(lowerCaseQuery) ||
+  //       item.team.toLowerCase().includes(lowerCaseQuery) ||
+  //       item.role.toLowerCase().includes(lowerCaseQuery) ||
+  //       item.status.toLowerCase().includes(lowerCaseQuery)
+  //   );
+  //   setFilteredData(filtered);
+  // }, [searchQuery, data]);
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    console.log(e.target.value);
   };
-
-  useEffect(() => {
-    const lowerCaseQuery = searchQuery.toLowerCase();
-    const filtered = data.filter(
-      (item) =>
-        item.name.toLowerCase().includes(lowerCaseQuery) ||
-        item.team.toLowerCase().includes(lowerCaseQuery) ||
-        item.role.toLowerCase().includes(lowerCaseQuery) ||
-        item.status.toLowerCase().includes(lowerCaseQuery)
-    );
-    setFilteredData(filtered);
-  }, [searchQuery, data]);
 
   const renderSubheader = () => (
     <div className="d-flex pt-2 pb-2">
@@ -106,21 +117,14 @@ function Teams() {
       </div>
       <div className="ms-auto mt-4 me-5">
         <Search value={searchQuery} onChange={handleSearchChange} />
+        <button
+          type="button"
+          className="btn btn-join-primary ms-3"
+          onClick={openPostingModal}
+        >
+          Post Hiring
+        </button>
       </div>
-    </div>
-  );
-
-  const renderTable = () => (
-    <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
-      {data && filteredData.length === 0 ? (
-        <div className="d-flex justify-content-center align-items-center">
-          <div className="brown-text fw-bold fs-5 py-2 mx-5">
-            No teams found
-          </div>
-        </div>
-      ) : (
-        <Table headers={headers} data={filteredData} className="mt-3" />
-      )}
     </div>
   );
 
@@ -131,13 +135,28 @@ function Teams() {
         buttons={buttons}
         hasBackButton
       />
-      <div className="container d-flex flex-column">
+      <div className="container-fluid d-flex flex-column">
         <Header />
         {renderSubheader()}
-        {renderTable()}
+        <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
+          {postings && postings.length === 0 && (
+            <div className="grey-text text-center fw-semibold py-2">
+              No Postings. Create a new Posting
+            </div>
+          )}
+          <div className="d-flex flex-row justify-content-start py-2 gap-5 flex-wrap">
+            <HiringCard />
+          </div>
+        </div>
+        {isPostingsModalOpen && (
+          <HiringPost
+            visible={isPostingsModalOpen}
+            handleModal={closePostingModal}
+          />
+        )}
       </div>
     </div>
   );
 }
 
-export default Teams;
+export default Hirings;

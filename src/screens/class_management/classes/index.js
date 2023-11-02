@@ -69,7 +69,7 @@ function Classes() {
       />
       <div className="container-fluid d-flex flex-column">
         <Header />
-        <div className="d-flex pt-3 pb-3">
+        <div className="d-flex pt-2 pb-2">
           <div className="brown-text fw-bold fs-5 py-2 mx-5">Classes</div>
           <div className="d-flex align-items-center ms-auto mx-5">
             <Search value={searchQuery} onChange={handleSearchChange} />
