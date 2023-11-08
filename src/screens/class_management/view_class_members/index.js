@@ -144,19 +144,22 @@ function ViewClassMembers() {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    console.log(e.target.value);
   };
 
   useEffect(() => {
     const lowerCaseQuery = searchQuery.toLowerCase();
-    const filtered = data.filter(
-      (item) =>
-        item.name.toLowerCase().includes(lowerCaseQuery) ||
-        item.team.toLowerCase().includes(lowerCaseQuery) ||
-        item.role.toLowerCase().includes(lowerCaseQuery) ||
-        item.status.toLowerCase().includes(lowerCaseQuery)
-    );
-    setFilteredData(filtered);
+    if (data.length === 0) {
+      setFilteredData([]);
+    } else {
+      const filtered = data.filter(
+        (item) =>
+          item.name.toLowerCase().includes(lowerCaseQuery) ||
+          item.team.toLowerCase().includes(lowerCaseQuery) ||
+          item.role.toLowerCase().includes(lowerCaseQuery) ||
+          item.status.toLowerCase().includes(lowerCaseQuery)
+      );
+      setFilteredData(filtered);
+    }
   }, [searchQuery, data]);
 
   const renderTable = () => (
@@ -183,7 +186,7 @@ function ViewClassMembers() {
       <div className="container-fluid d-flex flex-column">
         <Header />
         <div className="d-flex pt-3 pb-3">
-          <div className="brown-text fw-bold fs-5 py-2 mx-5">Classes</div>
+          <div className="brown-text fw-bold fs-5 py-2 mx-5">Members</div>
           <div className="d-flex align-items-center ms-auto mx-5">
             <Search value={searchQuery} onChange={handleSearchChange} />
           </div>

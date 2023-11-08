@@ -53,10 +53,14 @@ function CreateClass({ visible, handleModal }) {
   };
 
   const handleCopyCode = (code) => {
-    navigator.clipboard.writeText(code);
+    navigator.clipboard.writeText(code).then(() => {
+      // Wait for the clipboard to be updated before reloading
+      setTimeout(() => {
+        window.location.reload();
+      }, 500); // not sure if this delay is enough
+    });
     setShowCode(false);
     handleModal();
-    window.location.reload();
   };
 
   const renderShowCode = (code) => (
