@@ -13,8 +13,7 @@ import { NoAuthRoute } from './hocs/NoAuthRoute';
 import { PrivateRoute } from './hocs/PrivateRoute';
 import ViewClassMembers from './screens/class_management/view_class_members';
 import Teams from './screens/team_management/teams';
-import TeamLeaders from './screens/team_management/team_leaders';
-import Hirings from './screens/team_management/hirings';
+import PeerEval from './screens/peer_evaluation/view_peer_eval';
 
 function App() {
   const isAuthenticated = true;
@@ -74,7 +73,7 @@ function App() {
           path="/classes/:id/teamleaders"
           element={
             <PrivateRoute>
-              <TeamLeaders />
+              <Teams />
             </PrivateRoute>
           }
         />
@@ -87,10 +86,10 @@ function App() {
           }
         />
         <Route
-          path="/classes/:id/hirings"
+          path="/peer-eval"
           element={
             <PrivateRoute>
-              <Hirings />
+              <PeerEval />
             </PrivateRoute>
           }
         />

@@ -4,8 +4,8 @@ import { Dialog } from 'primereact/dialog';
 import PropTypes from 'prop-types';
 
 import './index.scss';
-import Table from '../table';
-import Search from '../search';
+import Table from '../../table';
+import Search from '../../search';
 
 function AddLeaders({ visible, handleModal }) {
   const [showManualModal, setShowManualModal] = useState(false);
@@ -64,8 +64,10 @@ function AddLeaders({ visible, handleModal }) {
           className="btn btn-close ms-auto"
           onClick={closeManualModal}
         />
-        <div className="text-center fs-5 fw-semibold">Students List</div>
-        <Search value={searchQuery} onChange={handleSearchChange} />
+        <div className="text-left fs-5 fw-bold">Students List</div>
+        <div className="ms-auto">
+          <Search value={searchQuery} onChange={handleSearchChange} />
+        </div>
         <Table headers={manualHeaders} data={[]} className="mt-3" />
       </div>
     </Dialog>
@@ -78,17 +80,24 @@ function AddLeaders({ visible, handleModal }) {
       onHide={closeAutomaticModal}
       showHeader={false}
     >
-      <div className="d-grid gap-3">
-        <button
-          aria-label="Close Modal"
-          className="btn btn-close ms-auto"
-          onClick={closeAutomaticModal}
-        />
-        <div className="text-center fs-5 fw-semibold">
-          Select an activity to start Automatic Leader Identification.
+      <div className="d-flex flex-column h-100">
+        <div className="d-grid gap-3">
+          <button
+            aria-label="Close Modal"
+            className="btn btn-close ms-auto"
+            onClick={closeAutomaticModal}
+          />
+          <div className="text-left fs-5 fw-semibold">Activity Lists</div>
+          <div className="ms-auto">
+            <Search value={searchQuery} onChange={handleSearchChange} />
+          </div>
+          <Table headers={automaticHeaders} data={[]} className="mt-3" />
         </div>
-        <Search value={searchQuery} onChange={handleSearchChange} />
-        <Table headers={automaticHeaders} data={[]} className="mt-3" />
+        <div className="mt-auto position-fixed bottom-0 start-50 translate-middle-x pb-5">
+          <button type="btn" className="btn btn-wild-primary fw-bold btn-large">
+            Start Identifying
+          </button>
+        </div>
       </div>
     </Dialog>
   );

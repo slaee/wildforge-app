@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import './index.scss';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 
 function ClassCards({ id, name, classCode, section, schedule }) {
   const { user } = useAuth();
