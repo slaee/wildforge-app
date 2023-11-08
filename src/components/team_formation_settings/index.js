@@ -6,7 +6,7 @@ import ControlInput from '../controlinput';
 
 import './index.scss';
 
-function TeamFormation({ visible, handleModal }) {
+function TeamFormationSettings({ visible, handleModal }) {
   return (
     <Dialog
       className="team-formation-modal"
@@ -31,22 +31,22 @@ function TeamFormation({ visible, handleModal }) {
           className="yellow-on-focus"
         />
         <button
-          aria-label="Start"
+          aria-label="Save"
           className="btn btn-join-primary fs-5 fw-semibold"
           onClick={handleModal}
         >
-          Start
+          Save
         </button>
       </div>
     </Dialog>
   );
 }
 
-TeamFormation.propTypes = {
+TeamFormationSettings.propTypes = {
   visible: PropTypes.bool.isRequired,
   handleModal: PropTypes.func.isRequired,
 };
 
-TeamFormation.defaultProps = {};
+TeamFormationSettings.defaultProps = {};
 
-export default TeamFormation;
+export default TeamFormationSettings;

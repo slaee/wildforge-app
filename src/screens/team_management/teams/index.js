@@ -9,6 +9,9 @@ import Table from '../../../components/table';
 import AddLeaders from '../../../components/modals/add_leaders';
 
 import './index.scss';
+import Search from '../../../components/search';
+import Remarks from '../../../components/modals/remarks';
+import DischargeNotifModal from '../../../components/modals/discharge_notif';
 
 function Teams() {
   const { user } = useAuth();
@@ -61,7 +64,10 @@ function Teams() {
     },
   ];
 
-  const headers = ['id', 'name', 'status'];
+  const teamHeaders = ['id', 'name', 'status'];
+  const membersHeaders = ['id', 'name', 'role', 'actions'];
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredClasses, setFilteredClasses] = useState([]);
 
   const data = [];
 
@@ -73,21 +79,17 @@ function Teams() {
     setAddLeadersModalOpen(false);
   };
 
-  const openStartTeamFormationModal = () => {
-    setStartTeamFormationModalOpen(true);
-  };
-
-  const closeStartTeamFormationModal = () => {
-    setStartTeamFormationModalOpen(false);
-  };
-
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
     console.log('copied');
   };
 
-  const renderSubheader = () => (
-    <div className="d-flex pt-2 pb-2">
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const renderAdminSubheader = () => (
+    <div className="subheader-body d-flex pt-2 pb-2">
       <div className="mx-5">
         <div className="fw-bold fs-5 brown-text">
           {classRoom?.name} {classRoom?.sections}
@@ -106,21 +108,116 @@ function Teams() {
           </button>
         </div>
       </div>
+      <div className="d-flex align-items-center me-5 ms-auto">
+        <button
+          type="button"
+          className="btn btn-wild-primary btn-sm fw-semibold"
+          onClick={openAddLeadersModal}
+        >
+          Add Leaders
+        </button>
+      </div>
     </div>
   );
 
-  const renderTable = () => (
+  const renderSubheader = () => (
+    <div className="subheader-body d-flex pt-2 pb-2">
+      <div className="mx-5">
+        <div className="fw-bold fs-5 brown-text">
+          {classRoom?.name} {classRoom?.sections}
+        </div>
+        <div className="d-flex py-2">
+          <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+          <div className="ms-4 me-2 fw-semibold fs-6">
+            {classRoom?.class_code}
+          </div>
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={handleCopyCode}
+          >
+            Copy
+          </button>
+        </div>
+      </div>
+      <div className="d-flex align-items-center me-5 ms-auto">
+        <Search value={searchQuery} onChange={handleSearchChange} />
+      </div>
+    </div>
+  );
+
+  const renderTeamsSubheader = () => (
+    <div className="subheader-body d-flex pt-2 pb-2">
+      <div className="mx-5">
+        <div className="fw-bold fs-5 brown-text">
+          {classRoom?.name} {classRoom?.sections}
+        </div>
+        <div className="d-flex py-2">
+          <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+          <div className="ms-4 me-2 fw-semibold fs-6">
+            {classRoom?.class_code}
+          </div>
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={handleCopyCode}
+          >
+            Copy
+          </button>
+        </div>
+      </div>
+      <div className="d-flex align-items-center me-5 ms-auto">
+        <div className="d-flex">
+          <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
+            Hiring:
+          </div>
+          <select className="form-select form-select-sm">
+            <option className="text-success fw-semibold" value="1">
+              OPEN
+            </option>
+            <option className="text-danger fw-semibold" value="2">
+              CLOSE
+            </option>
+          </select>
+        </div>
+        <div className="fw-bold ms-4 red-text">Leave Team</div>
+      </div>
+    </div>
+  );
+
+  const renderTable = (headerData, tableData, emptyMessage) => (
     <div className="d-flex flex-column pt-3 pb-3 px-5 table-body">
       {data.length === 0 ? (
         <div className="d-flex flex-column justify-content-center align-items-center">
-          <Table headers={headers} data={data} className="mt-3" />
+          <Table headers={headerData} data={tableData} className="mt-3" />
           <div className="brown-text fw-bold fs-5 py-2 mx-5">
-            No leaders identified
+            {emptyMessage}
           </div>
         </div>
       ) : (
-        <Table headers={headers} data={data} className="mt-3" />
+        <Table headers={headerData} data={tableData} className="mt-3" />
       )}
+    </div>
+  );
+
+  const renderTeamData = () => (
+    <div>
+      <div className="fw-bold fs-3 px-5 py-3">[Team Name]</div>
+      <div className="px-5 py-3 lh-lg text-justify">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
+        lacinia nisl vel nisl feugiat vestibulum. Praesent finibus lacus
+        scelerisque nibh dapibus pellentesque. Morbi eget urna id metus finibus
+        mollis vitae non massa. Ut at condimentum odio. Cras viverra, mauris ut
+        mattis convallis, urna est lacinia velit, vitae vehicula dui erat id
+        nisi. Quisque ultricies vestibulum nulla, vitae semper lacus rhoncus et.
+        Cras nec tellus laoreet, fringilla felis non, facilisis magna. Mauris
+        lacinia, leo ut gravida imperdiet, magna ligula suscipit nulla, at
+        volutpat nisi mi quis arcu.
+      </div>
+      <div className="container">
+        <div className="fw-bold fs-4 px-5 py-3">Members</div>
+        {renderTable(membersHeaders, data, "There's no members yet.")}
+      </div>
     </div>
   );
 
@@ -134,22 +231,15 @@ function Teams() {
       <div className="container-fluid d-flex flex-column">
         <Header />
         <div className="d-flex pt-2 pb-2">
-          {renderSubheader()}
-          <div className="d-flex align-items-center ms-auto mx-5">
-            <button
-              type="button"
-              className="btn btn-wild-primary btn-sm fw-semibold"
-              onClick={openAddLeadersModal}
-            >
-              Add Leaders
-            </button>
-          </div>
-          <AddLeaders
+          {renderAdminSubheader()}
+          <DischargeNotifModal
+            modalTitle="Add Leaders"
             visible={isAddLeadersModalOpen}
             handleModal={closeAddLeadersModal}
           />
         </div>
-        {renderTable()}
+        {/* {renderTable()} */}
+        {renderTeamData()}
       </div>
     </div>
   );
