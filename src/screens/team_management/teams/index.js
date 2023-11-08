@@ -1,70 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useClass, useClasses } from '../../../hooks';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useClass, useClasses } from '../../../hooks';
 
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
-import Search from '../../../components/search';
 import Table from '../../../components/table';
-import TeamFormation from '../../../components/team_formation';
+import AddLeaders from '../../../components/modals/add_leaders';
+
+import './index.scss';
 
 function Teams() {
-  const { id: classId } = useParams();
   const { user } = useAuth();
+  const { id: classId } = useParams();
+
   const navigate = useNavigate();
+
   const { isLoading: isClassesLoading, classes } = useClasses();
-  const { isLoading: isClassLoading, classRoom } = useClass(classId);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
-  let buttons = [];
-
-  if (user.is_staff) {
-    buttons = [
-      {
-        id: 1,
-        label: 'Dashboard',
-        className: 'classes',
-        path: `/classes/${classId}`,
-      },
-      {
-        id: 2,
-        label: 'Members',
-        className: 'members',
-        path: `/classes/${classId}/members`,
-      },
-      {
-        id: 3,
-        label: 'Team Leaders',
-        className: 'team-leaders',
-        path: `/classes/${classId}/teamleaders`,
-      },
-      {
-        id: 4,
-        label: 'Hirings',
-        className: 'team-leaders',
-        path: `/classes/${classId}/hirings`,
-      },
-    ];
-  } else {
-    buttons = [
-      {
-        id: 1,
-        label: 'Teams',
-        className: 'teams',
-        path: `/classes/${classId}/teams`,
-      },
-      {
-        id: 2,
-        label: 'Hirings',
-        className: 'team-leaders',
-        path: `/classes/${classId}/hirings`,
-      },
-    ];
-  }
-
-  const headers = ['id', 'team name', 'leader', '# of members', 'actions'];
-  const data = [];
 
   useEffect(() => {
     if (!isClassesLoading) {
@@ -76,50 +28,98 @@ function Teams() {
     }
   }, [isClassesLoading]);
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    console.log(e.target.value);
+  const { isLoading: isClassLoading, classRoom } = useClass(classId);
+
+  const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
+  // prettier-ignore
+  const [isStartTeamFormationModalOpen, setStartTeamFormationModalOpen] = useState(false);
+
+  const buttons = [
+    {
+      id: 1,
+      label: 'Dashboard',
+      className: 'classes',
+      path: `/classes/${classId}`,
+    },
+    {
+      id: 2,
+      label: 'Members',
+      className: 'members',
+      path: `/classes/${classId}/members`,
+    },
+    {
+      id: 3,
+      label: 'Teams',
+      className: 'teams',
+      path: `/classes/${classId}/teams`,
+    },
+    {
+      id: 4,
+      label: 'Hirings',
+      className: 'team-leaders',
+      path: `/classes/${classId}/hirings`,
+    },
+  ];
+
+  const headers = ['id', 'name', 'status'];
+
+  const data = [];
+
+  const openAddLeadersModal = () => {
+    setAddLeadersModalOpen(true);
   };
 
-  useEffect(() => {
-    const lowerCaseQuery = searchQuery.toLowerCase();
-    const filtered = data.filter(
-      (item) =>
-        item.name.toLowerCase().includes(lowerCaseQuery) ||
-        item.team.toLowerCase().includes(lowerCaseQuery) ||
-        item.role.toLowerCase().includes(lowerCaseQuery) ||
-        item.status.toLowerCase().includes(lowerCaseQuery)
-    );
-    setFilteredData(filtered);
-  }, [searchQuery, data]);
+  const closeAddLeadersModal = () => {
+    setAddLeadersModalOpen(false);
+  };
+
+  const openStartTeamFormationModal = () => {
+    setStartTeamFormationModalOpen(true);
+  };
+
+  const closeStartTeamFormationModal = () => {
+    setStartTeamFormationModalOpen(false);
+  };
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(classRoom?.class_code);
+    console.log('copied');
+  };
 
   const renderSubheader = () => (
     <div className="d-flex pt-2 pb-2">
       <div className="mx-5">
-        <div className="fw-bold fs-5 brown-text">{classRoom?.name}</div>
-        <div className="d-flex py-2">
-          <div className="fw-semibold fs-6 pt-2">{classRoom?.sections}</div>
-          <div className="fw-semibold fs-6 pt-2 ms-3">
-            {classRoom?.schedule}
-          </div>
+        <div className="fw-bold fs-5 brown-text">
+          {classRoom?.name} {classRoom?.sections}
         </div>
-      </div>
-      <div className="ms-auto mt-4 me-5">
-        <Search value={searchQuery} onChange={handleSearchChange} />
+        <div className="d-flex py-2">
+          <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+          <div className="ms-4 me-2 fw-semibold fs-6">
+            {classRoom?.class_code}
+          </div>
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={handleCopyCode}
+          >
+            Copy
+          </button>
+        </div>
       </div>
     </div>
   );
 
   const renderTable = () => (
-    <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
-      {data && filteredData.length === 0 ? (
-        <div className="d-flex justify-content-center align-items-center">
+    <div className="d-flex flex-column pt-3 pb-3 px-5 table-body">
+      {data.length === 0 ? (
+        <div className="d-flex flex-column justify-content-center align-items-center">
+          <Table headers={headers} data={data} className="mt-3" />
           <div className="brown-text fw-bold fs-5 py-2 mx-5">
-            No teams found
+            No leaders identified
           </div>
         </div>
       ) : (
-        <Table headers={headers} data={filteredData} className="mt-3" />
+        <Table headers={headers} data={data} className="mt-3" />
       )}
     </div>
   );
@@ -131,9 +131,24 @@ function Teams() {
         buttons={buttons}
         hasBackButton
       />
-      <div className="container d-flex flex-column">
+      <div className="container-fluid d-flex flex-column">
         <Header />
-        {renderSubheader()}
+        <div className="d-flex pt-2 pb-2">
+          {renderSubheader()}
+          <div className="d-flex align-items-center ms-auto mx-5">
+            <button
+              type="button"
+              className="btn btn-wild-primary btn-sm fw-semibold"
+              onClick={openAddLeadersModal}
+            >
+              Add Leaders
+            </button>
+          </div>
+          <AddLeaders
+            visible={isAddLeadersModalOpen}
+            handleModal={closeAddLeadersModal}
+          />
+        </div>
         {renderTable()}
       </div>
     </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
-import ClassCards from '../../../components/class_cards';
+import ClassCards from '../../../../components/class_cards';
 import CreateClass from '../create_class';
 import JoinClass from '../join_class';
 

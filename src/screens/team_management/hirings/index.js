@@ -6,8 +6,8 @@ import { useClass, useClasses } from '../../../hooks';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import Search from '../../../components/search';
-import HiringCard from '../../../components/hiring_cards';
-import HiringPost from '../../../components/hiring_post_modal';
+import HiringCard from '../../../components/cards/hiring_cards';
+import CreateTeam from '../../../components/modals/create_team';
 
 function Hirings() {
   const { user } = useAuth();
@@ -47,9 +47,9 @@ function Hirings() {
       },
       {
         id: 3,
-        label: 'Team Leaders',
-        className: 'team-leaders',
-        path: `/classes/${classId}/teamleaders`,
+        label: 'Teams',
+        className: 'teams',
+        path: `/classes/${classId}/teams`,
       },
       {
         id: 4,
@@ -149,7 +149,7 @@ function Hirings() {
           </div>
         </div>
         {isPostingsModalOpen && (
-          <HiringPost
+          <CreateTeam
             visible={isPostingsModalOpen}
             handleModal={closePostingModal}
           />

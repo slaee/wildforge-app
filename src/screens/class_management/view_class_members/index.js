@@ -127,9 +127,9 @@ function ViewClassMembers() {
     },
     {
       id: 3,
-      label: 'Team Leaders',
-      className: 'team-leaders',
-      path: `/classes/${classId}/teamleaders`,
+      label: 'Teams',
+      className: 'teams',
+      path: `/classes/${classId}/teams`,
     },
     {
       id: 4,

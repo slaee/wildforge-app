@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Dialog } from 'primereact/dialog';
-import ControlInput from '../controlinput';
-import ControlTextArea from '../controltextarea';
+import ControlInput from '../../controlinput';
+import ControlTextArea from '../../controltextarea';
 
 import './index.scss';
 
-function HiringPost({ visible, handleModal }) {
+function CreateTeam({ visible, handleModal }) {
   return (
     <Dialog
       className="hiring-post-modal"
@@ -22,7 +22,7 @@ function HiringPost({ visible, handleModal }) {
           onClick={handleModal}
         />
         <div className="px-3">
-          <div className="text-center fs-4 fw-bold">Post a Hiring</div>
+          <div className="text-center fs-4 fw-bold">Team Creation</div>
           <ControlInput
             name="team_name"
             label="Team Name"
@@ -32,11 +32,6 @@ function HiringPost({ visible, handleModal }) {
             name="team_name"
             label="Team Description"
             placeholder="Enter Team Description"
-          />
-          <ControlInput
-            name="no_of_members"
-            label="Number of Members"
-            placeholder="Enter Number of Members"
           />
         </div>
       </div>
@@ -58,11 +53,11 @@ function HiringPost({ visible, handleModal }) {
   );
 }
 
-HiringPost.propTypes = {
+CreateTeam.propTypes = {
   visible: PropTypes.bool.isRequired,
   handleModal: PropTypes.func.isRequired,
 };
 
-HiringPost.defaultProps = {};
+CreateTeam.defaultProps = {};
 
-export default HiringPost;
+export default CreateTeam;

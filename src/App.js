@@ -13,7 +13,6 @@ import { NoAuthRoute } from './hocs/NoAuthRoute';
 import { PrivateRoute } from './hocs/PrivateRoute';
 import ViewClassMembers from './screens/class_management/view_class_members';
 import Teams from './screens/team_management/teams';
-import TeamLeaders from './screens/team_management/team_leaders';
 import Hirings from './screens/team_management/hirings';
 
 function App() {
@@ -74,7 +73,7 @@ function App() {
           path="/classes/:id/teamleaders"
           element={
             <PrivateRoute>
-              <TeamLeaders />
+              <Teams />
             </PrivateRoute>
           }
         />
