@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import './index.scss';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
-function WildCards({ id, name, classCode, section, schedule }) {
+function ClassCards({ id, name, classCode, section, schedule }) {
+  const { user } = useAuth();
+  const isStaff = user.is_staff;
+
+  const cardLink = isStaff ? `/classes/${id}` : `/classes/${id}/teams`;
+
   return (
-    <Link to={`/classes/${id}`} className="text-decoration-none">
+    <Link to={cardLink} className="text-decoration-none">
       <div className="class-card d-flex flex-column justify-content-center p-5">
         <span className="text-center fw-bold fs-5 my-1">{name}</span>
         <div className="d-flex flex-row justify-content-center my-1">
@@ -21,7 +27,7 @@ function WildCards({ id, name, classCode, section, schedule }) {
   );
 }
 
-WildCards.defaultProps = {
+ClassCards.defaultProps = {
   id: 0,
   name: '',
   classCode: '',
@@ -29,7 +35,7 @@ WildCards.defaultProps = {
   schedule: '',
 };
 
-WildCards.propTypes = {
+ClassCards.propTypes = {
   id: PropTypes.number,
   name: PropTypes.string,
   classCode: PropTypes.string,
@@ -37,4 +43,4 @@ WildCards.propTypes = {
   schedule: PropTypes.string,
 };
 
-export default WildCards;
+export default ClassCards;

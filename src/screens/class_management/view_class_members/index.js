@@ -16,21 +16,6 @@ function ViewClassMembers() {
   const { user } = useAuth();
   const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
 
-  const buttons = [
-    {
-      id: 1,
-      label: 'Dashboard',
-      className: 'classes',
-      path: `/classes/${classId}`,
-    },
-    {
-      id: 2,
-      label: 'Members',
-      className: 'members',
-      path: `/classes/${classId}/members`,
-    },
-  ];
-
   let headers;
   if (user.is_staff) {
     headers = ['id', 'name', 'team', 'role', 'status', 'actions'];
@@ -126,6 +111,33 @@ function ViewClassMembers() {
 
       return tb_data;
     });
+
+  const buttons = [
+    {
+      id: 1,
+      label: 'Dashboard',
+      className: 'classes',
+      path: `/classes/${classId}`,
+    },
+    {
+      id: 2,
+      label: 'Members',
+      className: 'members',
+      path: `/classes/${classId}/members`,
+    },
+    {
+      id: 3,
+      label: 'Team Leaders',
+      className: 'team-leaders',
+      path: `/classes/${classId}/teamleaders`,
+    },
+    {
+      id: 4,
+      label: 'Hirings',
+      className: 'team-leaders',
+      path: `/classes/${classId}/hirings`,
+    },
+  ];
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);

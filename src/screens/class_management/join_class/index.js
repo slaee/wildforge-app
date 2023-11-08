@@ -30,7 +30,6 @@ function JoinClass({ visible, handleModal }) {
       onHide={handleModal}
       showHeader={false}
     >
-      <span className="fw-bold fs-6">Join Class</span>
       <div className="d-flex flex-column">
         <Formik
           initialValues={{
@@ -64,18 +63,18 @@ function JoinClass({ visible, handleModal }) {
         >
           {({ errors, values, handleSubmit, setFieldValue }) => (
             <form onSubmit={handleSubmit}>
-              <div className="d-flex flex-row my-3 justify-content-center">
+              <div className="d-flex flex-row justify-content-center">
                 <ControlInput
                   name="class_code"
                   className="yellow-on-focus"
-                  label=""
+                  label="Join Class"
                   placeholder="Enter Class Code"
                   value={values.class_code}
                   onChange={(e) => setFieldValue('class_code', e.target.value)}
                   error={errors.class_code}
                 />
                 <button
-                  className="btn btn-create-primary fw-semibold ms-2 mt-3"
+                  className="btn btn-create-primary fw-semibold ms-2 mt-5"
                   type="submit"
                 >
                   {isJoining ? 'Joining...' : 'Join'}

@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
-import WildCards from '../../../components/cards';
+import ClassCards from '../../../components/class_cards';
 import CreateClass from '../create_class';
 import JoinClass from '../join_class';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
 import Search from '../../../components/search';
-import TeamDetails from '../../../components/team_details';
 import { useClasses } from '../../../hooks';
 import { useAuth } from '../../../contexts/AuthContext';
 
@@ -70,7 +69,7 @@ function Classes() {
       />
       <div className="container-fluid d-flex flex-column">
         <Header />
-        <div className="d-flex pt-3 pb-3">
+        <div className="d-flex pt-2 pb-2">
           <div className="brown-text fw-bold fs-5 py-2 mx-5">Classes</div>
           <div className="d-flex align-items-center ms-auto mx-5">
             <Search value={searchQuery} onChange={handleSearchChange} />
@@ -100,7 +99,7 @@ function Classes() {
           <div className="d-flex flex-row justify-content-start py-2 gap-5 flex-wrap">
             {classes &&
               filteredClasses.map((Class) => (
-                <WildCards
+                <ClassCards
                   key={Class.id}
                   id={Class.id}
                   name={Class.name}
@@ -110,7 +109,6 @@ function Classes() {
                 />
               ))}
           </div>
-          {/* <TeamDetails /> */}
         </div>
       </div>
       {isCreateClassModalOpen && (

@@ -1,0 +1,19 @@
+@use '../../../styles/variables';
+@use '../../../styles/mixins';
+
+.table-body{
+    height: 100%;
+}
+
+.footer-container{
+    height: 10vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: sticky;
+    top: 100;
+    bottom: 0;
+    left: 0;
+    @include mixins.box-shadow(0, 8, 50, -5, variables.$wild-grey);
+}

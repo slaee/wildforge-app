@@ -41,6 +41,18 @@ function ViewClass() {
       className: 'members',
       path: `/classes/${classId}/members`,
     },
+    {
+      id: 3,
+      label: 'Team Leaders',
+      className: 'team-leaders',
+      path: `/classes/${classId}/teamleaders`,
+    },
+    {
+      id: 4,
+      label: 'Hirings',
+      className: 'hirings',
+      path: `/classes/${classId}/hirings`,
+    },
   ];
 
   const handleCopyCode = () => {
