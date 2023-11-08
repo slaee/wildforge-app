@@ -16,6 +16,21 @@ function ViewClassMembers() {
   const { user } = useAuth();
   const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
 
+  const buttons = [
+    {
+      id: 1,
+      label: 'Dashboard',
+      className: 'classes',
+      path: `/classes/${classId}`,
+    },
+    {
+      id: 2,
+      label: 'Members',
+      className: 'members',
+      path: `/classes/${classId}/members`,
+    },
+  ];
+
   let headers;
   if (user.is_staff) {
     headers = ['id', 'name', 'team', 'role', 'status', 'actions'];
@@ -112,39 +127,27 @@ function ViewClassMembers() {
       return tb_data;
     });
 
-  const buttons = [
-    {
-      id: 1,
-      label: 'Dashboard',
-      className: 'classes',
-      path: `/classes/${classId}`,
-    },
-    {
-      id: 2,
-      label: 'Members',
-      className: 'members',
-      path: ``,
-    },
-  ];
-
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    console.log(e.target.value);
   };
 
   useEffect(() => {
     const lowerCaseQuery = searchQuery.toLowerCase();
-    const filtered = data.filter(
-      (item) =>
-        item.name.toLowerCase().includes(lowerCaseQuery) ||
-        item.team.toLowerCase().includes(lowerCaseQuery) ||
-        item.role.toLowerCase().includes(lowerCaseQuery) ||
-        item.status.toLowerCase().includes(lowerCaseQuery)
-    );
-    setFilteredData(filtered);
+    if (data.length === 0) {
+      setFilteredData([]);
+    } else {
+      const filtered = data.filter(
+        (item) =>
+          item.name.toLowerCase().includes(lowerCaseQuery) ||
+          item.team.toLowerCase().includes(lowerCaseQuery) ||
+          item.role.toLowerCase().includes(lowerCaseQuery) ||
+          item.status.toLowerCase().includes(lowerCaseQuery)
+      );
+      setFilteredData(filtered);
+    }
   }, [searchQuery, data]);
 
   const renderTable = () => (
@@ -164,14 +167,14 @@ function ViewClassMembers() {
   return (
     <div className="d-flex">
       <Navbar
-        name={`${user?.first_name} ${user?.last_name} Test`}
+        name={`${user?.first_name} ${user?.last_name}`}
         buttons={buttons}
         hasBackButton
       />
       <div className="container-fluid d-flex flex-column">
         <Header />
         <div className="d-flex pt-3 pb-3">
-          <div className="brown-text fw-bold fs-5 py-2 mx-5">Classes</div>
+          <div className="brown-text fw-bold fs-5 py-2 mx-5">Members</div>
           <div className="d-flex align-items-center ms-auto mx-5">
             <Search value={searchQuery} onChange={handleSearchChange} />
           </div>

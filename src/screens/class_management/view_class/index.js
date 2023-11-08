@@ -39,7 +39,7 @@ function ViewClass() {
       id: 2,
       label: 'Members',
       className: 'members',
-      path: `members`,
+      path: `/classes/${classId}/members`,
     },
   ];
 
