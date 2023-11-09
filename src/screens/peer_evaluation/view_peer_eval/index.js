@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Dialog } from 'primereact/dialog';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import { useAuth } from '../../../contexts/AuthContext';
+import Search from '../../../components/search';
+import Table from '../../../components/table';
+
+import './index.scss';
+import ControlInput from '../../../components/controlinput';
 
 function PeerEval() {
   const { user } = useAuth();
+  const [peerEvalModal, setPeerEvalModal] = useState(false);
+  const [assignClassModal, setAssignClassModal] = useState(false);
 
   const buttons = [
     { id: 1, label: 'Classes', className: 'classes', path: '/classes' },
@@ -16,6 +24,104 @@ function PeerEval() {
     },
   ];
 
+  const peerEvalHeaders = ['id', 'name', 'actions'];
+
+  const openPeerEvalModal = () => {
+    setPeerEvalModal(true);
+  };
+
+  const closePeerEvalModal = () => {
+    setPeerEvalModal(false);
+  };
+
+  const openAssignTeamModal = () => {
+    setAssignClassModal(true);
+  };
+
+  const closeAssignTeamModal = () => {
+    setAssignClassModal(false);
+  };
+
+  const renderAssignTeamModal = () => (
+    <Dialog
+      className="peer-eval-modal"
+      visible={assignClassModal}
+      onHide={closeAssignTeamModal}
+      showHeader={false}
+    >
+      <div className="d-flex flex-column p-5">
+        <div className="d-grid gap-3">
+          <div className="text-left fs-5 fw-semibold">List of Classes</div>
+          <div className="ms-auto">
+            <Search />
+          </div>
+          <Table headers={[]} data={[]} className="mt-3" />
+          <div className="d-flex justify-content-evenly pt-5">
+            <button
+              type="btn"
+              className="btn btn-outline-secondary btn-lg fw-semibold"
+              onClick={closeAssignTeamModal}
+            >
+              Cancel
+            </button>
+            <button
+              type="btn"
+              className="btn btn-wild-primary btn-lg fw-semibold"
+              onClick={() => console.log('submit')}
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </Dialog>
+  );
+
+  const renderPeerEvalModal = () => (
+    <Dialog
+      className="peer-eval-modal"
+      visible={peerEvalModal}
+      onHide={closePeerEvalModal}
+      showHeader={false}
+    >
+      <div className="d-flex flex-column p-5">
+        <ControlInput
+          name="team_name"
+          label="Name"
+          placeholder="Enter Peer Evaluation Name"
+        />
+        <ControlInput
+          name="eval_link"
+          label="Forms Link"
+          placeholder="Enter Google Forms Link"
+        />
+        <button
+          type="btn"
+          className="btn btn-outline-warning fw-semibold mt-4"
+          onClick={openAssignTeamModal}
+        >
+          Assign Classes
+        </button>
+        <div className="d-flex justify-content-evenly pt-5">
+          <button
+            type="btn"
+            className="btn btn-outline-secondary btn-lg fw-semibold"
+            onClick={closePeerEvalModal}
+          >
+            Cancel
+          </button>
+          <button
+            type="btn"
+            className="btn btn-wild-primary btn-lg fw-semibold"
+            onClick={() => console.log('submit')}
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </Dialog>
+  );
+
   return (
     <div className="d-flex">
       <Navbar
@@ -24,6 +130,26 @@ function PeerEval() {
       />
       <div className="container-fluid d-flex flex-column">
         <Header />
+        <div className="d-flex pt-2 pb-2">
+          <div className="py-2 mx-5">
+            <Search />
+          </div>
+          <div className="d-flex align-items-center ms-auto mx-5">
+            <button
+              type="btn"
+              className="btn btn-join-primary fw-semibold"
+              onClick={openPeerEvalModal}
+            >
+              Add Peer Evaluation
+            </button>
+          </div>
+        </div>
+        <div className="container-fluid">
+          <div className="fw-bold fs-4 px-5 py-3">Peer Evaluation</div>
+          <Table headers={peerEvalHeaders} data={[]} className="mt-3" />
+          {peerEvalModal && renderPeerEvalModal()}
+          {assignClassModal && renderAssignTeamModal()}
+        </div>
       </div>
     </div>
   );
