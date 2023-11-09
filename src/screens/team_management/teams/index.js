@@ -56,12 +56,6 @@ function Teams() {
       className: 'teams',
       path: `/classes/${classId}/teams`,
     },
-    {
-      id: 4,
-      label: 'Hirings',
-      className: 'team-leaders',
-      path: `/classes/${classId}/hirings`,
-    },
   ];
 
   const teamHeaders = ['id', 'name', 'status'];
@@ -221,6 +215,23 @@ function Teams() {
     </div>
   );
 
+  const renderTeacherTeamManagement = () => (
+    <div className="d-flex flex-column pt-3 pb-3 px-5">
+      <ul className="nav nav-underline">
+        <li className="nav-item">
+          <a className="nav-link active" aria-current="page" href="#">
+            Team Leaders
+          </a>
+        </li>
+        <li className="nav-item">
+          <a className="nav-link" href="#">
+            Teams
+          </a>
+        </li>
+      </ul>
+    </div>
+  );
+
   return (
     <div className="d-flex">
       <Navbar
@@ -232,14 +243,15 @@ function Teams() {
         <Header />
         <div className="d-flex pt-2 pb-2">
           {renderAdminSubheader()}
-          <DischargeNotifModal
+          <AddLeaders
             modalTitle="Add Leaders"
             visible={isAddLeadersModalOpen}
             handleModal={closeAddLeadersModal}
           />
         </div>
+        {renderTeacherTeamManagement()}
         {/* {renderTable()} */}
-        {renderTeamData()}
+        {/* {renderTeamData()} */}
       </div>
     </div>
   );

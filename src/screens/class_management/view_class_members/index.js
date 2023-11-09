@@ -131,12 +131,6 @@ function ViewClassMembers() {
       className: 'teams',
       path: `/classes/${classId}/teams`,
     },
-    {
-      id: 4,
-      label: 'Hirings',
-      className: 'team-leaders',
-      path: `/classes/${classId}/hirings`,
-    },
   ];
 
   const [searchQuery, setSearchQuery] = useState('');
