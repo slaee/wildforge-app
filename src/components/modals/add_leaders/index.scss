@@ -5,8 +5,8 @@
     width: 25vw;
     height: 30vh;
     position: absolute;
-    top: 40%;
-    left: 83.5%;
+    top: 50%;
+    left: 55%;
     transform: translate(-50%, -50%);
     background-color: variables.$wild-white;
     @include mixins.box-shadow(0, 8, 50, -5, variables.$wild-grey);
