@@ -25,6 +25,7 @@ function PeerEval() {
   ];
 
   const peerEvalHeaders = ['id', 'name', 'actions'];
+  const classesHeaders = ['id', 'class', 'actions'];
 
   const openPeerEvalModal = () => {
     setPeerEvalModal(true);
@@ -44,7 +45,7 @@ function PeerEval() {
 
   const renderAssignTeamModal = () => (
     <Dialog
-      className="peer-eval-modal"
+      className="assign-teams-modal"
       visible={assignClassModal}
       onHide={closeAssignTeamModal}
       showHeader={false}
@@ -55,18 +56,18 @@ function PeerEval() {
           <div className="ms-auto">
             <Search />
           </div>
-          <Table headers={[]} data={[]} className="mt-3" />
-          <div className="d-flex justify-content-evenly pt-5">
+          <Table headers={classesHeaders} data={[]} className="mt-3" />
+          <div className="position-fixed bottom-0 start-50 translate-middle-x pb-5">
             <button
               type="btn"
-              className="btn btn-outline-secondary btn-lg fw-semibold"
+              className="btn btn-outline-secondary btn-lg fw-semibold me-4"
               onClick={closeAssignTeamModal}
             >
               Cancel
             </button>
             <button
               type="btn"
-              className="btn btn-wild-primary btn-lg fw-semibold"
+              className="btn btn-wild-primary btn-lg fw-semibold ms-4"
               onClick={() => console.log('submit')}
             >
               Save
