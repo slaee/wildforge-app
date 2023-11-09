@@ -106,15 +106,6 @@ function Teams() {
           </button>
         </div>
       </div>
-      <div className="d-flex align-items-center me-5 ms-auto">
-        <button
-          type="button"
-          className="btn btn-wild-primary btn-sm fw-semibold"
-          onClick={openAddLeadersModal}
-        >
-          Add Leaders
-        </button>
-      </div>
     </div>
   );
 
@@ -139,7 +130,7 @@ function Teams() {
         </div>
       </div>
       <div className="d-flex align-items-center me-5 ms-auto">
-        <Search value={searchQuery} onChange={handleSearchChange} />
+        <Search />
       </div>
     </div>
   );
@@ -219,20 +210,46 @@ function Teams() {
     </div>
   );
 
+  const [activeTab, setActiveTab] = useState('teamLeaders');
+
   const renderTeacherTeamManagement = () => (
     <div className="d-flex flex-column pt-3 pb-3 px-5">
       <ul className="nav nav-underline">
         <li className="nav-item">
-          <a className="nav-link active" aria-current="page" href="#">
+          <button
+            className={`nav-link ${
+              activeTab === 'teamLeaders' ? 'active' : ''
+            }`}
+            onClick={() => setActiveTab('teamLeaders')}
+          >
             Team Leaders
-          </a>
+          </button>
         </li>
         <li className="nav-item">
-          <a className="nav-link" href="#">
+          <button
+            className={`nav-link ${activeTab === 'teams' ? 'active' : ''}`}
+            onClick={() => setActiveTab('teams')}
+          >
             Teams
-          </a>
+          </button>
         </li>
       </ul>
+      {activeTab === 'teamLeaders' && (
+        <div>
+          <div className="d-flex justify-content-end ms-auto p-2">
+            <button
+              type="button"
+              className="btn btn-wild-primary btn-sm fw-semibold"
+              onClick={openAddLeadersModal}
+            >
+              Add Leaders
+            </button>
+          </div>
+          {renderTable(teamHeaders, data, 'No Leaders Identified Yet.')}
+        </div>
+      )}
+      {activeTab === 'teams' &&
+        renderTable(membersHeaders, data, 'No Teams Formed Yet.')}
     </div>
   );
 
