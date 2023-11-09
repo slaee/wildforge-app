@@ -58,6 +58,10 @@ function Teams() {
     },
   ];
 
+  if (!user.is_staff) {
+    buttons.splice(0, 1);
+  }
+
   const teamHeaders = ['id', 'name', 'status'];
   const membersHeaders = ['id', 'name', 'role', 'actions'];
   const [searchQuery, setSearchQuery] = useState('');

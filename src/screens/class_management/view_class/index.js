@@ -49,6 +49,10 @@ function ViewClass() {
     },
   ];
 
+  if (!user.is_staff) {
+    buttons.splice(0, 1);
+  }
+
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
     console.log('copied');

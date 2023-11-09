@@ -133,6 +133,10 @@ function ViewClassMembers() {
     },
   ];
 
+  if (!user.is_staff) {
+    buttons.splice(0, 1);
+  }
+
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
