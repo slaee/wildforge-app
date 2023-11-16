@@ -43,7 +43,7 @@ function Remarks({ modalTitle, visible, handleModal, hasDropdown }) {
             </button>
             <button
               type="submit"
-              className="btn btn-create-primary mx-auto fw-semibold"
+              className="btn btn-yellow-primary mx-auto fw-semibold"
             >
               Submit
             </button>

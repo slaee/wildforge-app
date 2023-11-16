@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import ClassCards from '../../../components/cards/class_cards';
-import CreateClass from '../create_class';
-import JoinClass from '../join_class';
+import CreateClass from '../../../components/modals/create_class';
+import JoinClass from '../../../components/modals/join_class';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
@@ -70,8 +70,8 @@ function Classes() {
       <div className="container-fluid d-flex flex-column">
         <Header />
         <div className="d-flex pt-2 pb-2">
-          <div className="brown-text fw-bold fs-5 py-2 mx-5">Classes</div>
-          <div className="d-flex align-items-center ms-auto mx-5">
+          <div className="brown-text fw-bold fs-5 py-2 px-5">CLASSES</div>
+          <div className="d-flex align-items-center ms-auto px-5">
             <Search value={searchQuery} onChange={handleSearchChange} />
             {user.is_staff ? (
               <button
@@ -82,10 +82,10 @@ function Classes() {
               </button>
             ) : (
               <button
-                className="btn btn-join-primary ms-4"
+                className="btn btn-yellow-primary ms-4"
                 onClick={openJoinClassModal}
               >
-                Join a class
+                Join Class
               </button>
             )}
           </div>
@@ -96,14 +96,13 @@ function Classes() {
               No Classes. Create a new Class
             </div>
           )}
-          <div className="d-flex flex-row justify-content-start py-2 gap-5 flex-wrap">
+          <div className="d-flex flex-row justify-content-start py-2 gap-2 flex-wrap">
             {classes &&
               filteredClasses.map((Class) => (
                 <ClassCards
                   key={Class.id}
                   id={Class.id}
                   name={Class.name}
-                  classCode={Class.class_code}
                   section={Class.sections}
                   schedule={Class.schedule}
                 />

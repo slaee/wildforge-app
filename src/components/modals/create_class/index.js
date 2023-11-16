@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import { Dialog } from 'primereact/dialog';
-import ControlInput from '../../../components/controlinput';
+import ControlInput from '../../controlinput';
 import { isObjectEmpty } from '../../../utils/object';
 import { useCreateClass } from '../../../hooks';
 import './index.scss';
@@ -65,16 +65,16 @@ function CreateClass({ visible, handleModal }) {
 
   const renderShowCode = (code) => (
     <Dialog
-      className="code-modal p-4"
+      className="code-modal p-3"
       visible={showCode}
       onHide={closeShowCodeModal}
       showHeader={false}
     >
       <span className="fw-bold fs-6">Join Code</span>
-      <div className="d-flex flex-row my-3 justify-content-center">
-        <span className="code-content text-center p-2">{code}</span>
+      <div className="d-flex flex-row py-2 justify-content-center">
+        <div className="code-content text-center p-2">{code}</div>
         <button
-          className="btn btn-create-primary fw-semibold ms-2"
+          className="btn btn-yellow-primary btn-lg fw-semibold ms-4"
           onClick={() => handleCopyCode(classCode)}
         >
           Copy
@@ -92,12 +92,7 @@ function CreateClass({ visible, handleModal }) {
         showHeader={false}
       >
         <div className="d-flex flex-column">
-          <button
-            aria-label="Close Modal"
-            className="btn btn-close ms-auto"
-            onClick={handleModal}
-          />
-          <span className="fw-bold text-center fs-5">Create Class</span>
+          <div className="fw-bold text-center fs-5">Create Class</div>
           <Formik
             initialValues={{
               name: '',
@@ -173,8 +168,15 @@ function CreateClass({ visible, handleModal }) {
                 </div>
                 <div className="d-flex flex-row justify-content-center">
                   <button
+                    aria-label="Close Modal"
+                    className="btn btn-secondary btn-lg ms-auto fw-semibold my-3 mx-auto"
+                    onClick={handleModal}
+                  >
+                    Cancel
+                  </button>
+                  <button
                     type="submit"
-                    className="btn btn-create-primary ms-auto fw-semibold my-3 mx-auto"
+                    className="btn btn-yellow-primary btn-lg ms-auto fw-semibold my-3 mx-auto"
                   >
                     Create
                   </button>

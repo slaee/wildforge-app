@@ -10,8 +10,6 @@ import AddLeaders from '../../../components/modals/add_leaders';
 
 import './index.scss';
 import Search from '../../../components/search';
-import Remarks from '../../../components/modals/remarks';
-import DischargeNotifModal from '../../../components/modals/discharge_notif';
 
 function Teams() {
   const { user } = useAuth();
@@ -66,6 +64,7 @@ function Teams() {
   const membersHeaders = ['id', 'name', 'role', 'actions'];
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredClasses, setFilteredClasses] = useState([]);
+  const [selectedValue, setSelectedValue] = useState('');
 
   const data = [];
 
@@ -86,93 +85,98 @@ function Teams() {
     setSearchQuery(e.target.value);
   };
 
-  const renderAdminSubheader = () => (
-    <div className="subheader-body d-flex pt-2 pb-2">
-      <div className="mx-5">
-        <div className="fw-bold fs-5 brown-text">
-          {classRoom?.name} {classRoom?.sections}
-        </div>
-        <div className="d-flex py-2">
-          <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
-          <div className="ms-4 me-2 fw-semibold fs-6">
-            {classRoom?.class_code}
-          </div>
-          <button
-            type="button"
-            className="btn btn-secondary btn-sm"
-            onClick={handleCopyCode}
-          >
-            Copy
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  const handleChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
 
-  const renderSubheader = () => (
-    <div className="subheader-body d-flex pt-2 pb-2">
-      <div className="mx-5">
-        <div className="fw-bold fs-5 brown-text">
-          {classRoom?.name} {classRoom?.sections}
-        </div>
-        <div className="d-flex py-2">
-          <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
-          <div className="ms-4 me-2 fw-semibold fs-6">
-            {classRoom?.class_code}
-          </div>
-          <button
-            type="button"
-            className="btn btn-secondary btn-sm"
-            onClick={handleCopyCode}
-          >
-            Copy
-          </button>
-        </div>
-      </div>
-      <div className="d-flex align-items-center me-5 ms-auto">
-        <Search />
-      </div>
-    </div>
-  );
+  const getColorClass = () => {
+    if (selectedValue === '1') {
+      return 'text-success';
+    }
+    if (selectedValue === '2') {
+      return 'text-danger';
+    }
+    return 'text-default';
+  };
 
-  const renderTeamsSubheader = () => (
-    <div className="subheader-body d-flex pt-2 pb-2">
-      <div className="mx-5">
-        <div className="fw-bold fs-5 brown-text">
-          {classRoom?.name} {classRoom?.sections}
-        </div>
-        <div className="d-flex py-2">
-          <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
-          <div className="ms-4 me-2 fw-semibold fs-6">
-            {classRoom?.class_code}
+  const renderSubheader = () => {
+    let subheaderContent = null;
+
+    if (user.is_staff) {
+      subheaderContent = (
+        <div className="d-flex pt-2 pb-2">
+          <div className="px-5">
+            <div className="d-flex align-items-center fw-bold fs-5 brown-text">
+              {classRoom?.name} {classRoom?.sections}
+            </div>
+            <div className="d-flex py-2">
+              <div className="d-flex align-items-center fw-semibold fs-6">
+                {classRoom?.schedule}
+              </div>
+              <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
+                {classRoom?.class_code}
+              </div>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={handleCopyCode}
+              >
+                Copy
+              </button>
+            </div>
           </div>
-          <button
-            type="button"
-            className="btn btn-secondary btn-sm"
-            onClick={handleCopyCode}
-          >
-            Copy
-          </button>
-        </div>
-      </div>
-      <div className="d-flex align-items-center me-5 ms-auto">
-        <div className="d-flex">
-          <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
-            Hiring:
+          <div className="d-flex align-items-center me-5 ms-auto">
+            <Search />
           </div>
-          <select className="form-select form-select-sm">
-            <option className="text-success fw-semibold" value="1">
-              OPEN
-            </option>
-            <option className="text-danger fw-semibold" value="2">
-              CLOSE
-            </option>
-          </select>
         </div>
-        <div className="fw-bold ms-4 red-text">Leave Team</div>
-      </div>
-    </div>
-  );
+      );
+    } else if (user.role === 'tl') {
+      subheaderContent = (
+        <div className="subheader-body d-flex pt-2 pb-2">
+          <div className="mx-5">
+            <div className="fw-bold fs-5 brown-text">
+              {classRoom?.name} {classRoom?.sections}
+            </div>
+            <div className="d-flex py-2">
+              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+              <div className="ms-4 me-2 fw-semibold fs-6">
+                {classRoom?.class_code}
+              </div>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={handleCopyCode}
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+          <div className="d-flex align-items-center me-5 ms-auto">
+            <div className="d-flex">
+              <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
+                Hiring:
+              </div>
+              <select
+                className={`form-select form-select-sm ${getColorClass()} fw-semibold`}
+                onChange={handleChange}
+                value={selectedValue}
+              >
+                <option className="text-success fw-semibold" value="1">
+                  OPEN
+                </option>
+                <option className="text-danger fw-semibold" value="2">
+                  CLOSE
+                </option>
+              </select>
+            </div>
+            <div className="fw-bold ms-4 red-text">Leave Team</div>
+          </div>
+        </div>
+      );
+    }
+
+    return subheaderContent;
+  };
 
   const renderTable = (headerData, tableData, emptyMessage) => (
     <div className="d-flex flex-column pt-3 pb-3 px-5 table-body">
@@ -235,21 +239,22 @@ function Teams() {
         </li>
       </ul>
       {activeTab === 'teamLeaders' && (
-        <div>
+        <>
           <div className="d-flex justify-content-end ms-auto p-2">
             <button
               type="button"
-              className="btn btn-wild-primary btn-sm fw-semibold"
+              className="btn btn-yellow-primary fw-semibold"
               onClick={openAddLeadersModal}
             >
               Add Leaders
             </button>
           </div>
           {renderTable(teamHeaders, data, 'No Leaders Identified Yet.')}
-        </div>
+        </>
       )}
-      {activeTab === 'teams' &&
-        renderTable(membersHeaders, data, 'No Teams Formed Yet.')}
+      {activeTab === 'teams' && (
+        <>{renderTable(membersHeaders, data, 'No Teams Formed Yet.')}</>
+      )}
     </div>
   );
 
@@ -262,8 +267,8 @@ function Teams() {
       />
       <div className="container-fluid d-flex flex-column">
         <Header />
-        <div className="d-flex pt-2 pb-2">
-          {renderAdminSubheader()}
+        <div className="d-flex flex-column">
+          {renderSubheader()}
           <AddLeaders
             modalTitle="Add Leaders"
             visible={isAddLeadersModalOpen}

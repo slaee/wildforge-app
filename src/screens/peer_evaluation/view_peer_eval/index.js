@@ -67,7 +67,7 @@ function PeerEval() {
             </button>
             <button
               type="btn"
-              className="btn btn-wild-primary btn-lg fw-semibold ms-4"
+              className="btn btn-yellow-primary btn-lg fw-semibold ms-4 px-4"
               onClick={() => console.log('submit')}
             >
               Save
@@ -103,17 +103,17 @@ function PeerEval() {
         >
           Assign Classes
         </button>
-        <div className="d-flex justify-content-evenly pt-5">
+        <div className="position-fixed bottom-0 start-50 translate-middle-x pb-5">
           <button
             type="btn"
-            className="btn btn-outline-secondary btn-lg fw-semibold"
+            className="btn btn-outline-secondary btn-lg fw-semibold me-3"
             onClick={closePeerEvalModal}
           >
             Cancel
           </button>
           <button
             type="btn"
-            className="btn btn-wild-primary btn-lg fw-semibold"
+            className="btn btn-yellow-primary btn-lg fw-semibold ms-3"
             onClick={() => console.log('submit')}
           >
             Submit
@@ -138,15 +138,17 @@ function PeerEval() {
           <div className="d-flex align-items-center ms-auto mx-5">
             <button
               type="btn"
-              className="btn btn-join-primary fw-semibold"
+              className="btn btn-yellow-primary fw-semibold"
               onClick={openPeerEvalModal}
             >
               Add Peer Evaluation
             </button>
           </div>
         </div>
-        <div className="container-fluid">
-          <div className="fw-bold fs-4 px-5 py-3">Peer Evaluation</div>
+        <div className="d-flex flex-column">
+          <div className="brown-text fw-bold fs-5 py-2 px-5">
+            PEER EVALUATION
+          </div>
           <Table headers={peerEvalHeaders} data={[]} className="mt-3" />
           {peerEvalModal && renderPeerEvalModal()}
           {assignClassModal && renderAssignTeamModal()}

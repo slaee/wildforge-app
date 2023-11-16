@@ -15,7 +15,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    @include mixins.make-container(450px, 32vh, variables.$wild-yellow, variables.$wild-white);
+    @include mixins.make-container(25vw, 32vh, variables.$wild-yellow, variables.$wild-white);
 }
 
 .teams-container{
@@ -23,12 +23,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    @include mixins.make-container(450px, 25vh, variables.$wild-brown, variables.$wild-white);
+    @include mixins.make-container(100%, 25vh, variables.$wild-brown, variables.$wild-white);
 }
 
 .logs-container{
     display: flex;
     flex-direction: column;
     padding: 4%;
-    @include mixins.make-container(450px, 68vh, variables.$wild-grey, variables.$wild-white);
+    @include mixins.make-container(100%, 67.3vh, variables.$wild-grey, variables.$wild-white);
 }
