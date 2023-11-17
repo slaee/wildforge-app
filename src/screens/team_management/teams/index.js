@@ -17,6 +17,10 @@ function Teams() {
 
   const navigate = useNavigate();
 
+  const hasTeam = true;
+
+  user.role = 'tl';
+
   const { isLoading: isClassesLoading, classes } = useClasses();
 
   useEffect(() => {
@@ -32,8 +36,6 @@ function Teams() {
   const { isLoading: isClassLoading, classRoom } = useClass(classId);
 
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
-  // prettier-ignore
-  const [isStartTeamFormationModalOpen, setStartTeamFormationModalOpen] = useState(false);
 
   const buttons = [
     {
@@ -60,13 +62,73 @@ function Teams() {
     buttons.splice(0, 1);
   }
 
-  const teamHeaders = ['id', 'name', 'status'];
+  const teamLeaderHeaders = ['id', 'name', 'team', 'status'];
+  const teamsHeaders = ['id', 'team', 'leader', 'members', 'actions'];
   const membersHeaders = ['id', 'name', 'role', 'actions'];
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredClasses, setFilteredClasses] = useState([]);
   const [selectedValue, setSelectedValue] = useState('');
 
-  const data = [];
+  const actionButtons = () => (
+    <>
+      <button
+        type="button"
+        className="btn btn-sm fw-bold text-success"
+        onClick={() => console.log('View Team')}
+      >
+        VIEW
+      </button>
+      {user.is_staff && (
+        <>
+          <button
+            type="button"
+            className="btn btn-sm fw-bold text-primary"
+            onClick={() => console.log('Edit Team')}
+          >
+            EDIT
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm fw-bold text-danger"
+            onClick={() => console.log('Delete Team')}
+          >
+            DELETE
+          </button>
+        </>
+      )}
+    </>
+  );
+
+  const dataTL = [
+    {
+      id: 1,
+      name: 'John Doe',
+      team: 'Team A',
+      status: 'Active',
+    },
+    {
+      id: 2,
+      name: 'Jane Doe',
+      team: 'Team B',
+      status: 'Pending',
+    },
+    {
+      id: 3,
+      name: 'Bob Smith',
+      team: 'Team C',
+      status: 'Inactive',
+    },
+  ];
+
+  const dataT = [
+    {
+      id: 1,
+      team: 'Team A',
+      leader: 'John Doe',
+      members: '3',
+      actions: actionButtons(),
+    },
+  ];
+
+  const dataM = [];
 
   const openAddLeadersModal = () => {
     setAddLeadersModalOpen(true);
@@ -79,10 +141,6 @@ function Teams() {
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
     console.log('copied');
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
   };
 
   const handleChange = (event) => {
@@ -130,7 +188,8 @@ function Teams() {
           </div>
         </div>
       );
-    } else if (user.role === 'tl') {
+    }
+    if (user.role === 'tl') {
       subheaderContent = (
         <div className="subheader-body d-flex pt-2 pb-2">
           <div className="mx-5">
@@ -157,7 +216,7 @@ function Teams() {
                 Hiring:
               </div>
               <select
-                className={`form-select form-select-sm ${getColorClass()} fw-semibold`}
+                className={`form-select form-select-sm ${getColorClass()} fw-bold`}
                 onChange={handleChange}
                 value={selectedValue}
               >
@@ -203,6 +262,7 @@ function Teams() {
                 className={`form-select form-select-sm ${getColorClass()} fw-semibold`}
                 onChange={handleChange}
                 value={selectedValue}
+                disabled
               >
                 <option className="text-success fw-semibold" value="1">
                   OPEN
@@ -222,7 +282,7 @@ function Teams() {
 
   const renderTable = (headerData, tableData, emptyMessage) => (
     <div className="d-flex flex-column pt-3 pb-3 px-5 table-body">
-      {data.length === 0 ? (
+      {tableData.length === 0 ? (
         <div className="d-flex flex-column justify-content-center align-items-center">
           <Table headers={headerData} data={tableData} className="mt-3" />
           <div className="brown-text fw-bold fs-5 py-2 mx-5">
@@ -251,7 +311,7 @@ function Teams() {
       </div>
       <div className="container">
         <div className="fw-bold fs-4 px-5 py-3">Members</div>
-        {renderTable(membersHeaders, data, "There's no members yet.")}
+        {renderTable(membersHeaders, dataM, "There's no members yet.")}
       </div>
     </div>
   );
@@ -291,11 +351,11 @@ function Teams() {
               Add Leaders
             </button>
           </div>
-          {renderTable(teamHeaders, data, 'No Leaders Identified Yet.')}
+          {renderTable(teamLeaderHeaders, dataTL, 'No Leaders Identified Yet.')}
         </>
       )}
       {activeTab === 'teams' && (
-        <>{renderTable(membersHeaders, data, 'No Teams Formed Yet.')}</>
+        <>{renderTable(teamsHeaders, dataT, 'No Teams Formed Yet.')}</>
       )}
     </div>
   );
@@ -317,9 +377,8 @@ function Teams() {
             handleModal={closeAddLeadersModal}
           />
         </div>
-        {renderTeacherTeamManagement()}
-        {/* {renderTable()} */}
-        {/* {renderTeamData()} */}
+        {user.is_staff && renderTeacherTeamManagement()}
+        {hasTeam && renderTeamData()} {/* Only for Team Leaders */}
       </div>
     </div>
   );

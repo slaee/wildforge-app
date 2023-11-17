@@ -13,11 +13,6 @@ function AddLeaders({ visible, handleModal }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
-  const manualHeaders = ['id', 'name', 'actions'];
-  const automaticHeaders = ['id', 'activity', 'actions'];
-  // unya na ang actions kay kalimot ko - Jhen
-  // test lang ni
-
   const openManualModal = () => {
     setShowManualModal(true);
     console.log('open manual');
@@ -38,6 +33,70 @@ function AddLeaders({ visible, handleModal }) {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
+
+  const actionButtons = () => {
+    if (showManualModal) {
+      return (
+        <button
+          type="button"
+          className="btn btn-yellow-primary fw-semibold"
+          onClick={() => console.log('clicked')}
+        >
+          Select as Leader
+        </button>
+      );
+    }
+    if (showAutomaticModal) {
+      return (
+        <div className="d-flex justify-content-center form-check form-switch">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckDefault"
+          />
+        </div>
+      );
+    }
+    return null; // Default to null if neither condition is met
+  };
+
+  const manualHeaders = ['id', 'name', 'actions'];
+  const manualSelectionData = [
+    {
+      id: 1,
+      name: 'John Doe',
+      actions: actionButtons(),
+    },
+    {
+      id: 2,
+      name: 'Sheldon Cooper',
+      actions: actionButtons(),
+    },
+    {
+      id: 3,
+      name: 'Loki Laufeyson',
+      actions: actionButtons(),
+    },
+  ];
+  const automaticHeaders = ['id', 'activity', 'actions'];
+  const automaticSelectionData = [
+    {
+      id: 1,
+      activity: 'Activity 1',
+      actions: actionButtons(),
+    },
+    {
+      id: 2,
+      activity: 'Activity 2',
+      actions: actionButtons(),
+    },
+    {
+      id: 3,
+      activity: 'Activity 3',
+      actions: actionButtons(),
+    },
+  ];
 
   // useEffect(() => {
   //   const lowerCaseQuery = searchQuery.toLowerCase();
@@ -68,7 +127,11 @@ function AddLeaders({ visible, handleModal }) {
         <div className="ms-auto">
           <Search value={searchQuery} onChange={handleSearchChange} />
         </div>
-        <Table headers={manualHeaders} data={[]} className="mt-3" />
+        <Table
+          headers={manualHeaders}
+          data={manualSelectionData}
+          className="mt-3"
+        />
       </div>
     </Dialog>
   );
@@ -81,18 +144,21 @@ function AddLeaders({ visible, handleModal }) {
       showHeader={false}
     >
       <div className="d-flex flex-column h-100">
-        <div className="d-grid gap-3">
-          <button
-            aria-label="Close Modal"
-            className="btn btn-close ms-auto"
-            onClick={closeAutomaticModal}
-          />
-          <div className="text-left fs-5 fw-semibold">Activity Lists</div>
-          <div className="ms-auto">
-            <Search value={searchQuery} onChange={handleSearchChange} />
-          </div>
-          <Table headers={automaticHeaders} data={[]} className="mt-3" />
+        <button
+          aria-label="Close Modal"
+          className="btn btn-close ms-auto"
+          onClick={closeAutomaticModal}
+        />
+        <div className="text-left fs-5 fw-semibold">Activity Lists</div>
+        <div className="ms-auto">
+          <Search value={searchQuery} onChange={handleSearchChange} />
         </div>
+        <Table
+          headers={automaticHeaders}
+          data={automaticSelectionData}
+          className="mt-3"
+        />
+
         <div className="mt-auto position-fixed bottom-0 start-50 translate-middle-x pb-5">
           <button type="btn" className="btn btn-wild-primary fw-bold btn-large">
             Start Identifying

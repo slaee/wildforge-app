@@ -63,37 +63,6 @@ const useClassMembers = (classId) => {
     }
   };
 
-  const acceptLeader = async (memberID) => {
-    let responseCode;
-
-    try {
-      const { status } = await ClassesService.acceptLeader(classId, memberID);
-
-      responseCode = status;
-    } catch (error) {
-      responseCode = error.response.status;
-    }
-
-    switch (responseCode) {
-      case 200:
-        setClassMembers((prevClassMembers) =>
-          prevClassMembers.map((member) => {
-            if (member.id === memberID) {
-              return { ...member, role: 'tl' };
-            }
-
-            return member;
-          })
-        );
-        break;
-      case 404:
-      case 500:
-        navigate(`/classes/$P{classId}/members`);
-        break;
-      default:
-    }
-  };
-
   useEffect(() => {
     const retrieveClassMembers = async () => {
       let responseCode;
@@ -132,7 +101,6 @@ const useClassMembers = (classId) => {
     classMembers,
     deleteMember,
     acceptMember,
-    acceptLeader,
   };
 };
 
