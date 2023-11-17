@@ -173,6 +173,48 @@ function Teams() {
           </div>
         </div>
       );
+    } else {
+      subheaderContent = (
+        <div className="subheader-body d-flex pt-2 pb-2">
+          <div className="mx-5">
+            <div className="fw-bold fs-5 brown-text">
+              {classRoom?.name} {classRoom?.sections}
+            </div>
+            <div className="d-flex py-2">
+              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+              <div className="ms-4 me-2 fw-semibold fs-6">
+                {classRoom?.class_code}
+              </div>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={handleCopyCode}
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+          <div className="d-flex align-items-center me-5 ms-auto">
+            <div className="d-flex">
+              <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
+                Hiring:
+              </div>
+              <select
+                className={`form-select form-select-sm ${getColorClass()} fw-semibold`}
+                onChange={handleChange}
+                value={selectedValue}
+              >
+                <option className="text-success fw-semibold" value="1">
+                  OPEN
+                </option>
+                <option className="text-danger fw-semibold" value="2">
+                  CLOSE
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      );
     }
 
     return subheaderContent;
