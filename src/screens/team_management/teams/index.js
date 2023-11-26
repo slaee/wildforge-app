@@ -7,10 +7,11 @@ import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import Table from '../../../components/table';
 import AddLeaders from '../../../components/modals/add_leaders';
+import CreateTeam from '../../../components/modals/create_team';
+import Search from '../../../components/search';
+import ApplyTeam from '../../../components/modals/apply_team';
 
 import './index.scss';
-import Search from '../../../components/search';
-import CreateTeam from '../../../components/modals/create_team';
 
 function Teams() {
   const { user } = useAuth();
@@ -18,9 +19,9 @@ function Teams() {
 
   const navigate = useNavigate();
 
-  const hasTeam = true;
+  const hasTeam = false;
 
-  user.role = 'tl';
+  // /user.role = 'tl';
 
   const { isLoading: isClassesLoading, classes } = useClasses();
 
@@ -37,6 +38,7 @@ function Teams() {
   const { isLoading: isClassLoading, classRoom } = useClass(classId);
 
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
+  const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
 
   const buttons = [
     {
@@ -193,8 +195,7 @@ function Teams() {
           </div>
         </div>
       );
-    }
-    if (user.role === 'tl' && hasTeam) {
+    } else if (user.role === 'tl' && hasTeam) {
       subheaderContent = (
         <div className="subheader-body d-flex pt-2 pb-2">
           <div className="mx-5">
@@ -203,7 +204,7 @@ function Teams() {
             </div>
             <div className="d-flex py-2">
               <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
-              <div className="ms-4 me-2 fw-semibold fs-6">
+              <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
                 {classRoom?.class_code}
               </div>
               <button
@@ -246,7 +247,7 @@ function Teams() {
             </div>
             <div className="d-flex py-2">
               <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
-              <div className="ms-4 me-2 fw-semibold fs-6">
+              <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
                 {classRoom?.class_code}
               </div>
               <button
@@ -391,6 +392,48 @@ function Teams() {
     </div>
   );
 
+  const renderTeamLeaderNoTeam = () => (
+    <div className="d-flex flex-column pt-3 pb-3 px-5">
+      <div className="d-flex justify-content-center">
+        <button
+          type="button"
+          className="btn btn-yellow-primary fw-semibold btn-lg"
+          onClick={() => setCreateTeamModalOpen(true)}
+        >
+          Create Team
+        </button>
+      </div>
+      <CreateTeam
+        visible={isCreateTeamModalOpen}
+        handleModal={() => setCreateTeamModalOpen(false)}
+      />
+    </div>
+  );
+
+  const renderStudentNoTeam = () => (
+    <div className="d-flex flex-column pt-3 pb-3 px-5">
+      {renderTable(teamsHeaders, dataT, 'No Teams Formed Yet.')}
+      {selectedTeam && (
+        <ApplyTeam
+          visible={selectedTeam}
+          handleModal={() => setSelectedTeam(false)}
+        />
+      )}
+    </div>
+  );
+
+  const isTeacher = user.is_staff;
+
+  const renderContent = () => {
+    if (isTeacher) {
+      return renderTeacherTeamManagement();
+    }
+    if (user.role === 'tl') {
+      return hasTeam ? renderTeamData() : renderTeamLeaderNoTeam();
+    }
+    return hasTeam ? renderTeamData() : renderStudentNoTeam();
+  };
+
   return (
     <div className="d-flex">
       <Navbar
@@ -408,15 +451,7 @@ function Teams() {
             handleModal={closeAddLeadersModal}
           />
         </div>
-        {user.is_staff && renderTeacherTeamManagement()}
-        {user.role === 'tl' && hasTeam ? (
-          renderTeamData()
-        ) : user.role === 'tl' && !hasTeam ? (
-          <CreateTeam />
-        ) : null}
-        {!hasTeam
-          ? renderTable(teamsHeaders, dataT, 'No Teams Formed Yet.')
-          : selectedTeam && renderTeamData()}
+        {renderContent()}
       </div>
     </div>
   );

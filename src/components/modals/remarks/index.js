@@ -17,7 +17,7 @@ function Remarks({ modalTitle, visible, handleModal, hasDropdown }) {
     >
       <div className="d-flex flex-column p-5">
         <div className="d-grid gap-3">
-          <div className="text-center fs-3 fw-bold">{modalTitle}</div>
+          <div className="text-center fs-4 fw-bold">{modalTitle}</div>
           <ControlTextArea name="remarks" label="Add Remarks" />
           {hasDropdown && (
             <div className="d-flex flex-column">
@@ -43,7 +43,7 @@ function Remarks({ modalTitle, visible, handleModal, hasDropdown }) {
             </button>
             <button
               type="submit"
-              className="btn btn-yellow-primary mx-auto fw-semibold"
+              className="btn btn-yellow-primary btn-create-team-modal mx-auto fw-semibold"
             >
               Submit
             </button>
