@@ -389,6 +389,16 @@ function Teams() {
       {activeTab === 'teams' && (
         <>{renderTable(teamsHeaders, dataT, 'No Teams Formed Yet.')}</>
       )}
+      {selectedTeam && (
+        <div className="modal-apply-team p-4">
+          <button
+            aria-label="Close Modal"
+            className="btn d-flex btn-close ms-auto"
+            onClick={() => setSelectedTeam(false)}
+          />
+          {renderTeamData()}
+        </div>
+      )}
     </div>
   );
 
