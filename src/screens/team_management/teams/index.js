@@ -10,6 +10,7 @@ import AddLeaders from '../../../components/modals/add_leaders';
 
 import './index.scss';
 import Search from '../../../components/search';
+import CreateTeam from '../../../components/modals/create_team';
 
 function Teams() {
   const { user } = useAuth();
@@ -66,13 +67,17 @@ function Teams() {
   const teamsHeaders = ['id', 'team', 'leader', 'members', 'actions'];
   const membersHeaders = ['id', 'name', 'role', 'actions'];
   const [selectedValue, setSelectedValue] = useState('');
+  const [selectedTeam, setSelectedTeam] = useState(false);
 
   const actionButtons = () => (
     <>
       <button
         type="button"
         className="btn btn-sm fw-bold text-success"
-        onClick={() => console.log('View Team')}
+        onClick={() => {
+          console.log('View Team');
+          setSelectedTeam(true);
+        }}
       >
         VIEW
       </button>
@@ -189,7 +194,7 @@ function Teams() {
         </div>
       );
     }
-    if (user.role === 'tl') {
+    if (user.role === 'tl' && hasTeam) {
       subheaderContent = (
         <div className="subheader-body d-flex pt-2 pb-2">
           <div className="mx-5">
@@ -232,7 +237,7 @@ function Teams() {
           </div>
         </div>
       );
-    } else {
+    } else if (user.role !== 'tl' && hasTeam) {
       subheaderContent = (
         <div className="subheader-body d-flex pt-2 pb-2">
           <div className="mx-5">
@@ -272,6 +277,32 @@ function Teams() {
                 </option>
               </select>
             </div>
+          </div>
+        </div>
+      );
+    } else {
+      subheaderContent = (
+        <div className="subheader-body d-flex pt-2 pb-2">
+          <div className="mx-5">
+            <div className="fw-bold fs-5 brown-text">
+              {classRoom?.name} {classRoom?.sections}
+            </div>
+            <div className="d-flex py-2">
+              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+              <div className="ms-4 me-2 fw-semibold fs-6">
+                {classRoom?.class_code}
+              </div>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={handleCopyCode}
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+          <div className="d-flex align-items-center me-5 ms-auto">
+            <Search />
           </div>
         </div>
       );
@@ -378,7 +409,14 @@ function Teams() {
           />
         </div>
         {user.is_staff && renderTeacherTeamManagement()}
-        {hasTeam && renderTeamData()} {/* Only for Team Leaders */}
+        {user.role === 'tl' && hasTeam ? (
+          renderTeamData()
+        ) : user.role === 'tl' && !hasTeam ? (
+          <CreateTeam />
+        ) : null}
+        {!hasTeam
+          ? renderTable(teamsHeaders, dataT, 'No Teams Formed Yet.')
+          : selectedTeam && renderTeamData()}
       </div>
     </div>
   );
