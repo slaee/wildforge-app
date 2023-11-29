@@ -32,7 +32,7 @@ function TeamFormationSettings({ visible, handleModal }) {
         />
         <button
           aria-label="Save"
-          className="btn btn-join-primary fs-5 fw-semibold"
+          className="btn btn-yellow-primary fs-5 fw-semibold"
           onClick={handleModal}
         >
           Save

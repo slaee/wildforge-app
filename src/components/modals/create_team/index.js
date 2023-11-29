@@ -44,7 +44,7 @@ function CreateTeam({ visible, handleModal }) {
         </button>
         <button
           type="submit"
-          className="btn btn-create-primary mx-auto fw-semibold"
+          className="btn btn-yellow-primary btn-create-team-modal mx-auto fw-semibold"
         >
           Create
         </button>

@@ -6,7 +6,7 @@ import Search from '../../../components/search';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import Table from '../../../components/table';
-import { useClassMembers } from '../../../hooks';
+import { useClass, useClassMembers } from '../../../hooks';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
@@ -15,6 +15,7 @@ function ViewClassMembers() {
   const { id: classId } = useParams();
   const { user } = useAuth();
   const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
+  const { isLoading: isClassLoading, classRoom } = useClass(classId);
 
   let headers;
   if (user.is_staff) {
@@ -22,7 +23,7 @@ function ViewClassMembers() {
   } else {
     headers = ['id', 'name', 'team', 'role', 'status'];
   }
-  // filter out teacher from classMembers
+
   const data = classMembers
     .filter((member) => member.role !== 't')
     .map((member) => {
@@ -34,8 +35,8 @@ function ViewClassMembers() {
         status === 'pending' ? (
           <>
             <button
-              type="button"
-              className="btn btn-sm text-success"
+              type="btn"
+              className="btn btn-sm fw-bold text-success"
               onClick={() => {
                 acceptMember(id);
                 window.location.reload();
@@ -44,8 +45,8 @@ function ViewClassMembers() {
               ACCEPT
             </button>
             <button
-              type="button"
-              className="btn btn-sm text-danger"
+              type="btn"
+              className="btn btn-sm fw-bold text-danger"
               onClick={() => {
                 deleteMember(id);
                 window.location.reload();
@@ -56,8 +57,8 @@ function ViewClassMembers() {
           </>
         ) : (
           <button
-            type="button"
-            className="btn btn-sm text-danger"
+            type="btn"
+            className="btn btn-sm fw-bold text-danger"
             onClick={() => {
               deleteMember(id);
               window.location.reload();
@@ -160,6 +161,38 @@ function ViewClassMembers() {
     }
   }, [searchQuery, data]);
 
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(classRoom?.class_code);
+    console.log('copied');
+  };
+
+  const renderSubheader = () => (
+    <div className="d-flex pt-2 pb-2">
+      <div className="px-5">
+        <div className="d-flex align-items-center fw-bold fs-5 brown-text">
+          {classRoom?.name} {classRoom?.sections}
+        </div>
+        <div className="d-flex py-2">
+          <div className="d-flex align-items-center fw-semibold fs-6">
+            {classRoom?.schedule}
+          </div>
+          <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
+            {classRoom?.class_code}
+          </div>
+          {user.is_staff && (
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={handleCopyCode}
+            >
+              Copy
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   const renderTable = () => (
     <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
       {data && filteredData.length === 0 ? (
@@ -183,8 +216,8 @@ function ViewClassMembers() {
       />
       <div className="container-fluid d-flex flex-column">
         <Header />
-        <div className="d-flex pt-3 pb-3">
-          <div className="brown-text fw-bold fs-5 py-2 mx-5">Members</div>
+        <div className="d-flex">
+          {renderSubheader()}
           <div className="d-flex align-items-center ms-auto mx-5">
             <Search value={searchQuery} onChange={handleSearchChange} />
           </div>

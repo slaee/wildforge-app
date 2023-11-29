@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { isObjectEmpty } from '../../../utils/object';
 
 import './index.scss';
-import ControlInput from '../../../components/controlinput';
+import ControlInput from '../../controlinput';
 import { useJoinClass } from '../../../hooks';
 
 const validate = (values) => {
@@ -74,7 +74,7 @@ function JoinClass({ visible, handleModal }) {
                   error={errors.class_code}
                 />
                 <button
-                  className="btn btn-create-primary fw-semibold ms-2 mt-5"
+                  className="btn btn-yellow-primary fw-semibold ms-2 mt-5"
                   type="submit"
                 >
                   {isJoining ? 'Joining...' : 'Join'}

@@ -7,17 +7,21 @@ import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import Table from '../../../components/table';
 import AddLeaders from '../../../components/modals/add_leaders';
+import CreateTeam from '../../../components/modals/create_team';
+import Search from '../../../components/search';
+import ApplyTeam from '../../../components/modals/apply_team';
 
 import './index.scss';
-import Search from '../../../components/search';
-import Remarks from '../../../components/modals/remarks';
-import DischargeNotifModal from '../../../components/modals/discharge_notif';
 
 function Teams() {
   const { user } = useAuth();
   const { id: classId } = useParams();
 
   const navigate = useNavigate();
+
+  const hasTeam = false;
+
+  // /user.role = 'tl';
 
   const { isLoading: isClassesLoading, classes } = useClasses();
 
@@ -34,8 +38,7 @@ function Teams() {
   const { isLoading: isClassLoading, classRoom } = useClass(classId);
 
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
-  // prettier-ignore
-  const [isStartTeamFormationModalOpen, setStartTeamFormationModalOpen] = useState(false);
+  const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
 
   const buttons = [
     {
@@ -62,12 +65,77 @@ function Teams() {
     buttons.splice(0, 1);
   }
 
-  const teamHeaders = ['id', 'name', 'status'];
+  const teamLeaderHeaders = ['id', 'name', 'team', 'status'];
+  const teamsHeaders = ['id', 'team', 'leader', 'members', 'actions'];
   const membersHeaders = ['id', 'name', 'role', 'actions'];
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredClasses, setFilteredClasses] = useState([]);
+  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedTeam, setSelectedTeam] = useState(false);
 
-  const data = [];
+  const actionButtons = () => (
+    <>
+      <button
+        type="button"
+        className="btn btn-sm fw-bold text-success"
+        onClick={() => {
+          console.log('View Team');
+          setSelectedTeam(true);
+        }}
+      >
+        VIEW
+      </button>
+      {user.is_staff && (
+        <>
+          <button
+            type="button"
+            className="btn btn-sm fw-bold text-primary"
+            onClick={() => console.log('Edit Team')}
+          >
+            EDIT
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm fw-bold text-danger"
+            onClick={() => console.log('Delete Team')}
+          >
+            DELETE
+          </button>
+        </>
+      )}
+    </>
+  );
+
+  const dataTL = [
+    {
+      id: 1,
+      name: 'John Doe',
+      team: 'Team A',
+      status: 'Active',
+    },
+    {
+      id: 2,
+      name: 'Jane Doe',
+      team: 'Team B',
+      status: 'Pending',
+    },
+    {
+      id: 3,
+      name: 'Bob Smith',
+      team: 'Team C',
+      status: 'Inactive',
+    },
+  ];
+
+  const dataT = [
+    {
+      id: 1,
+      team: 'Team A',
+      leader: 'John Doe',
+      members: '3',
+      actions: actionButtons(),
+    },
+  ];
+
+  const dataM = [];
 
   const openAddLeadersModal = () => {
     setAddLeadersModalOpen(true);
@@ -82,101 +150,171 @@ function Teams() {
     console.log('copied');
   };
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+  const handleChange = (event) => {
+    setSelectedValue(event.target.value);
   };
 
-  const renderAdminSubheader = () => (
-    <div className="subheader-body d-flex pt-2 pb-2">
-      <div className="mx-5">
-        <div className="fw-bold fs-5 brown-text">
-          {classRoom?.name} {classRoom?.sections}
-        </div>
-        <div className="d-flex py-2">
-          <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
-          <div className="ms-4 me-2 fw-semibold fs-6">
-            {classRoom?.class_code}
-          </div>
-          <button
-            type="button"
-            className="btn btn-secondary btn-sm"
-            onClick={handleCopyCode}
-          >
-            Copy
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  const getColorClass = () => {
+    if (selectedValue === '1') {
+      return 'text-success';
+    }
+    if (selectedValue === '2') {
+      return 'text-danger';
+    }
+    return 'text-default';
+  };
 
-  const renderSubheader = () => (
-    <div className="subheader-body d-flex pt-2 pb-2">
-      <div className="mx-5">
-        <div className="fw-bold fs-5 brown-text">
-          {classRoom?.name} {classRoom?.sections}
-        </div>
-        <div className="d-flex py-2">
-          <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
-          <div className="ms-4 me-2 fw-semibold fs-6">
-            {classRoom?.class_code}
-          </div>
-          <button
-            type="button"
-            className="btn btn-secondary btn-sm"
-            onClick={handleCopyCode}
-          >
-            Copy
-          </button>
-        </div>
-      </div>
-      <div className="d-flex align-items-center me-5 ms-auto">
-        <Search />
-      </div>
-    </div>
-  );
+  const renderSubheader = () => {
+    let subheaderContent = null;
 
-  const renderTeamsSubheader = () => (
-    <div className="subheader-body d-flex pt-2 pb-2">
-      <div className="mx-5">
-        <div className="fw-bold fs-5 brown-text">
-          {classRoom?.name} {classRoom?.sections}
-        </div>
-        <div className="d-flex py-2">
-          <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
-          <div className="ms-4 me-2 fw-semibold fs-6">
-            {classRoom?.class_code}
+    if (user.is_staff) {
+      subheaderContent = (
+        <div className="d-flex pt-2 pb-2">
+          <div className="px-5">
+            <div className="d-flex align-items-center fw-bold fs-5 brown-text">
+              {classRoom?.name} {classRoom?.sections}
+            </div>
+            <div className="d-flex py-2">
+              <div className="d-flex align-items-center fw-semibold fs-6">
+                {classRoom?.schedule}
+              </div>
+              <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
+                {classRoom?.class_code}
+              </div>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={handleCopyCode}
+              >
+                Copy
+              </button>
+            </div>
           </div>
-          <button
-            type="button"
-            className="btn btn-secondary btn-sm"
-            onClick={handleCopyCode}
-          >
-            Copy
-          </button>
-        </div>
-      </div>
-      <div className="d-flex align-items-center me-5 ms-auto">
-        <div className="d-flex">
-          <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
-            Hiring:
+          <div className="d-flex align-items-center me-5 ms-auto">
+            <Search />
           </div>
-          <select className="form-select form-select-sm">
-            <option className="text-success fw-semibold" value="1">
-              OPEN
-            </option>
-            <option className="text-danger fw-semibold" value="2">
-              CLOSE
-            </option>
-          </select>
         </div>
-        <div className="fw-bold ms-4 red-text">Leave Team</div>
-      </div>
-    </div>
-  );
+      );
+    } else if (user.role === 'tl' && hasTeam) {
+      subheaderContent = (
+        <div className="subheader-body d-flex pt-2 pb-2">
+          <div className="mx-5">
+            <div className="fw-bold fs-5 brown-text">
+              {classRoom?.name} {classRoom?.sections}
+            </div>
+            <div className="d-flex py-2">
+              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+              <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
+                {classRoom?.class_code}
+              </div>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={handleCopyCode}
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+          <div className="d-flex align-items-center me-5 ms-auto">
+            <div className="d-flex">
+              <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
+                Hiring:
+              </div>
+              <select
+                className={`form-select form-select-sm ${getColorClass()} fw-bold`}
+                onChange={handleChange}
+                value={selectedValue}
+              >
+                <option className="text-success fw-semibold" value="1">
+                  OPEN
+                </option>
+                <option className="text-danger fw-semibold" value="2">
+                  CLOSE
+                </option>
+              </select>
+            </div>
+            <div className="fw-bold ms-4 red-text">Leave Team</div>
+          </div>
+        </div>
+      );
+    } else if (user.role !== 'tl' && hasTeam) {
+      subheaderContent = (
+        <div className="subheader-body d-flex pt-2 pb-2">
+          <div className="mx-5">
+            <div className="fw-bold fs-5 brown-text">
+              {classRoom?.name} {classRoom?.sections}
+            </div>
+            <div className="d-flex py-2">
+              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+              <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
+                {classRoom?.class_code}
+              </div>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={handleCopyCode}
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+          <div className="d-flex align-items-center me-5 ms-auto">
+            <div className="d-flex">
+              <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
+                Hiring:
+              </div>
+              <select
+                className={`form-select form-select-sm ${getColorClass()} fw-semibold`}
+                onChange={handleChange}
+                value={selectedValue}
+                disabled
+              >
+                <option className="text-success fw-semibold" value="1">
+                  OPEN
+                </option>
+                <option className="text-danger fw-semibold" value="2">
+                  CLOSE
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      subheaderContent = (
+        <div className="subheader-body d-flex pt-2 pb-2">
+          <div className="mx-5">
+            <div className="fw-bold fs-5 brown-text">
+              {classRoom?.name} {classRoom?.sections}
+            </div>
+            <div className="d-flex py-2">
+              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+              <div className="ms-4 me-2 fw-semibold fs-6">
+                {classRoom?.class_code}
+              </div>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={handleCopyCode}
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+          <div className="d-flex align-items-center me-5 ms-auto">
+            <Search />
+          </div>
+        </div>
+      );
+    }
+
+    return subheaderContent;
+  };
 
   const renderTable = (headerData, tableData, emptyMessage) => (
     <div className="d-flex flex-column pt-3 pb-3 px-5 table-body">
-      {data.length === 0 ? (
+      {tableData.length === 0 ? (
         <div className="d-flex flex-column justify-content-center align-items-center">
           <Table headers={headerData} data={tableData} className="mt-3" />
           <div className="brown-text fw-bold fs-5 py-2 mx-5">
@@ -205,7 +343,7 @@ function Teams() {
       </div>
       <div className="container">
         <div className="fw-bold fs-4 px-5 py-3">Members</div>
-        {renderTable(membersHeaders, data, "There's no members yet.")}
+        {renderTable(membersHeaders, dataM, "There's no members yet.")}
       </div>
     </div>
   );
@@ -235,23 +373,76 @@ function Teams() {
         </li>
       </ul>
       {activeTab === 'teamLeaders' && (
-        <div>
+        <>
           <div className="d-flex justify-content-end ms-auto p-2">
             <button
               type="button"
-              className="btn btn-wild-primary btn-sm fw-semibold"
+              className="btn btn-yellow-primary fw-semibold"
               onClick={openAddLeadersModal}
             >
               Add Leaders
             </button>
           </div>
-          {renderTable(teamHeaders, data, 'No Leaders Identified Yet.')}
+          {renderTable(teamLeaderHeaders, dataTL, 'No Leaders Identified Yet.')}
+        </>
+      )}
+      {activeTab === 'teams' && (
+        <>{renderTable(teamsHeaders, dataT, 'No Teams Formed Yet.')}</>
+      )}
+      {selectedTeam && (
+        <div className="modal-apply-team p-4">
+          <button
+            aria-label="Close Modal"
+            className="btn d-flex btn-close ms-auto"
+            onClick={() => setSelectedTeam(false)}
+          />
+          {renderTeamData()}
         </div>
       )}
-      {activeTab === 'teams' &&
-        renderTable(membersHeaders, data, 'No Teams Formed Yet.')}
     </div>
   );
+
+  const renderTeamLeaderNoTeam = () => (
+    <div className="d-flex flex-column pt-3 pb-3 px-5">
+      <div className="d-flex justify-content-center">
+        <button
+          type="button"
+          className="btn btn-yellow-primary fw-semibold btn-lg"
+          onClick={() => setCreateTeamModalOpen(true)}
+        >
+          Create Team
+        </button>
+      </div>
+      <CreateTeam
+        visible={isCreateTeamModalOpen}
+        handleModal={() => setCreateTeamModalOpen(false)}
+      />
+    </div>
+  );
+
+  const renderStudentNoTeam = () => (
+    <div className="d-flex flex-column pt-3 pb-3 px-5">
+      {renderTable(teamsHeaders, dataT, 'No Teams Formed Yet.')}
+      {selectedTeam && (
+        <ApplyTeam
+          visible={selectedTeam}
+          handleModal={() => setSelectedTeam(false)}
+        />
+      )}
+    </div>
+  );
+
+  const isTeacher = user.is_staff;
+
+  const renderContent = () => {
+    if (isTeacher) {
+      return renderTeacherTeamManagement();
+    }
+    if (user.role === 'tl') {
+      return hasTeam ? renderTeamData() : renderTeamLeaderNoTeam();
+    }
+    return hasTeam ? renderTeamData() : renderStudentNoTeam();
+  };
 
   return (
     <div className="d-flex">
@@ -262,17 +453,15 @@ function Teams() {
       />
       <div className="container-fluid d-flex flex-column">
         <Header />
-        <div className="d-flex pt-2 pb-2">
-          {renderAdminSubheader()}
+        <div className="d-flex flex-column">
+          {renderSubheader()}
           <AddLeaders
             modalTitle="Add Leaders"
             visible={isAddLeadersModalOpen}
             handleModal={closeAddLeadersModal}
           />
         </div>
-        {renderTeacherTeamManagement()}
-        {/* {renderTable()} */}
-        {/* {renderTeamData()} */}
+        {renderContent()}
       </div>
     </div>
   );
