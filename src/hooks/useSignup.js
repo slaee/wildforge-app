@@ -10,7 +10,7 @@ const useSignup = () => {
     last_name,
     email,
     password,
-    is_staff,
+    role,
     callbacks,
   }) => {
     setIsSigningUp(true);
@@ -24,7 +24,7 @@ const useSignup = () => {
         last_name,
         email,
         password,
-        is_staff,
+        role,
       });
 
       responseCode = status;

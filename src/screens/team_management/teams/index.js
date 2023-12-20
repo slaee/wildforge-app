@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
-import { useClass, useClasses } from '../../../hooks';
+import { useClassRoom, useClassRooms } from '../../../hooks';
 
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
@@ -23,7 +23,7 @@ function Teams() {
 
   // /user.role = 'tl';
 
-  const { isLoading: isClassesLoading, classes } = useClasses();
+  const { isLoading: isClassesLoading, classes } = useClassRooms();
 
   useEffect(() => {
     if (!isClassesLoading) {
@@ -35,7 +35,7 @@ function Teams() {
     }
   }, [isClassesLoading]);
 
-  const { isLoading: isClassLoading, classRoom } = useClass(classId);
+  const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
 
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);

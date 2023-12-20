@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ClassesService } from '../services';
+import { ClassRoomsService } from '../services';
 
-const useClasses = () => {
+const useClassRooms = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [classes, setClasses] = useState([]);
 
   useEffect(() => {
-    const listRooms = async () => {
+    const get = async () => {
       let responseCode;
       let retrievedClasses;
 
       try {
-        const { status, data } = await ClassesService.list();
+        const { status, data } = await ClassRoomsService.all();
 
         responseCode = status;
         retrievedClasses = data;
@@ -36,10 +36,10 @@ const useClasses = () => {
       setIsLoading(false);
     };
 
-    listRooms();
+    get();
   }, []);
 
   return { isLoading, classes };
 };
 
-export default useClasses;
+export default useClassRooms;

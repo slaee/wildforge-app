@@ -10,10 +10,10 @@ import './index.scss';
 const validate = (values) => {
   const errors = {};
 
-  if (!values.name) {
-    errors.name = 'This field is required.';
-  } else if (values.name.length > 50) {
-    errors.name = 'The maximum length of this field is 50 characters.';
+  if (!values.course_name) {
+    errors.course_name = 'This field is required.';
+  } else if (values.course_name.length > 50) {
+    errors.course_name = 'The maximum length of this field is 50 characters.';
   }
 
   if (!values.sections) {
@@ -32,6 +32,12 @@ const validate = (values) => {
     )
   ) {
     errors.schedule = 'The format of this field is invalid.';
+  }
+
+  if (!values.max_teams_members) {
+    errors.max_teams_members = 'This field is required.';
+  } else if (typeof values.max_teams_members !== 'number') {
+    errors.max_teams_members = 'This field must be a number.';
   }
 
   return errors;
@@ -95,9 +101,10 @@ function CreateClass({ visible, handleModal }) {
           <div className="fw-bold text-center fs-5">Create Class</div>
           <Formik
             initialValues={{
-              name: '',
+              course_name: '',
               sections: '',
               schedule: '',
+              max_teams_members: 5,
             }}
             onSubmit={async (values, { setErrors }) => {
               const errors = validate(values);
@@ -125,9 +132,10 @@ function CreateClass({ visible, handleModal }) {
 
               // Create Class
               await createClass({
-                name: values.name,
+                course_name: values.course_name,
                 sections: values.sections,
                 schedule: values.schedule,
+                max_teams_members: values.max_teams_members,
                 callbacks: createClassCallbacks,
               });
             }}
@@ -135,12 +143,12 @@ function CreateClass({ visible, handleModal }) {
             {({ errors, values, handleSubmit, setFieldValue }) => (
               <form onSubmit={handleSubmit}>
                 <ControlInput
-                  name="name"
-                  label="Class Name"
+                  name="course_name"
+                  label="Course Name"
                   className="yellow-on-focus"
-                  value={values.name}
-                  onChange={(e) => setFieldValue('name', e.target.value)}
-                  error={errors.name}
+                  value={values.course_name}
+                  onChange={(e) => setFieldValue('course_name', e.target.value)}
+                  error={errors.course_name}
                 />
                 <div>
                   <ControlInput
@@ -165,6 +173,17 @@ function CreateClass({ visible, handleModal }) {
                   <div className="format-instructions">
                     Sample Format: 1:00PM - 2:00PM
                   </div>
+                  <ControlInput
+                    name="max_teams_members"
+                    label="Max team members"
+                    className="yellow-on-focus"
+                    value={values.max_teams_members}
+                    type="number"
+                    onChange={(e) =>
+                      setFieldValue('max_teams_members', e.target.value)
+                    }
+                    error={errors.max_teams_members}
+                  />
                 </div>
                 <div className="d-flex flex-row justify-content-center">
                   <button

@@ -1,21 +1,28 @@
 import { useState } from 'react';
 
-import { ClassesService } from '../services';
+import { ClassRoomsService } from '../services';
 
 const useCreateClass = () => {
   const [isCreating, setIsCreating] = useState(false);
 
-  const createClass = async ({ name, sections, schedule, callbacks }) => {
+  const createClass = async ({
+    course_name,
+    sections,
+    schedule,
+    max_teams_members,
+    callbacks,
+  }) => {
     setIsCreating(true);
 
     let responseCode;
     let retrievedClass;
 
     try {
-      const { status, data } = await ClassesService.create({
-        name,
+      const { status, data } = await ClassRoomsService.create({
+        course_name,
         sections,
         schedule,
+        max_teams_members,
       });
 
       responseCode = status;

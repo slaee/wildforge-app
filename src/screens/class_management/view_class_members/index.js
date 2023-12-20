@@ -6,33 +6,34 @@ import Search from '../../../components/search';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import Table from '../../../components/table';
-import { useClass, useClassMembers } from '../../../hooks';
+import { useClassRoom, useClassMembers } from '../../../hooks';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
+import GLOBALS from '../../../app_globals';
 
 function ViewClassMembers() {
   const { id: classId } = useParams();
   const { user } = useAuth();
   const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
-  const { isLoading: isClassLoading, classRoom } = useClass(classId);
+  const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
 
   let headers;
-  if (user.is_staff) {
+  if (user.role === GLOBALS.USER_ROLE.MODERATOR) {
     headers = ['id', 'name', 'team', 'role', 'status', 'actions'];
   } else {
     headers = ['id', 'name', 'team', 'role', 'status'];
   }
 
   const data = classMembers
-    .filter((member) => member.role !== 't')
+    .filter((member) => member.role !== GLOBALS.CLASSMEMBER_ROLE.TEACHER)
     .map((member) => {
-      const { id, first_name, last_name, team, status, role } = member;
+      const { id, first_name, last_name, team, status } = member;
 
       let tb_data = {};
 
       const actions =
-        status === 'pending' ? (
+        status === GLOBALS.MEMBER_STATUS.PENDING ? (
           <>
             <button
               type="btn"
@@ -68,46 +69,25 @@ function ViewClassMembers() {
           </button>
         );
 
-      if (user.is_staff) {
-        if (role === 's') {
-          tb_data = {
-            id,
-            name: `${first_name} ${last_name}`,
-            team: team || 'N/A',
-            status,
-            role: 'Student',
-            actions,
-          };
-        }
-        if (role === 'tl') {
-          tb_data = {
-            id,
-            name: `${first_name} ${last_name}`,
-            team: team || 'N/A',
-            status,
-            role: 'Team Leader',
-            actions,
-          };
-        }
+      if (user.role === GLOBALS.USER_ROLE.MODERATOR) {
+        tb_data = {
+          id,
+          name: `${first_name} ${last_name}`,
+          team: team || 'N/A',
+          status:
+            status === GLOBALS.MEMBER_STATUS.PENDING ? 'pending' : 'accepted',
+          role: 'Student',
+          actions,
+        };
       } else {
-        if (role === 's') {
-          tb_data = {
-            id,
-            name: `${first_name} ${last_name}`,
-            team: team || 'N/A',
-            status,
-            role: 'Student',
-          };
-        }
-        if (role === 'tl') {
-          tb_data = {
-            id,
-            name: `${first_name} ${last_name}`,
-            team: team || 'N/A',
-            status,
-            role: 'Team Leader',
-          };
-        }
+        tb_data = {
+          id,
+          name: `${first_name} ${last_name}`,
+          team: team || 'N/A',
+          status:
+            status === GLOBALS.MEMBER_STATUS.PENDING ? 'pending' : 'accepted',
+          role: 'Student',
+        };
       }
 
       return tb_data;
@@ -139,18 +119,18 @@ function ViewClassMembers() {
   }
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredData, setFilteredData] = useState(data);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
-  useEffect(() => {
-    const lowerCaseQuery = searchQuery.toLowerCase();
-    if (data.length === 0) {
-      setFilteredData([]);
+  const searchMember = (query) => {
+    const lowerCaseQuery = query.toLowerCase();
+    if (lowerCaseQuery.length === 0) {
+      setFilteredData(data);
     } else {
-      const filtered = data.filter(
+      const filtered = data?.filter(
         (item) =>
           item.name.toLowerCase().includes(lowerCaseQuery) ||
           item.team.toLowerCase().includes(lowerCaseQuery) ||
@@ -159,7 +139,11 @@ function ViewClassMembers() {
       );
       setFilteredData(filtered);
     }
-  }, [searchQuery, data]);
+  };
+
+  useEffect(() => {
+    searchMember(searchQuery);
+  }, [searchQuery, data?.length]);
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);

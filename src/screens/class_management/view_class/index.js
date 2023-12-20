@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
 
-import { useClass, useClasses } from '../../../hooks';
+import { useClassRoom, useClassRooms } from '../../../hooks';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 
@@ -14,7 +14,7 @@ function ViewClass() {
 
   const navigate = useNavigate();
 
-  const { isLoading: isClassesLoading, classes } = useClasses();
+  const { isLoading: isClassesLoading, classes } = useClassRooms();
 
   useEffect(() => {
     if (!isClassesLoading) {
@@ -26,7 +26,7 @@ function ViewClass() {
     }
   }, [isClassesLoading]);
 
-  const { isLoading: isClassLoading, classRoom } = useClass(classId);
+  const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
 
   const buttons = [
     {

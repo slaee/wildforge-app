@@ -12,11 +12,10 @@ export function PrivateRoute({ forUserType, children }) {
 
   if (
     user &&
-    (forUserType === GLOBALS.USER_TYPES.ANY ||
-      forUserType === GLOBALS.USER_TYPES.TEACHER ||
-      forUserType === GLOBALS.USER_TYPES.ADMIN ||
-      forUserType === GLOBALS.USER_TYPES.TEAM_LEADER ||
-      forUserType === GLOBALS.USER_TYPES.STUDENT)
+    (forUserType === GLOBALS.USER_ROLE.ANONYMOUS ||
+      forUserType === GLOBALS.USER_ROLE.ADMIN ||
+      forUserType === GLOBALS.USER_ROLE.MODERATOR ||
+      forUserType === GLOBALS.USER_ROLE.BASIC)
   ) {
     return <Navigate to="/classes" />;
   }
@@ -30,11 +29,10 @@ PrivateRoute.defaultProps = {
 
 PrivateRoute.propTypes = {
   forUserType: PropTypes.oneOf([
-    GLOBALS.USER_TYPES.ANY,
-    GLOBALS.USER_TYPES.STUDENT,
-    GLOBALS.USER_TYPES.TEACHER,
-    GLOBALS.USER_TYPES.ADMIN,
-    GLOBALS.USER_TYPES.TEAM_LEADER,
+    GLOBALS.USER_ROLE.ANONYMOUS,
+    GLOBALS.USER_ROLE.ADMIN,
+    GLOBALS.USER_ROLE.MODERATOR,
+    GLOBALS.USER_ROLE.BASIC,
   ]),
   children: PropTypes.any,
 };

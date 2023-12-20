@@ -9,11 +9,12 @@ import JoinClass from '../../../components/modals/join_class';
 import 'primeicons/primeicons.css';
 import './index.scss';
 import Search from '../../../components/search';
-import { useClasses } from '../../../hooks';
+import { useClassRooms } from '../../../hooks';
 import { useAuth } from '../../../contexts/AuthContext';
+import GLOBALS from '../../../app_globals';
 
 function Classes() {
-  const { classes } = useClasses();
+  const { classes } = useClassRooms();
   const { user } = useAuth();
 
   const buttons = [
@@ -73,7 +74,7 @@ function Classes() {
           <div className="brown-text fw-bold fs-5 py-2 px-5">CLASSES</div>
           <div className="d-flex align-items-center ms-auto px-5">
             <Search value={searchQuery} onChange={handleSearchChange} />
-            {user.is_staff ? (
+            {user.role === GLOBALS.USER_ROLE.MODERATOR ? (
               <button
                 className="btn btn-add-primary ms-4"
                 onClick={openCreateClassModal}
@@ -98,13 +99,13 @@ function Classes() {
           )}
           <div className="d-flex flex-row justify-content-start py-2 gap-2 flex-wrap">
             {classes &&
-              filteredClasses.map((Class) => (
+              filteredClasses.map((classRoom) => (
                 <ClassCards
-                  key={Class.id}
-                  id={Class.id}
-                  name={Class.name}
-                  section={Class.sections}
-                  schedule={Class.schedule}
+                  key={classRoom.id}
+                  id={classRoom.id}
+                  name={classRoom.course_name}
+                  section={classRoom.sections}
+                  schedule={classRoom.schedule}
                 />
               ))}
           </div>
