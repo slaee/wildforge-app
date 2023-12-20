@@ -64,13 +64,12 @@ const useClassMembers = (classId) => {
   };
 
   useEffect(() => {
-    const retrieveClassMembers = async () => {
+    const get = async () => {
       let responseCode;
       let retrievedClassMembers;
 
       try {
-        const { status, data } =
-          await ClassRoomsService.retrieveMembers(classId);
+        const { status, data } = await ClassRoomsService.members(classId);
 
         responseCode = status;
         retrievedClassMembers = data;
@@ -94,7 +93,7 @@ const useClassMembers = (classId) => {
       setIsRetrieving(false);
     };
 
-    retrieveClassMembers();
+    get();
   }, []);
 
   return {

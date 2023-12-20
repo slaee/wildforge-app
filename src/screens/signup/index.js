@@ -5,6 +5,7 @@ import Cookies from 'universal-cookie';
 import { useAuth } from '../../contexts/AuthContext';
 import { isValidEmail } from '../../utils/strings';
 import ControlInput from '../../components/controlinput';
+import GLOBALS from '../../app_globals';
 
 import './index.scss';
 import { isObjectEmpty } from '../../utils/object';
@@ -119,7 +120,7 @@ function Signup() {
             } else {
               setFirstNameError('');
               setLastNameError('');
-              setFieldValue('is_staff', true);
+              setFieldValue('role', GLOBALS.USER_ROLE.MODERATOR);
               nextStep();
             }
           }}
@@ -212,7 +213,7 @@ function Signup() {
               email: '',
               password: '',
               confirmPassword: '',
-              is_staff: false,
+              role: GLOBALS.USER_ROLE.BASIC,
             }}
             onSubmit={async (values, { setErrors }) => {
               const errors = validate(values);
@@ -266,7 +267,7 @@ function Signup() {
                 last_name: values.last_name,
                 email: values.email,
                 password: values.password,
-                is_staff: values.is_staff,
+                role: values.role,
                 callbacks: signupUserCallbacks,
               });
             }}

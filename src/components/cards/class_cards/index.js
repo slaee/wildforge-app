@@ -7,9 +7,9 @@ import { useAuth } from '../../../contexts/AuthContext';
 
 function ClassCards({ id, name, section, schedule }) {
   const { user } = useAuth();
-  const isStaff = user.is_staff;
+  const isModerator = user.role;
 
-  const cardLink = isStaff ? `/classes/${id}` : `/classes/${id}/teams`;
+  const cardLink = isModerator ? `/classes/${id}` : `/classes/${id}/teams`;
 
   return (
     <Link to={cardLink} className="text-decoration-none">

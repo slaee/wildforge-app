@@ -5,7 +5,13 @@ import { ClassRoomsService } from '../services';
 const useCreateClass = () => {
   const [isCreating, setIsCreating] = useState(false);
 
-  const createClass = async ({ name, sections, schedule, callbacks }) => {
+  const createClass = async ({
+    course_name,
+    sections,
+    schedule,
+    max_teams_members,
+    callbacks,
+  }) => {
     setIsCreating(true);
 
     let responseCode;
@@ -13,9 +19,10 @@ const useCreateClass = () => {
 
     try {
       const { status, data } = await ClassRoomsService.create({
-        name,
+        course_name,
         sections,
         schedule,
+        max_teams_members,
       });
 
       responseCode = status;
