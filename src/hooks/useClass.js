@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ClassesService } from '../services';
+import { ClassRoomsService } from '../services';
 
 const useRoom = (classId) => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const useRoom = (classId) => {
       let retrievedClassRoom;
 
       try {
-        const { status, data } = await ClassesService.retrieve(classId);
+        const { status, data } = await ClassRoomsService.retrieve(classId);
 
         responseCode = status;
         retrievedClassRoom = data;

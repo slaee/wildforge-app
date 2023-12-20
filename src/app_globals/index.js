@@ -1,7 +1,7 @@
-import USER_TYPES from './userTypes';
+import USER_ROLE from './userRole';
 
 const GLOBALS = {
-  USER_TYPES,
+  USER_ROLE,
 };
 
 export default GLOBALS;

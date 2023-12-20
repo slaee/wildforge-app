@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { ClassesService } from '../services';
+import { ClassRoomsService } from '../services';
 
 const useJoinClass = () => {
   const [isJoining, setIsJoining] = useState(false);
@@ -12,7 +12,7 @@ const useJoinClass = () => {
     let retrievedMessage;
 
     try {
-      const { status, data } = await ClassesService.join({
+      const { status, data } = await ClassRoomsService.join({
         class_code: classCode,
       });
 

@@ -3,7 +3,7 @@ import config from './config';
 
 const BASE_URL = `${config.API_URL}/classes`;
 
-const ClassesService = {
+const ClassRoomsService = {
   /// GET /classes
   all: () => axios.get(BASE_URL),
 
@@ -123,4 +123,4 @@ const ClassesService = {
   evals: (id) => axios.get(`${BASE_URL}/${id}/evals`),
 };
 
-export default ClassesService;
+export default ClassRoomsService;

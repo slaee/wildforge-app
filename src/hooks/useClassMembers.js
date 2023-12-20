@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ClassesService } from '../services';
+import { ClassRoomsService } from '../services';
 
 const useClassMembers = (classId) => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ const useClassMembers = (classId) => {
     let responseCode;
 
     try {
-      const { status } = await ClassesService.delete(classId, memberID);
+      const { status } = await ClassRoomsService.delete(classId, memberID);
 
       responseCode = status;
     } catch (error) {
@@ -36,7 +36,7 @@ const useClassMembers = (classId) => {
     let responseCode;
 
     try {
-      const { status } = await ClassesService.accept(classId, memberID);
+      const { status } = await ClassRoomsService.accept(classId, memberID);
 
       responseCode = status;
     } catch (error) {
@@ -69,7 +69,8 @@ const useClassMembers = (classId) => {
       let retrievedClassMembers;
 
       try {
-        const { status, data } = await ClassesService.retrieveMembers(classId);
+        const { status, data } =
+          await ClassRoomsService.retrieveMembers(classId);
 
         responseCode = status;
         retrievedClassMembers = data;

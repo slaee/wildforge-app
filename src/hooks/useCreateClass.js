@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { ClassesService } from '../services';
+import { ClassRoomsService } from '../services';
 
 const useCreateClass = () => {
   const [isCreating, setIsCreating] = useState(false);
@@ -12,7 +12,7 @@ const useCreateClass = () => {
     let retrievedClass;
 
     try {
-      const { status, data } = await ClassesService.create({
+      const { status, data } = await ClassRoomsService.create({
         name,
         sections,
         schedule,

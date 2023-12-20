@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ClassesService } from '../services';
+import { ClassRoomsService } from '../services';
 
 const useClasses = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const useClasses = () => {
       let retrievedClasses;
 
       try {
-        const { status, data } = await ClassesService.list();
+        const { status, data } = await ClassRoomsService.list();
 
         responseCode = status;
         retrievedClasses = data;
