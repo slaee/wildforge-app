@@ -1,32 +1,17 @@
 import React, { useState } from 'react';
-import { InputText } from 'primereact/inputtext'; // Import InputText component
-import './ForgotPassword.scss';
+import { InputText } from 'primereact/inputtext';
+import './index.scss';
+import { useNavigate } from 'react-router-dom';
 
 function ForgotPassword() {
   const [email, setEmail] = useState('');
-  const [showPasswordForm, setShowPasswordForm] = useState(true);
-  const [resetPassword, setResetPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
-
-  const toggleForm = () => {
-    setShowPasswordForm(true); // Change this to true to show the email input form
-    setResetPassword(false); // Reset the resetPassword state
-  };
+  const [step, setStep] = useState(1);
+  const nav = useNavigate();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-  };
-
-  const handleResetPassword = () => {
-    // Handle the logic for resetting the password here.
-    // You can add validation and make API requests as needed.
-    // If successful, set resetPassword to true.
-    // For demonstration, let's just set it to true after a delay.
-    // setTimeout(() => {
-    //   setResetPassword(true);
-    // }, 2000); // Simulating a 2-second delay before showing the reset password form
-    setResetPassword(true);
   };
 
   const handleNewPasswordChange = (e) => {
@@ -35,6 +20,14 @@ function ForgotPassword() {
 
   const handleConfirmNewPasswordChange = (e) => {
     setConfirmNewPassword(e.target.value);
+  };
+
+  const handleResetPassword = () => {
+    // Handle the logic for resetting the password here.
+    // You can add validation and make API requests as needed.
+    // If successful, advance to the next step.
+    // For demonstration, let's just advance to the next step immediately.
+    setStep(step + 1);
   };
 
   const renderEmailInput = () => (
@@ -58,9 +51,13 @@ function ForgotPassword() {
         </button>
       </div>
       <div className="d-flex justify-content-start pt-3 pb-3">
-        <a href="/" className="fs-5 redirect-text">
+        <span
+          className="fs-5 redirect-text"
+          aria-hidden="true"
+          onClick={() => nav(-1)}
+        >
           Back to Login
-        </a>
+        </span>
       </div>
     </>
   );
@@ -95,9 +92,15 @@ function ForgotPassword() {
         </button>
       </div>
       <div className="d-flex justify-content-start pt-3">
-        <a href="/" className="fs-5 redirect-text">
+        <span
+          className="fs-5 redirect-text"
+          role="button"
+          tabIndex={0}
+          aria-hidden="true"
+          onClick={() => setStep(1)}
+        >
           Back
-        </a>
+        </span>
       </div>
     </>
   );
@@ -111,7 +114,7 @@ function ForgotPassword() {
       <div className="login-container">
         <div className="form">
           <span className="fs-3 fw-bold pb-3">Forgot Password</span>
-          {resetPassword ? renderResetPassword() : renderEmailInput()}
+          {step === 1 ? renderEmailInput() : renderResetPassword()}
         </div>
       </div>
     </>
