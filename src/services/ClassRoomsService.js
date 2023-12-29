@@ -29,6 +29,9 @@ const ClassRoomsService = {
   /// GET /classes/{id}
   get: (id) => api.get(`${BASE_URL}/${id}`),
 
+  member: (classPK, userId) =>
+    api.get(`${BASE_URL}/${classPK}/members/${userId}`),
+
   /// GET /classes/{class_pk}/members/
   members: (classPK) => api.get(`${BASE_URL}/${classPK}/members`),
 

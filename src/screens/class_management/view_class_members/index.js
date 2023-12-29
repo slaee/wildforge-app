@@ -15,7 +15,8 @@ import GLOBALS from '../../../app_globals';
 function ViewClassMembers() {
   const { id: classId } = useParams();
   const { user } = useAuth();
-  const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
+  const { deleteMember, acceptMember, classMembers, isRetrieving } =
+    useClassMembers(classId);
   const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
 
   let buttons = [];

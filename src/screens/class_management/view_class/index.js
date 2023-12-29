@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAuth } from '../../../contexts/AuthContext';
-import { useClassMembers, useClassRoom, useClassRooms } from '../../../hooks';
+import { useClassMember, useClassMembers, useClassRoom } from '../../../hooks';
 
 import GLOBALS from '../../../app_globals';
 
+import Loading from '../../../components/loading';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 
@@ -16,37 +17,25 @@ function ViewClass() {
 
   const { user } = useAuth();
   const { id: classId } = useParams();
-  const { isLoading: isClassesLoading, classes } = useClassRooms();
   const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
-  const { classMembers, isRetrieving } = useClassMembers(classId);
+  const { classMember, isRetrieving } = useClassMember(classId, user.user_id);
 
-  const classMember = classMembers.find(
-    (member) => member.user_id === user.user_id
-  );
+  const [isLoading, setIsLoading] = useState(true);
 
   let buttons = [];
 
   if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
+    navigate(`/classes/${classId}/teams`);
     buttons = GLOBALS.SIDENAV_CLASSMEMBER(classId);
   } else {
     buttons = GLOBALS.SIDENAV_TEACHER(classId);
   }
 
   useEffect(() => {
-    if (!isClassesLoading) {
-      const foundClass = classes.find((c) => c.id === parseInt(classId, 10));
-
-      if (!foundClass) {
-        navigate('/classes');
-      }
+    if (isRetrieving || isClassLoading) {
+      setTimeout(() => setIsLoading(false), 350);
     }
-
-    if (!isRetrieving) {
-      if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
-        navigate(`/classes/${classId}/teams`);
-      }
-    }
-  }, [isClassesLoading, isRetrieving, isClassLoading]);
+  }, [classMember, isClassLoading, isRetrieving]);
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
@@ -106,7 +95,7 @@ function ViewClass() {
     </div>
   );
 
-  return (
+  const renderContent = () => (
     <div className="d-flex">
       <Navbar
         name={`${user?.first_name} ${user?.last_name}`}
@@ -120,6 +109,8 @@ function ViewClass() {
       </div>
     </div>
   );
+
+  return <div>{isLoading ? <Loading /> : renderContent()}</div>;
 }
 
 export default ViewClass;

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+
 import { useAuth } from '../../../contexts/AuthContext';
-import { useClassMembers, useClassRoom, useClassRooms } from '../../../hooks';
+import { useClassMembers, useClassRoom } from '../../../hooks';
+
+import GLOBALS from '../../../app_globals';
 
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
@@ -12,79 +15,28 @@ import Search from '../../../components/search';
 import ApplyTeam from '../../../components/modals/apply_team';
 
 import './index.scss';
-import GLOBALS from '../../../app_globals';
 
 function Teams() {
   const { user } = useAuth();
   const { id: classId } = useParams();
+  const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
+  const { classMembers, isRetrieving } = useClassMembers(classId);
 
-  const { classMembers } = useClassMembers(classId);
+  const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
+  const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
+
+  const hasTeam = false;
+
+  let buttons = [];
 
   const classMember = classMembers.find(
     (member) => member.user_id === user.user_id
   );
 
-  const navigate = useNavigate();
-
-  const hasTeam = false;
-
-  // /user.role = 'tl';
-
-  const { isLoading: isClassesLoading, classes } = useClassRooms();
-
-  useEffect(() => {
-    if (!isClassesLoading) {
-      const foundClass = classes.find((c) => c.id === parseInt(classId, 10));
-
-      if (!foundClass) {
-        navigate('/classes');
-      }
-    }
-  }, [isClassesLoading]);
-
-  const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
-
-  const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
-  const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
-
-  let buttons = [];
-
   if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
-    buttons = [
-      {
-        id: 2,
-        label: 'Teams',
-        className: 'teams',
-        path: `/classes/${classId}/teams`,
-      },
-      {
-        id: 3,
-        label: 'Members',
-        className: 'members',
-        path: `/classes/${classId}/members`,
-      },
-    ];
+    buttons = GLOBALS.SIDENAV_CLASSMEMBER(classId);
   } else {
-    buttons = [
-      {
-        id: 1,
-        label: 'Dashboard',
-        className: 'classes',
-        path: `/classes/${classId}`,
-      },
-      {
-        id: 2,
-        label: 'Teams',
-        className: 'teams',
-        path: `/classes/${classId}/teams`,
-      },
-      {
-        id: 3,
-        label: 'Members',
-        className: 'members',
-        path: `/classes/${classId}/members`,
-      },
-    ];
+    buttons = GLOBALS.SIDENAV_TEACHER(classId);
   }
 
   const teamLeaderHeaders = ['id', 'name', 'team', 'status'];
