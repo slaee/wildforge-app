@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAuth } from '../../../contexts/AuthContext';
-import { useClassMember, useClassMembers, useClassRoom } from '../../../hooks';
+import { useClassMember, useClassRoom } from '../../../hooks';
 
 import GLOBALS from '../../../app_globals';
 
@@ -33,7 +33,7 @@ function ViewClass() {
 
   useEffect(() => {
     if (isRetrieving || isClassLoading) {
-      setTimeout(() => setIsLoading(false), 350);
+      setTimeout(() => setIsLoading(false), 600);
     }
   }, [classMember, isClassLoading, isRetrieving]);
 

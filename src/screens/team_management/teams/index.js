@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useAuth } from '../../../contexts/AuthContext';
-import { useClassMembers, useClassRoom } from '../../../hooks';
+import { useClassMember, useClassRoom } from '../../../hooks';
 
 import GLOBALS from '../../../app_globals';
 
@@ -19,8 +19,8 @@ import './index.scss';
 function Teams() {
   const { user } = useAuth();
   const { id: classId } = useParams();
-  const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
-  const { classMembers, isRetrieving } = useClassMembers(classId);
+  const { classRoom } = useClassRoom(classId);
+  const { classMember } = useClassMember(classId, user.user_id);
 
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
@@ -28,10 +28,6 @@ function Teams() {
   const hasTeam = false;
 
   let buttons = [];
-
-  const classMember = classMembers.find(
-    (member) => member.user_id === user.user_id
-  );
 
   if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
     buttons = GLOBALS.SIDENAV_CLASSMEMBER(classId);

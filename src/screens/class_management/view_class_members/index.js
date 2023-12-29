@@ -6,7 +6,7 @@ import Search from '../../../components/search';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import Table from '../../../components/table';
-import { useClassRoom, useClassMembers } from '../../../hooks';
+import { useClassRoom, useClassMembers, useClassMember } from '../../../hooks';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
@@ -15,15 +15,11 @@ import GLOBALS from '../../../app_globals';
 function ViewClassMembers() {
   const { id: classId } = useParams();
   const { user } = useAuth();
-  const { deleteMember, acceptMember, classMembers, isRetrieving } =
-    useClassMembers(classId);
-  const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
+  const { classMember } = useClassMember(classId, user.user_id);
+  const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
+  const { classRoom } = useClassRoom(classId);
 
   let buttons = [];
-
-  const classMember = classMembers.find(
-    (member) => member.user_id === user.user_id
-  );
 
   if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
     buttons = GLOBALS.SIDENAV_CLASSMEMBER(classId);
