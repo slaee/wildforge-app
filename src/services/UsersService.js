@@ -3,6 +3,8 @@ import config from './config';
 
 const BASE_URL = `${config.API_URL}/users`;
 
+const instance = axios.create();
+
 const UsersService = {
   /// POST /users
   /*
@@ -14,7 +16,7 @@ const UsersService = {
       "role": 2
     }
   */
-  signup: (user) => axios.post(`${BASE_URL}`, user),
+  signup: (user) => instance.post(`${BASE_URL}`, user),
 
   /// POST /users/login
   /*
@@ -23,7 +25,7 @@ const UsersService = {
       "password": "string"
     }
   */
-  login: (user) => axios.post(`${BASE_URL}/login`, user),
+  login: (user) => instance.post(`${BASE_URL}/login`, user),
 };
 
 export default UsersService;

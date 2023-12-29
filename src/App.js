@@ -1,11 +1,13 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+// React Imports
+import { Route, Routes } from 'react-router-dom';
 
-import PropTypes from 'prop-types';
-
+// Context Imports
 import { AuthProvider } from './contexts/AuthContext';
+import { AuthWrapper } from './contexts/AuthWrapper';
 import { NoAuthRoute } from './hocs/NoAuthRoute';
 import { PrivateRoute } from './hocs/PrivateRoute';
 
+// Screen Imports
 import Login from './screens/login';
 import Logout from './screens/logout';
 import ForgotPassword from './screens/forgot_password';
@@ -16,6 +18,7 @@ import ViewClassMembers from './screens/class_management/view_class_members';
 import Teams from './screens/team_management/teams';
 import PeerEval from './screens/peer_evaluation/view_peer_eval';
 
+// Style Imports
 import './App.css';
 
 function App() {
@@ -100,21 +103,5 @@ function App() {
     </AuthProvider>
   );
 }
-
-function AuthWrapper({ isAuthenticated }) {
-  return isAuthenticated ? (
-    <Navigate to="/classes" replace />
-  ) : (
-    <Navigate to="/login" replace />
-  );
-}
-
-AuthWrapper.defaultProps = {
-  isAuthenticated: false,
-};
-
-AuthWrapper.propTypes = {
-  isAuthenticated: PropTypes.bool,
-};
 
 export default App;

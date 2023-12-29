@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
-import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie';
 import { useAuth } from '../../contexts/AuthContext';
 import { isValidEmail } from '../../utils/strings';
 import ControlInput from '../../components/controlinput';
@@ -57,7 +57,6 @@ function Signup() {
   const [step, setStep] = useState(1);
   const [firstNameError, setFirstNameError] = useState('');
   const [lastNameError, setLastNameError] = useState('');
-  const cookies = new Cookies();
 
   const { loginUpdate } = useAuth();
   const { signupUser } = useSignup();
@@ -224,12 +223,8 @@ function Signup() {
 
               const acquireTokensCallbacks = {
                 acquired: async ({ accessToken, refreshToken }) => {
-                  cookies.set('accessToken', accessToken, {
-                    path: '/',
-                  });
-                  cookies.set('refreshToken', refreshToken, {
-                    path: '/',
-                  });
+                  Cookies.set('accessToken', accessToken);
+                  Cookies.set('refreshToken', refreshToken);
                 },
                 invalidFields: () =>
                   setErrors({

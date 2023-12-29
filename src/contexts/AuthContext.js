@@ -1,49 +1,61 @@
 import React, { useState, createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie';
 
 const AuthContext = createContext({
   user: null,
-  loginUpdate: () => {},
-  loginRestart: () => {},
+  accessToken: null,
+  refreshToken: null,
+  setUser: () => {},
+  setAccessToken: () => {},
+  setRefreshToken: () => {},
 });
 
-const cookies = new Cookies();
-
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(cookies.get('user'));
+  const [user, setUser_] = useState(null);
+  const [accessToken, setAccessToken_] = useState(null);
+  const [refreshToken, setRefreshToken_] = useState(null);
 
-  const loginUpdate = (userData) => {
-    cookies.set('user', userData, {
-      path: '/',
-    });
+  const setUser = (newUser) => {
+    if (newUser) {
+      Cookies.set('user', newUser);
+    } else {
+      Cookies.remove('user');
+    }
 
-    setUser(userData);
+    setUser_(newUser);
   };
 
-  const loginRestart = () => {
-    cookies.remove('user', {
-      path: '/',
-    });
+  const setAccessToken = (newAccessToken) => {
+    if (newAccessToken) {
+      Cookies.set('accessToken', newAccessToken);
+    } else {
+      Cookies.remove('accessToken');
+    }
 
-    cookies.remove('accessToken', {
-      path: '/',
-    });
+    setAccessToken_(newAccessToken);
+  };
 
-    cookies.remove('refreshToken', {
-      path: '/',
-    });
+  const setRefreshToken = (newRefreshToken) => {
+    if (newRefreshToken) {
+      Cookies.set('refreshToken', newRefreshToken);
+    } else {
+      Cookies.remove('refreshToken');
+    }
 
-    setUser(null);
+    setRefreshToken_(newRefreshToken);
   };
 
   const authContextValue = useMemo(
     () => ({
       user,
-      loginUpdate,
-      loginRestart,
+      accessToken,
+      refreshToken,
+      setUser,
+      setAccessToken,
+      setRefreshToken,
     }),
-    [user]
+    [user, accessToken, refreshToken]
   );
 
   return (

@@ -14,18 +14,11 @@ import { useAuth } from '../../../contexts/AuthContext';
 import GLOBALS from '../../../app_globals';
 
 function Classes() {
-  const { classes } = useClassRooms();
   const { user } = useAuth();
+  const { classes } = useClassRooms();
 
-  const buttons = [
-    { id: 1, label: 'Classes', className: 'classes', path: '/classes' },
-    {
-      id: 2,
-      label: 'Peer Evaluation',
-      className: 'peer-eval',
-      path: '/peer-eval',
-    },
-  ];
+  const buttons = GLOBALS.SIDENAV_DEFAULT;
+
   const [isCreateClassModalOpen, setCreateClassModalOpen] = useState(false);
   const [isJoinClassModalOpen, setJoinClassModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');

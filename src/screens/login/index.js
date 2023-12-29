@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
-import Cookies from 'universal-cookie';
+
 import { useAuth } from '../../contexts/AuthContext';
+import { useAcquireTokens, useLogin } from '../../hooks';
+
 import { isValidEmail } from '../../utils/strings';
 import { isObjectEmpty } from '../../utils/object';
+
 import ControlInput from '../../components/controlinput';
-import { useAcquireTokens, useLogin } from '../../hooks';
 
 import './index.scss';
 
@@ -30,9 +32,7 @@ const validate = (values) => {
 };
 
 function Login() {
-  const cookies = new Cookies();
-
-  const { loginUpdate } = useAuth();
+  const { setUser, setAccessToken, setRefreshToken } = useAuth();
   const { isLoggingIn, loginUser } = useLogin();
   const { isAcquiring, acquireTokens } = useAcquireTokens();
 
@@ -59,12 +59,8 @@ function Login() {
 
               const acquireTokensCallbacks = {
                 acquired: async ({ accessToken, refreshToken }) => {
-                  cookies.set('accessToken', accessToken, {
-                    path: '/',
-                  });
-                  cookies.set('refreshToken', refreshToken, {
-                    path: '/',
-                  });
+                  setAccessToken(accessToken);
+                  setRefreshToken(refreshToken);
                 },
                 invalidFields: () =>
                   setErrors({
@@ -84,7 +80,7 @@ function Login() {
                     callbacks: acquireTokensCallbacks,
                   });
 
-                  loginUpdate(retrievedUser);
+                  setUser(retrievedUser);
                 },
                 invalidFields: () =>
                   setErrors({

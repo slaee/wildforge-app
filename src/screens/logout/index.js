@@ -3,11 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 function Logout() {
-  const { loginRestart } = useAuth();
   const navigate = useNavigate();
+  const { setAccessToken, setRefreshToken, setUser } = useAuth();
 
   useEffect(() => {
-    loginRestart();
+    setAccessToken(null);
+    setRefreshToken(null);
+    setUser(null);
+
     navigate('/login', { replace: true });
   }, []);
 
