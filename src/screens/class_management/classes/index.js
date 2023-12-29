@@ -1,17 +1,22 @@
+// React Imports
 import React, { useState, useEffect } from 'react';
 
+// Hooks Imports
+import { useClassRooms } from '../../../hooks';
+import { useAuth } from '../../../contexts/AuthContext';
+
+// Components Imports
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import ClassCards from '../../../components/cards/class_cards';
 import CreateClass from '../../../components/modals/create_class';
 import JoinClass from '../../../components/modals/join_class';
+import Search from '../../../components/search';
+import GLOBALS from '../../../app_globals';
 
+// Styles Imports
 import 'primeicons/primeicons.css';
 import './index.scss';
-import Search from '../../../components/search';
-import { useClassRooms } from '../../../hooks';
-import { useAuth } from '../../../contexts/AuthContext';
-import GLOBALS from '../../../app_globals';
 
 function Classes() {
   const { user } = useAuth();

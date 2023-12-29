@@ -25,41 +25,9 @@ function ViewClassMembers() {
   );
 
   if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
-    buttons = [
-      {
-        id: 2,
-        label: 'Teams',
-        className: 'teams',
-        path: `/classes/${classId}/teams`,
-      },
-      {
-        id: 3,
-        label: 'Members',
-        className: 'members',
-        path: `/classes/${classId}/members`,
-      },
-    ];
+    buttons = GLOBALS.SIDENAV_CLASSMEMBER(classId);
   } else {
-    buttons = [
-      {
-        id: 1,
-        label: 'Dashboard',
-        className: 'classes',
-        path: `/classes/${classId}`,
-      },
-      {
-        id: 2,
-        label: 'Teams',
-        className: 'teams',
-        path: `/classes/${classId}/teams`,
-      },
-      {
-        id: 3,
-        label: 'Members',
-        className: 'members',
-        path: `/classes/${classId}/members`,
-      },
-    ];
+    buttons = GLOBALS.SIDENAV_TEACHER(classId);
   }
 
   const headers = ['id', 'name', 'team', 'role', 'status'];
