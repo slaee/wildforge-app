@@ -12,8 +12,7 @@ export function PrivateRoute({ forUserType, children }) {
 
   if (
     user &&
-    (forUserType === GLOBALS.USER_ROLE.ANONYMOUS ||
-      forUserType === GLOBALS.USER_ROLE.ADMIN ||
+    (forUserType === GLOBALS.USER_ROLE.ADMIN ||
       forUserType === GLOBALS.USER_ROLE.MODERATOR ||
       forUserType === GLOBALS.USER_ROLE.BASIC)
   ) {
@@ -29,7 +28,6 @@ PrivateRoute.defaultProps = {
 
 PrivateRoute.propTypes = {
   forUserType: PropTypes.oneOf([
-    GLOBALS.USER_ROLE.ANONYMOUS,
     GLOBALS.USER_ROLE.ADMIN,
     GLOBALS.USER_ROLE.MODERATOR,
     GLOBALS.USER_ROLE.BASIC,

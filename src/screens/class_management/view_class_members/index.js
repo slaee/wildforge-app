@@ -18,12 +18,50 @@ function ViewClassMembers() {
   const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
   const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
 
-  let headers;
-  if (user.role === GLOBALS.USER_ROLE.MODERATOR) {
-    headers = ['id', 'name', 'team', 'role', 'status', 'actions'];
+  let buttons = [];
+
+  const classMember = classMembers.find((member) => member.user_id === user.id);
+
+  if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
+    buttons = [
+      {
+        id: 2,
+        label: 'Teams',
+        className: 'teams',
+        path: `/classes/${classId}/teams`,
+      },
+      {
+        id: 3,
+        label: 'Members',
+        className: 'members',
+        path: `/classes/${classId}/members`,
+      },
+    ];
   } else {
-    headers = ['id', 'name', 'team', 'role', 'status'];
+    buttons = [
+      {
+        id: 1,
+        label: 'Dashboard',
+        className: 'classes',
+        path: `/classes/${classId}`,
+      },
+      {
+        id: 2,
+        label: 'Teams',
+        className: 'teams',
+        path: `/classes/${classId}/teams`,
+      },
+      {
+        id: 3,
+        label: 'Members',
+        className: 'members',
+        path: `/classes/${classId}/members`,
+      },
+    ];
   }
+
+  const headers = ['id', 'name', 'team', 'role', 'status'];
+  if (user.role === GLOBALS.USER_ROLE.MODERATOR) headers.push('actions');
 
   const data = classMembers
     .filter((member) => member.role !== GLOBALS.CLASSMEMBER_ROLE.TEACHER)
@@ -69,54 +107,19 @@ function ViewClassMembers() {
           </button>
         );
 
-      if (user.role === GLOBALS.USER_ROLE.MODERATOR) {
-        tb_data = {
-          id,
-          name: `${first_name} ${last_name}`,
-          team: team || 'N/A',
-          status:
-            status === GLOBALS.MEMBER_STATUS.PENDING ? 'pending' : 'accepted',
-          role: 'Student',
-          actions,
-        };
-      } else {
-        tb_data = {
-          id,
-          name: `${first_name} ${last_name}`,
-          team: team || 'N/A',
-          status:
-            status === GLOBALS.MEMBER_STATUS.PENDING ? 'pending' : 'accepted',
-          role: 'Student',
-        };
-      }
+      tb_data = {
+        id,
+        name: `${first_name} ${last_name}`,
+        team: team || 'N/A',
+        status:
+          status === GLOBALS.MEMBER_STATUS.PENDING ? 'pending' : 'accepted',
+        role: 'Student',
+      };
+
+      if (user.role === GLOBALS.USER_ROLE.MODERATOR) tb_data.actions = actions;
 
       return tb_data;
     });
-
-  const buttons = [
-    {
-      id: 1,
-      label: 'Dashboard',
-      className: 'classes',
-      path: `/classes/${classId}`,
-    },
-    {
-      id: 2,
-      label: 'Members',
-      className: 'members',
-      path: `/classes/${classId}/members`,
-    },
-    {
-      id: 3,
-      label: 'Teams',
-      className: 'teams',
-      path: `/classes/${classId}/teams`,
-    },
-  ];
-
-  if (!user.is_staff) {
-    buttons.splice(0, 1);
-  }
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState(data);

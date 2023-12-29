@@ -1,20 +1,34 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../../../contexts/AuthContext';
 
-import { useClassRoom, useClassRooms } from '../../../hooks';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useClassMembers, useClassRoom, useClassRooms } from '../../../hooks';
+
+import GLOBALS from '../../../app_globals';
+
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 
 import './index.scss';
 
 function ViewClass() {
-  const { id: classId } = useParams();
-  const { user } = useAuth();
-
   const navigate = useNavigate();
 
+  const { user } = useAuth();
+  const { id: classId } = useParams();
   const { isLoading: isClassesLoading, classes } = useClassRooms();
+  const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
+  const { classMembers, isRetrieving } = useClassMembers(classId);
+
+  const classMember = classMembers.find((member) => member.user_id === user.id);
+
+  let buttons = [];
+
+  if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
+    buttons = GLOBALS.SIDENAV_CLASSMEMBER(classId);
+  } else {
+    buttons = GLOBALS.SIDENAV_TEACHER(classId);
+  }
 
   useEffect(() => {
     if (!isClassesLoading) {
@@ -24,34 +38,13 @@ function ViewClass() {
         navigate('/classes');
       }
     }
-  }, [isClassesLoading]);
 
-  const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
-
-  const buttons = [
-    {
-      id: 1,
-      label: 'Dashboard',
-      className: 'classes',
-      path: `/classes/${classId}`,
-    },
-    {
-      id: 2,
-      label: 'Members',
-      className: 'members',
-      path: `/classes/${classId}/members`,
-    },
-    {
-      id: 3,
-      label: 'Teams',
-      className: 'teams',
-      path: `/classes/${classId}/teams`,
-    },
-  ];
-
-  if (!user.is_staff) {
-    buttons.splice(0, 1);
-  }
+    if (!isRetrieving) {
+      if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
+        navigate(`/classes/${classId}/teams`);
+      }
+    }
+  }, [isClassesLoading, isRetrieving, isClassLoading]);
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);

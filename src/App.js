@@ -1,19 +1,22 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import './App.css';
 
 import PropTypes from 'prop-types';
+
 import { AuthProvider } from './contexts/AuthContext';
-import Classes from './screens/class_management/classes';
-import ViewClass from './screens/class_management/view_class';
-import Login from './screens/login';
-import Signup from './screens/signup';
-import ForgotPassword from './screens/forgot_password';
-import Logout from './screens/logout';
 import { NoAuthRoute } from './hocs/NoAuthRoute';
 import { PrivateRoute } from './hocs/PrivateRoute';
+
+import Login from './screens/login';
+import Logout from './screens/logout';
+import ForgotPassword from './screens/forgot_password';
+import Signup from './screens/signup';
+import Classes from './screens/class_management/classes';
+import ViewClass from './screens/class_management/view_class';
 import ViewClassMembers from './screens/class_management/view_class_members';
 import Teams from './screens/team_management/teams';
 import PeerEval from './screens/peer_evaluation/view_peer_eval';
+
+import './App.css';
 
 function App() {
   const isAuthenticated = true;

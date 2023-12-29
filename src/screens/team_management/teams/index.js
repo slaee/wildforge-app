@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
-import { useClassRoom, useClassRooms } from '../../../hooks';
+import { useClassMembers, useClassRoom, useClassRooms } from '../../../hooks';
 
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
@@ -12,10 +12,15 @@ import Search from '../../../components/search';
 import ApplyTeam from '../../../components/modals/apply_team';
 
 import './index.scss';
+import GLOBALS from '../../../app_globals';
 
 function Teams() {
   const { user } = useAuth();
   const { id: classId } = useParams();
+
+  const { classMembers } = useClassMembers(classId);
+
+  const classMember = classMembers.find((member) => member.user_id === user.id);
 
   const navigate = useNavigate();
 
@@ -40,29 +45,44 @@ function Teams() {
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
 
-  const buttons = [
-    {
-      id: 1,
-      label: 'Dashboard',
-      className: 'classes',
-      path: `/classes/${classId}`,
-    },
-    {
-      id: 2,
-      label: 'Members',
-      className: 'members',
-      path: `/classes/${classId}/members`,
-    },
-    {
-      id: 3,
-      label: 'Teams',
-      className: 'teams',
-      path: `/classes/${classId}/teams`,
-    },
-  ];
+  let buttons = [];
 
-  if (!user.is_staff) {
-    buttons.splice(0, 1);
+  if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
+    buttons = [
+      {
+        id: 2,
+        label: 'Teams',
+        className: 'teams',
+        path: `/classes/${classId}/teams`,
+      },
+      {
+        id: 3,
+        label: 'Members',
+        className: 'members',
+        path: `/classes/${classId}/members`,
+      },
+    ];
+  } else {
+    buttons = [
+      {
+        id: 1,
+        label: 'Dashboard',
+        className: 'classes',
+        path: `/classes/${classId}`,
+      },
+      {
+        id: 2,
+        label: 'Teams',
+        className: 'teams',
+        path: `/classes/${classId}/teams`,
+      },
+      {
+        id: 3,
+        label: 'Members',
+        className: 'members',
+        path: `/classes/${classId}/members`,
+      },
+    ];
   }
 
   const teamLeaderHeaders = ['id', 'name', 'team', 'status'];
