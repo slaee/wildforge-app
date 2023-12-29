@@ -20,7 +20,9 @@ function ViewClass() {
   const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
   const { classMembers, isRetrieving } = useClassMembers(classId);
 
-  const classMember = classMembers.find((member) => member.user_id === user.id);
+  const classMember = classMembers.find(
+    (member) => member.user_id === user.user_id
+  );
 
   let buttons = [];
 

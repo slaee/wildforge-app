@@ -20,7 +20,9 @@ function ViewClassMembers() {
 
   let buttons = [];
 
-  const classMember = classMembers.find((member) => member.user_id === user.id);
+  const classMember = classMembers.find(
+    (member) => member.user_id === user.user_id
+  );
 
   if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
     buttons = [

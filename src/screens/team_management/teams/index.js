@@ -20,7 +20,9 @@ function Teams() {
 
   const { classMembers } = useClassMembers(classId);
 
-  const classMember = classMembers.find((member) => member.user_id === user.id);
+  const classMember = classMembers.find(
+    (member) => member.user_id === user.user_id
+  );
 
   const navigate = useNavigate();
 
