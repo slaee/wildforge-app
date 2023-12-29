@@ -117,6 +117,7 @@ function Login() {
                   className="yellow-on-focus"
                   value={values.password}
                   onChange={(e) => setFieldValue('password', e.target.value)}
+                  autoComplete="on"
                   error={errors.password}
                 />
                 <Link

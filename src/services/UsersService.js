@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from './config';
+import { api } from './axiosConfig';
 
 const BASE_URL = `${config.API_URL}/users`;
 
@@ -26,6 +27,9 @@ const UsersService = {
     }
   */
   login: (user) => instance.post(`${BASE_URL}/login`, user),
+
+  /// GET /users/{id}
+  user: (id) => api.get(`${BASE_URL}/${id}`),
 };
 
 export default UsersService;

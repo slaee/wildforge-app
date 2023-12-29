@@ -3,7 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 
 // Context Imports
 import { AuthProvider } from './contexts/AuthContext';
-import { AuthWrapper } from './contexts/AuthWrapper';
 import { NoAuthRoute } from './hocs/NoAuthRoute';
 import { PrivateRoute } from './hocs/PrivateRoute';
 
@@ -22,14 +21,16 @@ import PeerEval from './screens/peer_evaluation/view_peer_eval';
 import './App.css';
 
 function App() {
-  const isAuthenticated = true;
-
   return (
     <AuthProvider>
       <Routes>
         <Route
           path="/"
-          element={<AuthWrapper isAuthenticated={isAuthenticated} />}
+          element={
+            <NoAuthRoute>
+              <Login />
+            </NoAuthRoute>
+          }
         />
 
         <Route path="/logout" element={<Logout />} />
