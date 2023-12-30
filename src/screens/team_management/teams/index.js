@@ -27,9 +27,7 @@ function Teams() {
 
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
-
-  const hasTeam = false;
-
+  const [hasTeam, setHasTeam] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [buttons, setButtons] = useState([]);
 
