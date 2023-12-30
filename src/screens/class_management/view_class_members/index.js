@@ -36,14 +36,6 @@ function ViewClassMembers() {
   const headers = ['id', 'name', 'team', 'role', 'status'];
   if (user.role === GLOBALS.USER_ROLE.MODERATOR) headers.push('actions');
 
-  const handleDeleteMember = (id) => {
-    deleteMember(id);
-  };
-
-  const handleAcceptMember = (id) => {
-    acceptMember(id);
-  };
-
   const data = classMembers
     .filter((member) => member.role !== GLOBALS.CLASSMEMBER_ROLE.TEACHER)
     .map((member) => {
@@ -58,7 +50,7 @@ function ViewClassMembers() {
               type="btn"
               className="btn btn-sm fw-bold text-success"
               onClick={() => {
-                handleAcceptMember(id);
+                acceptMember(id);
               }}
             >
               ACCEPT
@@ -67,7 +59,7 @@ function ViewClassMembers() {
               type="btn"
               className="btn btn-sm fw-bold text-danger"
               onClick={() => {
-                handleDeleteMember(id);
+                deleteMember(id);
               }}
             >
               REJECT
@@ -78,7 +70,7 @@ function ViewClassMembers() {
             type="btn"
             className="btn btn-sm fw-bold text-danger"
             onClick={() => {
-              handleDeleteMember(id);
+              deleteMember(id);
             }}
           >
             KICK
