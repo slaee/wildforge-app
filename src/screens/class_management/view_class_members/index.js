@@ -2,22 +2,28 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useAuth } from '../../../contexts/AuthContext';
+import { useClassRoom, useClassMembers, useClassMember } from '../../../hooks';
+
 import Search from '../../../components/search';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import Table from '../../../components/table';
-import { useClassRoom, useClassMembers, useClassMember } from '../../../hooks';
+
+import GLOBALS from '../../../app_globals';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
-import GLOBALS from '../../../app_globals';
 
 function ViewClassMembers() {
   const { id: classId } = useParams();
+
   const { user } = useAuth();
   const { classMember } = useClassMember(classId, user.user_id);
   const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
   const { classRoom } = useClassRoom(classId);
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
 
   let buttons = [];
 
@@ -29,6 +35,14 @@ function ViewClassMembers() {
 
   const headers = ['id', 'name', 'team', 'role', 'status'];
   if (user.role === GLOBALS.USER_ROLE.MODERATOR) headers.push('actions');
+
+  const handleDeleteMember = (id) => {
+    deleteMember(id);
+  };
+
+  const handleAcceptMember = (id) => {
+    acceptMember(id);
+  };
 
   const data = classMembers
     .filter((member) => member.role !== GLOBALS.CLASSMEMBER_ROLE.TEACHER)
@@ -44,8 +58,7 @@ function ViewClassMembers() {
               type="btn"
               className="btn btn-sm fw-bold text-success"
               onClick={() => {
-                acceptMember(id);
-                window.location.reload();
+                handleAcceptMember(id);
               }}
             >
               ACCEPT
@@ -54,8 +67,7 @@ function ViewClassMembers() {
               type="btn"
               className="btn btn-sm fw-bold text-danger"
               onClick={() => {
-                deleteMember(id);
-                window.location.reload();
+                handleDeleteMember(id);
               }}
             >
               REJECT
@@ -66,8 +78,7 @@ function ViewClassMembers() {
             type="btn"
             className="btn btn-sm fw-bold text-danger"
             onClick={() => {
-              deleteMember(id);
-              window.location.reload();
+              handleDeleteMember(id);
             }}
           >
             KICK
@@ -87,9 +98,6 @@ function ViewClassMembers() {
 
       return tb_data;
     });
-
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredData, setFilteredData] = useState(data);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -113,7 +121,7 @@ function ViewClassMembers() {
 
   useEffect(() => {
     searchMember(searchQuery);
-  }, [searchQuery, data?.length]);
+  }, [searchQuery, data?.length, classMembers]);
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
