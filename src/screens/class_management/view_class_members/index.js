@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAuth } from '../../../contexts/AuthContext';
 import { useClassRoom, useClassMembers, useClassMember } from '../../../hooks';
@@ -13,25 +13,40 @@ import GLOBALS from '../../../app_globals';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
+import Loading from '../../../components/loading';
 
 function ViewClassMembers() {
+  const navigate = useNavigate();
   const { id: classId } = useParams();
 
   const { user } = useAuth();
-  const { classMember } = useClassMember(classId, user.user_id);
+  const { classMember, isRetrieving } = useClassMember(classId, user.user_id);
   const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
   const { classRoom } = useClassRoom(classId);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
 
-  let buttons = [];
+  const [isLoading, setIsLoading] = useState(true);
+  const [buttons, setButtons] = useState([]);
 
-  if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
-    buttons = GLOBALS.SIDENAV_CLASSMEMBER(classId);
-  } else {
-    buttons = GLOBALS.SIDENAV_TEACHER(classId);
-  }
+  useEffect(() => {
+    if (isRetrieving) {
+      setTimeout(() => setIsLoading(false), 350);
+    } else {
+      if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
+        setButtons(GLOBALS.SIDENAV_CLASSMEMBER(classId));
+      }
+
+      if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.TEACHER) {
+        setButtons(GLOBALS.SIDENAV_TEACHER(classId));
+      }
+
+      if (!classMember) {
+        navigate('/classes');
+      }
+    }
+  }, [isRetrieving]);
 
   const headers = ['id', 'name', 'team', 'role', 'status'];
   if (user.role === GLOBALS.USER_ROLE.MODERATOR) headers.push('actions');
@@ -133,15 +148,13 @@ function ViewClassMembers() {
           <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
             {classRoom?.class_code}
           </div>
-          {user.is_staff && (
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm"
-              onClick={handleCopyCode}
-            >
-              Copy
-            </button>
-          )}
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={handleCopyCode}
+          >
+            Copy
+          </button>
         </div>
       </div>
     </div>
@@ -161,6 +174,18 @@ function ViewClassMembers() {
     </div>
   );
 
+  const renderContent = () => (
+    <div>
+      <div className="d-flex">
+        {renderSubheader()}
+        <div className="d-flex align-items-center ms-auto mx-5">
+          <Search value={searchQuery} onChange={handleSearchChange} />
+        </div>
+      </div>
+      {renderTable()}
+    </div>
+  );
+
   return (
     <div className="d-flex">
       <Navbar
@@ -170,13 +195,8 @@ function ViewClassMembers() {
       />
       <div className="container-fluid d-flex flex-column">
         <Header />
-        <div className="d-flex">
-          {renderSubheader()}
-          <div className="d-flex align-items-center ms-auto mx-5">
-            <Search value={searchQuery} onChange={handleSearchChange} />
-          </div>
-        </div>
-        {renderTable()}
+
+        {isLoading ? <Loading /> : renderContent()}
       </div>
     </div>
   );

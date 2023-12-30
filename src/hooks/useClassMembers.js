@@ -21,7 +21,7 @@ const useClassMembers = (classId) => {
 
       responseCode = status;
     } catch (error) {
-      //
+      // none
     }
 
     switch (responseCode) {
@@ -31,8 +31,10 @@ const useClassMembers = (classId) => {
         );
         break;
       case 404:
+        navigate(`/classes/${classId}/members`);
+        break;
       case 500:
-        navigate(`/classes/$P{classId}/members`);
+        navigate('/classes');
         break;
       default:
     }
@@ -92,7 +94,7 @@ const useClassMembers = (classId) => {
         responseCode = status;
         retrievedClassMembers = data;
       } catch (error) {
-        //
+        // none
       }
 
       switch (responseCode) {
@@ -100,8 +102,6 @@ const useClassMembers = (classId) => {
           setClassMembers(retrievedClassMembers);
           break;
         case 404:
-          navigate('/classes');
-          break;
         case 500:
           navigate('/classes');
           break;

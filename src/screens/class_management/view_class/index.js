@@ -17,25 +17,30 @@ function ViewClass() {
 
   const { user } = useAuth();
   const { id: classId } = useParams();
-  const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
+  const { classRoom } = useClassRoom(classId);
   const { classMember, isRetrieving } = useClassMember(classId, user.user_id);
 
   const [isLoading, setIsLoading] = useState(true);
-
-  let buttons = [];
-
-  if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
-    navigate(`/classes/${classId}/teams`);
-    buttons = GLOBALS.SIDENAV_CLASSMEMBER(classId);
-  } else {
-    buttons = GLOBALS.SIDENAV_TEACHER(classId);
-  }
+  const [buttons, setButtons] = useState([]);
 
   useEffect(() => {
-    if (isRetrieving || isClassLoading) {
-      setTimeout(() => setIsLoading(false), 600);
+    if (isRetrieving) {
+      setTimeout(() => setIsLoading(false), 350);
+    } else {
+      if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
+        navigate(`/classes/${classId}/teams`);
+        setButtons(GLOBALS.SIDENAV_CLASSMEMBER(classId));
+      }
+
+      if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.TEACHER) {
+        setButtons(GLOBALS.SIDENAV_TEACHER(classId));
+      }
+
+      if (!classMember) {
+        navigate('/classes');
+      }
     }
-  }, [classMember, isClassLoading, isRetrieving]);
+  }, [isRetrieving]);
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
@@ -55,15 +60,13 @@ function ViewClass() {
           <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
             {classRoom?.class_code}
           </div>
-          {user.is_staff && (
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm"
-              onClick={handleCopyCode}
-            >
-              Copy
-            </button>
-          )}
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={handleCopyCode}
+          >
+            Copy
+          </button>
         </div>
       </div>
     </div>
@@ -95,7 +98,9 @@ function ViewClass() {
     </div>
   );
 
-  const renderContent = () => (
+  const renderContent = () => <div>{renderBody()}</div>;
+
+  return (
     <div className="d-flex">
       <Navbar
         name={`${user?.first_name} ${user?.last_name}`}
@@ -105,12 +110,10 @@ function ViewClass() {
       <div className="container-fluid d-flex flex-column">
         <Header />
         {renderSubheader()}
-        {renderBody()}
+        {isLoading ? <Loading /> : renderContent()}
       </div>
     </div>
   );
-
-  return <div>{isLoading ? <Loading /> : renderContent()}</div>;
 }
 
 export default ViewClass;

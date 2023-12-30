@@ -5,7 +5,7 @@ import { ClassRoomsService } from '../services';
 const useClassMember = (classId, userId) => {
   const navigate = useNavigate();
   const [isRetrieving, setIsRetrieving] = useState(true);
-  const [classMember, setClassMember] = useState([]);
+  const [classMember, setClassMember] = useState(null);
 
   useEffect(() => {
     const get = async () => {
@@ -21,7 +21,7 @@ const useClassMember = (classId, userId) => {
         responseCode = status;
         retrievedClassMember = data;
       } catch (error) {
-        responseCode = error.response.status;
+        // none
       }
 
       switch (responseCode) {
@@ -29,7 +29,7 @@ const useClassMember = (classId, userId) => {
           setClassMember(retrievedClassMember);
           break;
         case 404:
-          navigate('/classes');
+          navigate(`/classes/${classId}/members`);
           break;
         case 500:
           navigate('/classes');

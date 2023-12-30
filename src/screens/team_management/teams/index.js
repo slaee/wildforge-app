@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../../contexts/AuthContext';
 import { useClassMember, useClassRoom } from '../../../hooks';
@@ -15,25 +15,41 @@ import Search from '../../../components/search';
 import ApplyTeam from '../../../components/modals/apply_team';
 
 import './index.scss';
+import Loading from '../../../components/loading';
 
 function Teams() {
+  const navigate = useNavigate();
+
   const { user } = useAuth();
   const { id: classId } = useParams();
   const { classRoom } = useClassRoom(classId);
-  const { classMember } = useClassMember(classId, user.user_id);
+  const { classMember, isRetrieving } = useClassMember(classId, user.user_id);
 
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
 
   const hasTeam = false;
 
-  let buttons = [];
+  const [isLoading, setIsLoading] = useState(true);
+  const [buttons, setButtons] = useState([]);
 
-  if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
-    buttons = GLOBALS.SIDENAV_CLASSMEMBER(classId);
-  } else {
-    buttons = GLOBALS.SIDENAV_TEACHER(classId);
-  }
+  useEffect(() => {
+    if (isRetrieving) {
+      setTimeout(() => setIsLoading(false), 350);
+    } else {
+      if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
+        setButtons(GLOBALS.SIDENAV_CLASSMEMBER(classId));
+      }
+
+      if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.TEACHER) {
+        setButtons(GLOBALS.SIDENAV_TEACHER(classId));
+      }
+
+      if (!classMember) {
+        navigate('/classes');
+      }
+    }
+  }, [isRetrieving]);
 
   const teamLeaderHeaders = ['id', 'name', 'team', 'status'];
   const teamsHeaders = ['id', 'team', 'leader', 'members', 'actions'];
@@ -137,7 +153,7 @@ function Teams() {
   const renderSubheader = () => {
     let subheaderContent = null;
 
-    if (user.is_staff) {
+    if (user.role === GLOBALS.USER_ROLE.MODERATOR) {
       subheaderContent = (
         <div className="d-flex pt-2 pb-2">
           <div className="px-5">
@@ -165,7 +181,10 @@ function Teams() {
           </div>
         </div>
       );
-    } else if (user.role === 'tl' && hasTeam) {
+    } else if (
+      classMember.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT &&
+      hasTeam
+    ) {
       subheaderContent = (
         <div className="subheader-body d-flex pt-2 pb-2">
           <div className="mx-5">
@@ -208,7 +227,10 @@ function Teams() {
           </div>
         </div>
       );
-    } else if (user.role !== 'tl' && hasTeam) {
+    } else if (
+      classMember.role !== GLOBALS.CLASSMEMBER_ROLE.STUDENT &&
+      hasTeam
+    ) {
       subheaderContent = (
         <div className="subheader-body d-flex pt-2 pb-2">
           <div className="mx-5">
@@ -402,9 +424,9 @@ function Teams() {
     </div>
   );
 
-  const isTeacher = user.is_staff;
+  const isTeacher = user.role === GLOBALS.USER_ROLE.MODERATOR;
 
-  const renderContent = () => {
+  const renderBody = () => {
     if (isTeacher) {
       return renderTeacherTeamManagement();
     }
@@ -413,6 +435,20 @@ function Teams() {
     }
     return hasTeam ? renderTeamData() : renderStudentNoTeam();
   };
+
+  const renderContent = () => (
+    <div>
+      <div className="d-flex flex-column">
+        {renderSubheader()}
+        <AddLeaders
+          modalTitle="Add Leaders"
+          visible={isAddLeadersModalOpen}
+          handleModal={closeAddLeadersModal}
+        />
+      </div>
+      {renderBody()}
+    </div>
+  );
 
   return (
     <div className="d-flex">
@@ -423,15 +459,7 @@ function Teams() {
       />
       <div className="container-fluid d-flex flex-column">
         <Header />
-        <div className="d-flex flex-column">
-          {renderSubheader()}
-          <AddLeaders
-            modalTitle="Add Leaders"
-            visible={isAddLeadersModalOpen}
-            handleModal={closeAddLeadersModal}
-          />
-        </div>
-        {renderContent()}
+        {isLoading ? <Loading /> : renderContent()}
       </div>
     </div>
   );
