@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
 
-import Cookies from 'js-cookie';
 import { useAuth } from '../../contexts/AuthContext';
 import { useAcquireTokens, useSignup } from '../../hooks';
 
