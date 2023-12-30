@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
+
 import Cookies from 'js-cookie';
 import { useAuth } from '../../contexts/AuthContext';
-import { isValidEmail } from '../../utils/strings';
+import { useAcquireTokens, useSignup } from '../../hooks';
+
 import ControlInput from '../../components/controlinput';
+
 import GLOBALS from '../../app_globals';
+import { isObjectEmpty } from '../../utils/object';
+import { isValidEmail } from '../../utils/strings';
 
 import './index.scss';
-import { isObjectEmpty } from '../../utils/object';
-import useSignup from '../../hooks/useSignup';
-import { useAcquireTokens } from '../../hooks';
 
 const validate = (values) => {
   const errors = {};
@@ -58,7 +60,7 @@ function Signup() {
   const [firstNameError, setFirstNameError] = useState('');
   const [lastNameError, setLastNameError] = useState('');
 
-  const { loginUpdate } = useAuth();
+  const { setUser, setAccessToken, setRefreshToken } = useAuth();
   const { signupUser } = useSignup();
   const { acquireTokens } = useAcquireTokens();
 
@@ -223,8 +225,8 @@ function Signup() {
 
               const acquireTokensCallbacks = {
                 acquired: async ({ accessToken, refreshToken }) => {
-                  Cookies.set('accessToken', accessToken);
-                  Cookies.set('refreshToken', refreshToken);
+                  setAccessToken(accessToken);
+                  setRefreshToken(refreshToken);
                 },
                 invalidFields: () =>
                   setErrors({
@@ -244,7 +246,7 @@ function Signup() {
                     callbacks: acquireTokensCallbacks,
                   });
 
-                  loginUpdate(retrievedUser);
+                  setUser(retrievedUser);
                 },
                 emailExists: () =>
                   setErrors({
