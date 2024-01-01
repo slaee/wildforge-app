@@ -24,7 +24,7 @@ api.interceptors.request.use(
     }
 
     // Get access token from cookies for every api request
-    const accessToken = Cookies.get('accessToken');
+    const accessToken = Cookies.get('access_token');
     if (!requestConfig.headers.Authorization) {
       requestConfig.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -43,7 +43,7 @@ api.interceptors.response.use(
       originalRequest.sent = true;
 
       try {
-        const refreshToken = Cookies.get('refreshToken');
+        const refreshToken = Cookies.get('refresh_token');
 
         // if the REFRESH TOKEN is still valid, we'll try to renew it
         const { data: renewedTokens } = await TokensService.refresh({
@@ -53,8 +53,8 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${renewedTokens.access}`;
 
         // Store the new tokens to cookies
-        Cookies.set('accessToken', renewedTokens.access);
-        Cookies.set('refreshToken', renewedTokens.refresh);
+        Cookies.set('access_token', renewedTokens.access);
+        Cookies.set('refresh_token', renewedTokens.refresh);
 
         return api(originalRequest);
       } catch (err) {

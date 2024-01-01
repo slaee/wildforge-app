@@ -12,19 +12,19 @@ const AuthContext = createContext({
 });
 
 export function AuthProvider({ children }) {
-  const [accessToken, setAccessToken_] = useState(Cookies.get('accessToken'));
+  const [accessToken, setAccessToken_] = useState(Cookies.get('access_token'));
   const [refreshToken, setRefreshToken_] = useState(
-    Cookies.get('refreshToken')
+    Cookies.get('refresh_token')
   );
 
   const setAccessToken = (newAccessToken) => {
     if (newAccessToken) {
-      Cookies.set('accessToken', newAccessToken, {
+      Cookies.set('access_token', newAccessToken, {
         secure: true,
         sameSite: 'strict',
       });
     } else {
-      Cookies.remove('accessToken');
+      Cookies.remove('access_token');
     }
 
     setAccessToken_(newAccessToken);
@@ -32,12 +32,12 @@ export function AuthProvider({ children }) {
 
   const setRefreshToken = (newRefreshToken) => {
     if (newRefreshToken) {
-      Cookies.set('refreshToken', newRefreshToken, {
+      Cookies.set('refresh_token', newRefreshToken, {
         secure: true,
         sameSite: 'strict',
       });
     } else {
-      Cookies.remove('refreshToken');
+      Cookies.remove('refresh_token');
     }
 
     setRefreshToken_(newRefreshToken);
