@@ -25,10 +25,10 @@ const useCreateClass = () => {
         max_teams_members,
       });
 
-      responseCode = res.status;
-      retrievedClass = res.data;
+      responseCode = res?.status;
+      retrievedClass = res?.data;
     } catch (error) {
-      responseCode = error.response.status;
+      responseCode = error?.response?.status;
     }
 
     switch (responseCode) {

@@ -12,8 +12,8 @@ if (isLocal) {
   apiUrl = 'https://api.our.link';
 }
 
-const config = {
+const apiConfig = {
   API_URL: apiUrl,
 };
 
-export default config;
+export default apiConfig;

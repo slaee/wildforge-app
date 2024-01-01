@@ -19,8 +19,7 @@ const useClassRoom = (classId) => {
         responseCode = res?.status;
         retrievedClassRoom = res?.data;
       } catch (error) {
-        console.log(error);
-        responseCode = error.response.status;
+        responseCode = error?.response?.status;
       }
 
       switch (responseCode) {

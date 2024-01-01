@@ -14,14 +14,14 @@ const useJoinClass = () => {
     let retrievedMessage;
 
     try {
-      const { status, data } = await ClassRoomsService.join({
+      const res = await ClassRoomsService.join({
         class_code: classCode,
       });
 
-      responseCode = status;
-      retrievedMessage = data;
+      responseCode = res?.status;
+      retrievedMessage = res?.data;
     } catch (error) {
-      responseCode = error.response.status;
+      responseCode = error?.response?.status;
     }
 
     switch (responseCode) {

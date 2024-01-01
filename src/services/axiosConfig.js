@@ -2,7 +2,7 @@ import { redirect } from 'react-router-dom';
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import config from './config';
+import apiConfig from './config';
 
 import TokensService from './TokensService';
 
@@ -11,7 +11,7 @@ const loginRestart = () => {
 };
 
 export const api = axios.create({
-  baseURL: config.API_URL,
+  baseURL: apiConfig.API_URL,
 });
 
 api.interceptors.request.use(
@@ -19,7 +19,7 @@ api.interceptors.request.use(
     // if the current request doesn't include the config's base
     // API URL, we don't attach the access token to its authorization
     // because it means it is an API call to a 3rd party service
-    if (requestConfig.baseURL !== config.API_URL) {
+    if (requestConfig.baseURL !== apiConfig.API_URL) {
       return requestConfig;
     }
 
@@ -61,6 +61,9 @@ api.interceptors.response.use(
         // if anything goes wrong, logout the user
         // and throw an error to exit this Promise chain
         loginRestart();
+        throw err;
+      } finally {
+        originalRequest.sent = false;
       }
     }
 

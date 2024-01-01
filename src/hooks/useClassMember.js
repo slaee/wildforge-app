@@ -15,11 +15,10 @@ const useClassMember = (classId, userId) => {
       try {
         const res = await ClassRoomsService.member(classId, userId);
 
-        responseCode = res.status;
-        retrievedClassMember = res.data;
+        responseCode = res?.status;
+        retrievedClassMember = res?.data;
       } catch (error) {
-        console.log(error);
-        responseCode = error.response.status;
+        responseCode = error?.response?.status;
       }
 
       switch (responseCode) {

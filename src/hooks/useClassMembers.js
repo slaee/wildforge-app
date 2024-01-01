@@ -17,9 +17,9 @@ const useClassMembers = (classId) => {
         setClassMembers(del);
       });
 
-      responseCode = res.status;
+      responseCode = res?.status;
     } catch (error) {
-      responseCode = error.response.status;
+      responseCode = error?.response?.status;
     }
 
     switch (responseCode) {
@@ -54,9 +54,9 @@ const useClassMembers = (classId) => {
         setClassMembers(updated);
       });
 
-      responseCode = res.status;
+      responseCode = res?.status;
     } catch (error) {
-      responseCode = error.response.status;
+      responseCode = error?.response?.status;
     }
 
     switch (responseCode) {
@@ -92,10 +92,10 @@ const useClassMembers = (classId) => {
       try {
         const res = await ClassRoomsService.members(classId);
 
-        responseCode = res.status;
-        retrievedClassMembers = res.data;
+        responseCode = res?.status;
+        retrievedClassMembers = res?.data;
       } catch (error) {
-        responseCode = error.response.status;
+        responseCode = error?.response?.status;
       }
 
       switch (responseCode) {

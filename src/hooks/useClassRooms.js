@@ -15,10 +15,10 @@ const useClassRooms = () => {
       try {
         const res = await ClassRoomsService.all();
 
-        responseCode = res.status;
-        retrievedClasses = res.data;
+        responseCode = res?.status;
+        retrievedClasses = res?.data;
       } catch (error) {
-        responseCode = error.response.status;
+        responseCode = error?.response?.status;
       }
 
       switch (responseCode) {

@@ -1,7 +1,7 @@
-import config from './config';
+import apiConfig from './config';
 import { api } from './axiosConfig';
 
-const BASE_URL = `${config.API_URL}/classes`;
+const BASE_URL = `${apiConfig.API_URL}/classes`;
 
 const ClassRoomsService = {
   /// GET /classes

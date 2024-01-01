@@ -27,10 +27,10 @@ const useSignup = () => {
         role,
       });
 
-      responseCode = res.status;
-      retrievedUser = res.data;
+      responseCode = res?.status;
+      retrievedUser = res?.data;
     } catch (error) {
-      responseCode = error.response.status;
+      responseCode = error?.response?.status;
     }
 
     switch (responseCode) {
