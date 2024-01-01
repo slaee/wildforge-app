@@ -19,7 +19,10 @@ export function AuthProvider({ children }) {
 
   const setAccessToken = (newAccessToken) => {
     if (newAccessToken) {
-      Cookies.set('accessToken', newAccessToken);
+      Cookies.set('accessToken', newAccessToken, {
+        secure: true,
+        sameSite: 'strict',
+      });
     } else {
       Cookies.remove('accessToken');
     }
@@ -29,7 +32,10 @@ export function AuthProvider({ children }) {
 
   const setRefreshToken = (newRefreshToken) => {
     if (newRefreshToken) {
-      Cookies.set('refreshToken', newRefreshToken);
+      Cookies.set('refreshToken', newRefreshToken, {
+        secure: true,
+        sameSite: 'strict',
+      });
     } else {
       Cookies.remove('refreshToken');
     }

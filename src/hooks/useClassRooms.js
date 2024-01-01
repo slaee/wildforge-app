@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import { ClassRoomsService } from '../services';
 
 const useClassRooms = () => {
@@ -13,10 +13,10 @@ const useClassRooms = () => {
       let retrievedClasses;
 
       try {
-        const { status, data } = await ClassRoomsService.all();
+        const res = await ClassRoomsService.all();
 
-        responseCode = status;
-        retrievedClasses = data;
+        responseCode = res.status;
+        retrievedClasses = res.data;
       } catch (error) {
         responseCode = error.response.status;
       }
@@ -26,9 +26,11 @@ const useClassRooms = () => {
           setClasses(retrievedClasses);
           break;
         case 401:
+          redirect('/login');
+          break;
         case 404:
         case 500:
-          navigate('/logout');
+          navigate('/classes');
           break;
         default:
       }

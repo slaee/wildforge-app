@@ -13,16 +13,16 @@ const useAcquireTokens = () => {
     let refreshToken;
 
     try {
-      const { status, data } = await TokensService.acquire({
+      const res = await TokensService.acquire({
         email,
         password,
       });
 
-      responseCode = status;
-      accessToken = data.access;
-      refreshToken = data.refresh;
+      responseCode = res.status;
+      accessToken = res.data.access;
+      refreshToken = res.data.refresh;
     } catch (error) {
-      //
+      responseCode = error.response.status;
     }
 
     switch (responseCode) {

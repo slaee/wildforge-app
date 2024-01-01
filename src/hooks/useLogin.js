@@ -12,13 +12,13 @@ const useLogin = () => {
     let retrievedUser;
 
     try {
-      const { status, data } = await UsersService.login({
+      const res = await UsersService.login({
         email,
         password,
       });
 
-      responseCode = status;
-      retrievedUser = data;
+      responseCode = res.status;
+      retrievedUser = res.data;
     } catch (error) {
       responseCode = error.response.status;
     }
@@ -27,8 +27,8 @@ const useLogin = () => {
       case 200:
         await callbacks.loggedIn({ retrievedUser });
         break;
-      case 400:
       case 401:
+      case 400:
         await callbacks.invalidFields();
         break;
       case 500:

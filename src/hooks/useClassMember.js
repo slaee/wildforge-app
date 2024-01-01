@@ -13,21 +13,19 @@ const useClassMember = (classId, userId) => {
       let retrievedClassMember;
 
       try {
-        const { status, data } = await ClassRoomsService.member(
-          classId,
-          userId
-        );
+        const res = await ClassRoomsService.member(classId, userId);
 
-        responseCode = status;
-        retrievedClassMember = data;
+        responseCode = res.status;
+        retrievedClassMember = res.data;
       } catch (error) {
-        // none
+        responseCode = error.response.status;
       }
 
       switch (responseCode) {
         case 200:
           setClassMember(retrievedClassMember);
           break;
+        case 401:
         case 404:
           navigate(`/classes/${classId}/members`);
           break;

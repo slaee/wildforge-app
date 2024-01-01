@@ -32,9 +32,6 @@ function App() {
             </NoAuthRoute>
           }
         />
-
-        <Route path="/logout" element={<Logout />} />
-
         <Route
           path="/login"
           element={
@@ -52,46 +49,52 @@ function App() {
           }
         />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
-        <Route
-          path="/classes"
-          element={
-            <PrivateRoute>
-              <Classes />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/classes/:id"
-          element={
-            <PrivateRoute>
-              <ViewClass />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/classes/:id/members"
-          element={
-            <PrivateRoute>
-              <ViewClassMembers />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/classes/:id/teamleaders"
-          element={
-            <PrivateRoute>
-              <Teams />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/classes/:id/teams"
-          element={
-            <PrivateRoute>
-              <Teams />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/logout" element={<Logout />} />
+
+        {/* Classroom routes */}
+        <Route path="classes">
+          <Route
+            index
+            element={
+              <PrivateRoute>
+                <Classes />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path=":id"
+            element={
+              <PrivateRoute>
+                <ViewClass />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path=":id/members"
+            element={
+              <PrivateRoute>
+                <ViewClassMembers />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path=":id/teamleaders"
+            element={
+              <PrivateRoute>
+                <Teams />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path=":id/teams"
+            element={
+              <PrivateRoute>
+                <Teams />
+              </PrivateRoute>
+            }
+          />
+        </Route>
+
         <Route
           path="/peer-eval"
           element={

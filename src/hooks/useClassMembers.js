@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import { ClassRoomsService } from '../services';
 import GLOBALS from '../app_globals';
 
@@ -12,16 +12,14 @@ const useClassMembers = (classId) => {
     let responseCode;
 
     try {
-      const { status } = await ClassRoomsService.delete(classId, memberID).then(
-        () => {
-          const del = classMembers.filter((member) => member.id !== memberID);
-          setClassMembers(del);
-        }
-      );
+      const res = await ClassRoomsService.delete(classId, memberID).then(() => {
+        const del = classMembers.filter((member) => member.id !== memberID);
+        setClassMembers(del);
+      });
 
-      responseCode = status;
+      responseCode = res.status;
     } catch (error) {
-      // none
+      responseCode = error.response.status;
     }
 
     switch (responseCode) {
@@ -29,6 +27,9 @@ const useClassMembers = (classId) => {
         setClassMembers((prevClassMembers) =>
           prevClassMembers.filter((member) => member.id !== memberID)
         );
+        break;
+      case 401:
+        redirect('/login');
         break;
       case 404:
         navigate(`/classes/${classId}/members`);
@@ -44,23 +45,21 @@ const useClassMembers = (classId) => {
     let responseCode;
 
     try {
-      const { status } = await ClassRoomsService.accept(classId, memberID).then(
-        () => {
-          const updated = classMembers.map((member) => {
-            if (member.id === memberID) {
-              return { ...member, status: GLOBALS.MEMBER_STATUS.ACCEPTED };
-            }
+      const res = await ClassRoomsService.accept(classId, memberID).then(() => {
+        const updated = classMembers.map((member) => {
+          if (member.id === memberID) {
+            return { ...member, status: GLOBALS.MEMBER_STATUS.ACCEPTED };
+          }
 
-            return member;
-          });
+          return res.member;
+        });
 
-          setClassMembers(updated);
-        }
-      );
+        setClassMembers(updated);
+      });
 
-      responseCode = status;
+      responseCode = res.status;
     } catch (error) {
-      // none
+      responseCode = error.response.status;
     }
 
     switch (responseCode) {
@@ -75,9 +74,14 @@ const useClassMembers = (classId) => {
           })
         );
         break;
+      case 401:
+        redirect('/login');
+        break;
       case 404:
+        navigate(`/classes/${classId}/members`);
+        break;
       case 500:
-        navigate(`/classes/$P{classId}/members`);
+        navigate('/classes');
         break;
       default:
     }
@@ -89,19 +93,24 @@ const useClassMembers = (classId) => {
       let retrievedClassMembers;
 
       try {
-        const { status, data } = await ClassRoomsService.members(classId);
+        const res = await ClassRoomsService.members(classId);
 
-        responseCode = status;
-        retrievedClassMembers = data;
+        responseCode = res.status;
+        retrievedClassMembers = res.data;
       } catch (error) {
-        // none
+        responseCode = error.response.status;
       }
 
       switch (responseCode) {
         case 200:
           setClassMembers(retrievedClassMembers);
           break;
+        case 401:
+          redirect('/login');
+          break;
         case 404:
+          navigate(`/classes/${classId}/members`);
+          break;
         case 500:
           navigate('/classes');
           break;
