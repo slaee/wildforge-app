@@ -23,7 +23,7 @@ function ViewClassMembers() {
   const { accessToken } = useAuth();
   const user = jwtDecode(accessToken);
 
-  const { classMember, isRetrieving } = useClassMember(classId, user.user_id);
+  const { classMember, isRetrieving } = useClassMember(classId, user?.user_id);
   const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
   const { classRoom } = useClassRoom(classId);
 
@@ -52,10 +52,10 @@ function ViewClassMembers() {
   }, [isRetrieving]);
 
   const headers = ['id', 'name', 'team', 'role', 'status'];
-  if (user.role === GLOBALS.USER_ROLE.MODERATOR) headers.push('actions');
+  if (user?.role === GLOBALS.USER_ROLE.MODERATOR) headers.push('actions');
 
   const data = classMembers
-    .filter((member) => member.role !== GLOBALS.CLASSMEMBER_ROLE.TEACHER)
+    .filter((member) => member?.role !== GLOBALS.CLASSMEMBER_ROLE.TEACHER)
     .map((member) => {
       const { id, first_name, last_name, team, status } = member;
 

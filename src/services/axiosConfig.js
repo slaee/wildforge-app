@@ -2,9 +2,11 @@ import { redirect } from 'react-router-dom';
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import jwtDecode from 'jwt-decode';
 import apiConfig from './config';
 
 import TokensService from './TokensService';
+import { hash, dehash } from '../utils/mask';
 
 const loginRestart = () => {
   redirect('/logout');
@@ -43,7 +45,10 @@ api.interceptors.response.use(
       originalRequest.sent = true;
 
       try {
-        const refreshToken = Cookies.get('refresh_token');
+        const refreshToken = dehash(
+          Cookies.get('refresh_token'),
+          localStorage.getItem('uuid')
+        );
 
         // if the REFRESH TOKEN is still valid, we'll try to renew it
         const { data: renewedTokens } = await TokensService.refresh({
@@ -53,8 +58,18 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${renewedTokens.access}`;
 
         // Store the new tokens to cookies
-        Cookies.set('access_token', renewedTokens.access);
-        Cookies.set('refresh_token', renewedTokens.refresh);
+        Cookies.set('access_token', renewedTokens.access, {
+          secure: true,
+          sameSite: 'Strict',
+        });
+
+        const jti = jwtDecode(renewedTokens.refresh)?.jti;
+        localStorage.setItem('uuid', jti);
+
+        Cookies.set('refresh_token', hash(renewedTokens.refresh, jti), {
+          secure: true,
+          sameSite: 'Strict',
+        });
 
         return api(originalRequest);
       } catch (err) {
@@ -62,8 +77,6 @@ api.interceptors.response.use(
         // and throw an error to exit this Promise chain
         loginRestart();
         throw err;
-      } finally {
-        originalRequest.sent = false;
       }
     }
 

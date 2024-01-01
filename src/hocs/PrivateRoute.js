@@ -4,14 +4,14 @@ import { useAuth } from '../contexts/AuthContext';
 import GLOBALS from '../app_globals';
 
 export function PrivateRoute({ forUserType, children }) {
-  const { accessToken } = useAuth();
+  const { refreshToken } = useAuth();
 
-  if (!accessToken) {
+  if (!refreshToken) {
     return <Navigate to="/login" />;
   }
 
   if (
-    accessToken &&
+    refreshToken &&
     (forUserType === GLOBALS.USER_ROLE.ADMIN ||
       forUserType === GLOBALS.USER_ROLE.MODERATOR ||
       forUserType === GLOBALS.USER_ROLE.BASIC)

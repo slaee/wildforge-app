@@ -1,27 +1,31 @@
 import React, { useState, createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
+import jwtDecode from 'jwt-decode';
+
+import { hash, dehash } from '../utils/mask';
 
 const AuthContext = createContext({
-  user: null,
+  uuid: null,
   accessToken: null,
   refreshToken: null,
-  setUser: () => {},
+  setUuid: () => {},
   setAccessToken: () => {},
   setRefreshToken: () => {},
 });
 
 export function AuthProvider({ children }) {
+  const [uuid, setUuid] = useState(localStorage.getItem('uuid'));
   const [accessToken, setAccessToken_] = useState(Cookies.get('access_token'));
   const [refreshToken, setRefreshToken_] = useState(
-    Cookies.get('refresh_token')
+    dehash(Cookies.get('refresh_token'), uuid)
   );
 
   const setAccessToken = (newAccessToken) => {
     if (newAccessToken) {
       Cookies.set('access_token', newAccessToken, {
         secure: true,
-        sameSite: 'strict',
+        sameSite: 'Strict',
       });
     } else {
       Cookies.remove('access_token');
@@ -32,12 +36,18 @@ export function AuthProvider({ children }) {
 
   const setRefreshToken = (newRefreshToken) => {
     if (newRefreshToken) {
-      Cookies.set('refresh_token', newRefreshToken, {
+      const jti = jwtDecode(newRefreshToken)?.jti;
+      localStorage.setItem('uuid', jti);
+      setUuid(jti);
+
+      const token = hash(newRefreshToken, jti);
+      Cookies.set('refresh_token', token, {
         secure: true,
-        sameSite: 'strict',
+        sameSite: 'Strict',
       });
     } else {
       Cookies.remove('refresh_token');
+      localStorage.removeItem('uuid');
     }
 
     setRefreshToken_(newRefreshToken);
@@ -45,8 +55,10 @@ export function AuthProvider({ children }) {
 
   const authContextValue = useMemo(
     () => ({
+      uuid,
       accessToken,
       refreshToken,
+      setUuid,
       setAccessToken,
       setRefreshToken,
     }),

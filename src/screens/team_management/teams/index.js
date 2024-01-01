@@ -26,7 +26,7 @@ function Teams() {
 
   const { id: classId } = useParams();
   const { classRoom } = useClassRoom(classId);
-  const { classMember, isRetrieving } = useClassMember(classId, user.user_id);
+  const { classMember, isRetrieving } = useClassMember(classId, user?.user_id);
 
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
