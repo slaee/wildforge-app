@@ -59,7 +59,7 @@ function Signup() {
   const [firstNameError, setFirstNameError] = useState('');
   const [lastNameError, setLastNameError] = useState('');
 
-  const { setUser, setAccessToken, setRefreshToken } = useAuth();
+  const { setAccessToken, setRefreshToken } = useAuth();
   const { signupUser } = useSignup();
   const { acquireTokens } = useAcquireTokens();
 
@@ -244,8 +244,6 @@ function Signup() {
                     password: values.password,
                     callbacks: acquireTokensCallbacks,
                   });
-
-                  setUser(retrievedUser);
                 },
                 emailExists: () =>
                   setErrors({

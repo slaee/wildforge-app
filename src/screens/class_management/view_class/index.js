@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 
 import { useAuth } from '../../../contexts/AuthContext';
 import { useClassMember, useClassRoom } from '../../../hooks';
@@ -15,10 +16,12 @@ import './index.scss';
 function ViewClass() {
   const navigate = useNavigate();
 
-  const { user } = useAuth();
+  const { accessToken } = useAuth();
+  const user = jwtDecode(accessToken);
+
   const { id: classId } = useParams();
   const { classRoom } = useClassRoom(classId);
-  const { classMember, isRetrieving } = useClassMember(classId, user.user_id);
+  const { classMember, isRetrieving } = useClassMember(classId, user?.user_id);
 
   const [isLoading, setIsLoading] = useState(true);
   const [buttons, setButtons] = useState([]);

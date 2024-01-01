@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 
 // Hooks Imports
+import jwtDecode from 'jwt-decode';
 import { useClassRooms } from '../../../hooks';
 import { useAuth } from '../../../contexts/AuthContext';
 
@@ -19,7 +20,9 @@ import 'primeicons/primeicons.css';
 import './index.scss';
 
 function Classes() {
-  const { user } = useAuth();
+  const { accessToken } = useAuth();
+  const user = jwtDecode(accessToken);
+
   const { classes } = useClassRooms();
 
   const buttons = GLOBALS.SIDENAV_DEFAULT;

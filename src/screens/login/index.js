@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
 
 import { useAuth } from '../../contexts/AuthContext';
-import { useAcquireTokens, useLogin } from '../../hooks';
+import { useAcquireTokens } from '../../hooks';
 
 import { isValidEmail } from '../../utils/strings';
 import { isObjectEmpty } from '../../utils/object';
@@ -32,8 +32,7 @@ const validate = (values) => {
 };
 
 function Login() {
-  const { setUser, setAccessToken, setRefreshToken } = useAuth();
-  const { isLoggingIn, loginUser } = useLogin();
+  const { setAccessToken, setRefreshToken } = useAuth();
   const { isAcquiring, acquireTokens } = useAcquireTokens();
 
   return (
@@ -72,31 +71,10 @@ function Login() {
                   }),
               };
 
-              const loginUserCallbacks = {
-                loggedIn: async ({ retrievedUser }) => {
-                  await acquireTokens({
-                    email: values.email,
-                    password: values.password,
-                    callbacks: acquireTokensCallbacks,
-                  });
-
-                  setUser(retrievedUser);
-                },
-                invalidFields: () =>
-                  setErrors({
-                    overall: 'Invalid email address and/or password.',
-                  }),
-                internalError: () =>
-                  setErrors({
-                    overall: 'Oops, something went wrong.',
-                  }),
-              };
-
-              // Login user
-              await loginUser({
+              await acquireTokens({
                 email: values.email,
                 password: values.password,
-                callbacks: loginUserCallbacks,
+                callbacks: acquireTokensCallbacks,
               });
             }}
           >
@@ -135,9 +113,9 @@ function Login() {
                   <button
                     type="submit"
                     className="btn btn-wild-primary btn-large fw-bold fs-5"
-                    disabled={isLoggingIn || isAcquiring}
+                    disabled={isAcquiring}
                   >
-                    {isLoggingIn || isAcquiring ? 'Logging In...' : 'Login'}
+                    {isAcquiring ? 'Logging In...' : 'Login'}
                   </button>
                 </div>
               </form>

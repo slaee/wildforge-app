@@ -4,12 +4,11 @@ import { useAuth } from '../../contexts/AuthContext';
 
 function Logout() {
   const navigate = useNavigate();
-  const { setAccessToken, setRefreshToken, setUser } = useAuth();
+  const { setAccessToken, setRefreshToken } = useAuth();
 
   useEffect(() => {
     setAccessToken(null);
     setRefreshToken(null);
-    setUser(null);
 
     navigate('/login', { replace: true });
   }, []);

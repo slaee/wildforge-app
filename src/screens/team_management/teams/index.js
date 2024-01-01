@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import jwtDecode from 'jwt-decode';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useClassMember, useClassRoom } from '../../../hooks';
 
@@ -20,7 +21,9 @@ import Loading from '../../../components/loading';
 function Teams() {
   const navigate = useNavigate();
 
-  const { user } = useAuth();
+  const { accessToken } = useAuth();
+  const user = jwtDecode(accessToken);
+
   const { id: classId } = useParams();
   const { classRoom } = useClassRoom(classId);
   const { classMember, isRetrieving } = useClassMember(classId, user.user_id);

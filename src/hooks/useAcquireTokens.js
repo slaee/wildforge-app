@@ -22,7 +22,7 @@ const useAcquireTokens = () => {
       accessToken = data.access;
       refreshToken = data.refresh;
     } catch (error) {
-      responseCode = error.response.status;
+      //
     }
 
     switch (responseCode) {

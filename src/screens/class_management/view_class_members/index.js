@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import jwtDecode from 'jwt-decode';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useClassRoom, useClassMembers, useClassMember } from '../../../hooks';
 
@@ -8,18 +9,20 @@ import Search from '../../../components/search';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import Table from '../../../components/table';
+import Loading from '../../../components/loading';
 
 import GLOBALS from '../../../app_globals';
 
 import 'primeicons/primeicons.css';
 import './index.scss';
-import Loading from '../../../components/loading';
 
 function ViewClassMembers() {
   const navigate = useNavigate();
   const { id: classId } = useParams();
 
-  const { user } = useAuth();
+  const { accessToken } = useAuth();
+  const user = jwtDecode(accessToken);
+
   const { classMember, isRetrieving } = useClassMember(classId, user.user_id);
   const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
   const { classRoom } = useClassRoom(classId);

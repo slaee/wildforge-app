@@ -1,13 +1,6 @@
-import React, {
-  useState,
-  createContext,
-  useContext,
-  useMemo,
-  useEffect,
-} from 'react';
+import React, { useState, createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
-import jwtDecode from 'jwt-decode';
 
 const AuthContext = createContext({
   user: null,
@@ -19,29 +12,10 @@ const AuthContext = createContext({
 });
 
 export function AuthProvider({ children }) {
-  const [user, setUser_] = useState(Cookies.get('user'));
-  const [accessToken, setAccessToken_] = useState(
-    Cookies.get('accessToken') || null
-  );
+  const [accessToken, setAccessToken_] = useState(Cookies.get('accessToken'));
   const [refreshToken, setRefreshToken_] = useState(
-    Cookies.get('refreshToken') || null
+    Cookies.get('refreshToken')
   );
-
-  const setUser = (newUser) => {
-    if (newUser) {
-      Cookies.set('user', newUser, { expires: 7 });
-    } else {
-      Cookies.remove('user');
-    }
-
-    setUser_(newUser);
-  };
-
-  useEffect(() => {
-    if (accessToken) {
-      setUser(jwtDecode(accessToken));
-    }
-  }, [accessToken]);
 
   const setAccessToken = (newAccessToken) => {
     if (newAccessToken) {
@@ -65,14 +39,12 @@ export function AuthProvider({ children }) {
 
   const authContextValue = useMemo(
     () => ({
-      user,
       accessToken,
       refreshToken,
-      setUser,
       setAccessToken,
       setRefreshToken,
     }),
-    [user, accessToken, refreshToken]
+    [accessToken, refreshToken]
   );
 
   return (
