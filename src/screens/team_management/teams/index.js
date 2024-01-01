@@ -183,7 +183,7 @@ function Teams() {
         </div>
       );
     } else if (
-      classMember.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT &&
+      classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT &&
       hasTeam
     ) {
       subheaderContent = (
@@ -229,7 +229,7 @@ function Teams() {
         </div>
       );
     } else if (
-      classMember.role !== GLOBALS.CLASSMEMBER_ROLE.STUDENT &&
+      classMember?.role !== GLOBALS.CLASSMEMBER_ROLE.STUDENT &&
       hasTeam
     ) {
       subheaderContent = (

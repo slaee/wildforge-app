@@ -25,9 +25,6 @@ const useClassRooms = () => {
         case 200:
           setClasses(retrievedClasses);
           break;
-        case 401:
-          redirect('/login');
-          break;
         case 404:
         case 500:
           navigate('/classes');

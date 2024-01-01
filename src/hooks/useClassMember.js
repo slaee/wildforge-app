@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import { ClassRoomsService } from '../services';
 
 const useClassMember = (classId, userId) => {
@@ -18,6 +18,7 @@ const useClassMember = (classId, userId) => {
         responseCode = res.status;
         retrievedClassMember = res.data;
       } catch (error) {
+        console.log(error);
         responseCode = error.response.status;
       }
 
@@ -25,7 +26,6 @@ const useClassMember = (classId, userId) => {
         case 200:
           setClassMember(retrievedClassMember);
           break;
-        case 401:
         case 404:
           navigate(`/classes/${classId}/members`);
           break;

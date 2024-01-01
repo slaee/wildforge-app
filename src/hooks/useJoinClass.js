@@ -28,9 +28,6 @@ const useJoinClass = () => {
       case 200:
         await callbacks.joined({ retrievedMessage });
         break;
-      case 401:
-        redirect('/login');
-        break;
       case 400:
         await callbacks.invalidFields();
         break;

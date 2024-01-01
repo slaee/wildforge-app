@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -7,9 +7,7 @@ import config from './config';
 import TokensService from './TokensService';
 
 const loginRestart = () => {
-  const navigate = useNavigate();
-
-  navigate('/logout');
+  redirect('/logout');
 };
 
 export const api = axios.create({

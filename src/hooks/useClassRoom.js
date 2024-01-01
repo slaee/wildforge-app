@@ -16,18 +16,16 @@ const useClassRoom = (classId) => {
       try {
         const res = await ClassRoomsService.get(classId);
 
-        responseCode = res.status;
-        retrievedClassRoom = res.data;
+        responseCode = res?.status;
+        retrievedClassRoom = res?.data;
       } catch (error) {
+        console.log(error);
         responseCode = error.response.status;
       }
 
       switch (responseCode) {
         case 200:
           setClassRoom(retrievedClassRoom);
-          break;
-        case 401:
-          redirect('/login');
           break;
         case 404:
           navigate('/classes');
@@ -42,7 +40,7 @@ const useClassRoom = (classId) => {
     };
 
     get();
-  }, []);
+  }, [isRetrieving]);
 
   return { isRetrieving, classRoom };
 };

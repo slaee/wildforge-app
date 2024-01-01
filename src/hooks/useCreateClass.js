@@ -36,9 +36,6 @@ const useCreateClass = () => {
       case 201:
         await callbacks.created({ retrievedClass });
         break;
-      case 401:
-        redirect('/login');
-        break;
       case 400:
         await callbacks.invalidFields();
         break;

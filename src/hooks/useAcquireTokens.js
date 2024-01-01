@@ -30,6 +30,7 @@ const useAcquireTokens = () => {
         await callbacks.acquired({ accessToken, refreshToken });
         break;
       case 401:
+      case 400:
         await callbacks.invalidFields();
         break;
       case 500:

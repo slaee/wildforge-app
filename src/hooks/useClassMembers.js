@@ -28,9 +28,6 @@ const useClassMembers = (classId) => {
           prevClassMembers.filter((member) => member.id !== memberID)
         );
         break;
-      case 401:
-        redirect('/login');
-        break;
       case 404:
         navigate(`/classes/${classId}/members`);
         break;
