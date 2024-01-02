@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { redirect, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ClassRoomsService } from '../services';
 import GLOBALS from '../app_globals';
 
@@ -12,18 +12,14 @@ const useClassMembers = (classId) => {
     let responseCode;
 
     try {
-      const res = await ClassRoomsService.delete(classId, memberID).then(() => {
-        const del = classMembers.filter((member) => member.id !== memberID);
-        setClassMembers(del);
-      });
-
+      const res = await ClassRoomsService.delete(classId, memberID);
       responseCode = res?.status;
     } catch (error) {
       responseCode = error?.response?.status;
     }
 
     switch (responseCode) {
-      case 200:
+      case 204:
         setClassMembers((prevClassMembers) =>
           prevClassMembers.filter((member) => member.id !== memberID)
         );
@@ -42,37 +38,23 @@ const useClassMembers = (classId) => {
     let responseCode;
 
     try {
-      const res = await ClassRoomsService.accept(classId, memberID).then(() => {
-        const updated = classMembers.map((member) => {
-          if (member.id === memberID) {
-            return { ...member, status: GLOBALS.MEMBER_STATUS.ACCEPTED };
-          }
-
-          return res.member;
-        });
-
-        setClassMembers(updated);
-      });
-
+      const res = await ClassRoomsService.accept(classId, memberID);
       responseCode = res?.status;
     } catch (error) {
       responseCode = error?.response?.status;
     }
 
     switch (responseCode) {
-      case 200:
+      case 202:
         setClassMembers((prevClassMembers) =>
           prevClassMembers.map((member) => {
             if (member.id === memberID) {
-              return { ...member, status: 'accepted' };
+              return { ...member, status: GLOBALS.MEMBER_STATUS.ACCEPTED };
             }
 
             return member;
           })
         );
-        break;
-      case 401:
-        redirect('/login');
         break;
       case 404:
         navigate(`/classes/${classId}/members`);
@@ -101,9 +83,6 @@ const useClassMembers = (classId) => {
       switch (responseCode) {
         case 200:
           setClassMembers(retrievedClassMembers);
-          break;
-        case 401:
-          redirect('/login');
           break;
         case 404:
           navigate(`/classes/${classId}/members`);

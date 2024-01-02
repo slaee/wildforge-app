@@ -29,6 +29,7 @@ function ViewClassMembers() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
+  const [tableData, setTableData] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
   const [buttons, setButtons] = useState([]);
@@ -51,63 +52,72 @@ function ViewClassMembers() {
     }
   }, [isRetrieving]);
 
+  useEffect(() => {
+    if (classMembers) {
+      const data = classMembers
+        .filter((member) => member.role !== GLOBALS.CLASSMEMBER_ROLE.TEACHER)
+        .map((member) => {
+          const { id, first_name, last_name, team, status } = member;
+
+          let tb_data = {};
+
+          const actions =
+            status === GLOBALS.MEMBER_STATUS.PENDING ? (
+              <>
+                <button
+                  type="btn"
+                  className="btn btn-sm fw-bold text-success"
+                  onClick={() => {
+                    acceptMember(id);
+                  }}
+                >
+                  ACCEPT
+                </button>
+                <button
+                  type="btn"
+                  className="btn btn-sm fw-bold text-danger"
+                  onClick={() => {
+                    deleteMember(id);
+                  }}
+                >
+                  REJECT
+                </button>
+              </>
+            ) : (
+              <button
+                type="btn"
+                className="btn btn-sm fw-bold text-danger"
+                onClick={() => {
+                  deleteMember(id);
+                }}
+              >
+                KICK
+              </button>
+            );
+
+          tb_data = {
+            id,
+            name: `${first_name} ${last_name}`,
+            team: team || 'N/A',
+            status:
+              status === GLOBALS.MEMBER_STATUS.PENDING ? 'pending' : 'accepted',
+            role: 'Student',
+          };
+
+          if (user?.role === GLOBALS.USER_ROLE.MODERATOR)
+            tb_data.actions = actions;
+
+          return tb_data;
+        });
+
+      setTableData(data);
+    }
+  }, [classMembers]);
+
   const headers = ['id', 'name', 'team', 'role', 'status'];
-  if (user?.role === GLOBALS.USER_ROLE.MODERATOR) headers.push('actions');
-
-  const data = classMembers
-    .filter((member) => member?.role !== GLOBALS.CLASSMEMBER_ROLE.TEACHER)
-    .map((member) => {
-      const { id, first_name, last_name, team, status } = member;
-
-      let tb_data = {};
-
-      const actions =
-        status === GLOBALS.MEMBER_STATUS.PENDING ? (
-          <>
-            <button
-              type="btn"
-              className="btn btn-sm fw-bold text-success"
-              onClick={() => {
-                acceptMember(id);
-              }}
-            >
-              ACCEPT
-            </button>
-            <button
-              type="btn"
-              className="btn btn-sm fw-bold text-danger"
-              onClick={() => {
-                deleteMember(id);
-              }}
-            >
-              REJECT
-            </button>
-          </>
-        ) : (
-          <button
-            type="btn"
-            className="btn btn-sm fw-bold text-danger"
-            onClick={() => {
-              deleteMember(id);
-            }}
-          >
-            KICK
-          </button>
-        );
-
-      tb_data = {
-        id,
-        name: `${first_name} ${last_name}`,
-        team: team || 'N/A',
-        status:
-          status === GLOBALS.MEMBER_STATUS.PENDING ? 'pending' : 'accepted',
-        role: 'Student',
-      };
-
-      if (user.role === GLOBALS.USER_ROLE.MODERATOR) tb_data.actions = actions;
-
-      return tb_data;
-    });
+  if (user?.role === GLOBALS.USER_ROLE.MODERATOR) {
+    headers.push('actions');
+  }
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -116,9 +126,9 @@ function ViewClassMembers() {
   const searchMember = (query) => {
     const lowerCaseQuery = query.toLowerCase();
     if (lowerCaseQuery.length === 0) {
-      setFilteredData(data);
+      setFilteredData(tableData);
     } else {
-      const filtered = data?.filter(
+      const filtered = tableData?.filter(
         (item) =>
           item.name.toLowerCase().includes(lowerCaseQuery) ||
           item.team.toLowerCase().includes(lowerCaseQuery) ||
@@ -131,7 +141,7 @@ function ViewClassMembers() {
 
   useEffect(() => {
     searchMember(searchQuery);
-  }, [searchQuery, data?.length, classMembers]);
+  }, [searchQuery, tableData, classMembers]);
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
@@ -165,7 +175,7 @@ function ViewClassMembers() {
 
   const renderTable = () => (
     <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
-      {data && filteredData.length === 0 ? (
+      {tableData && filteredData.length === 0 ? (
         <div className="d-flex justify-content-center align-items-center">
           <div className="brown-text fw-bold fs-5 py-2 mx-5">
             No members found
