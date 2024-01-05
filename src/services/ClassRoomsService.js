@@ -35,6 +35,10 @@ const ClassRoomsService = {
   /// GET /classes/{class_pk}/members/
   members: (classPK) => api.get(`${BASE_URL}/${classPK}/members`),
 
+  // GET /classes/{class_pk}/members/{id}/teamrole
+  teamMemberRole: (classPK, memberID) =>
+    api.get(`${BASE_URL}/${classPK}/members/${memberID}/teamrole`),
+
   /// PUT /classes/{class_pk}/members/{id}/accept
   accept: (classPK, memberID) =>
     api.put(`${BASE_URL}/${classPK}/members/${memberID}/accept`),
