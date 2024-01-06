@@ -1,7 +1,7 @@
 import axios from 'axios';
-import config from './config';
+import apiConfig from './config';
 
-const BASE_URL = `${config.API_URL}/tokens`;
+const BASE_URL = `${apiConfig.API_URL}/tokens`;
 
 const instance = axios.create();
 

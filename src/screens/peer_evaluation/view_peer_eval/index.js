@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
+
+import jwtDecode from 'jwt-decode';
 import { Dialog } from 'primereact/dialog';
+import { useAuth } from '../../../contexts/AuthContext';
+
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
-import { useAuth } from '../../../contexts/AuthContext';
 import Search from '../../../components/search';
 import Table from '../../../components/table';
-
-import './index.scss';
 import ControlInput from '../../../components/controlinput';
 
+import './index.scss';
+
 function PeerEval() {
-  const { user } = useAuth();
+  const { accessToken } = useAuth();
+  const user = jwtDecode(accessToken);
+
   const [peerEvalModal, setPeerEvalModal] = useState(false);
   const [assignClassModal, setAssignClassModal] = useState(false);
 

@@ -4,16 +4,15 @@ import { useAuth } from '../contexts/AuthContext';
 import GLOBALS from '../app_globals';
 
 export function PrivateRoute({ forUserType, children }) {
-  const { user } = useAuth();
+  const { refreshToken } = useAuth();
 
-  if (!user) {
+  if (!refreshToken) {
     return <Navigate to="/login" />;
   }
 
   if (
-    user &&
-    (forUserType === GLOBALS.USER_ROLE.ANONYMOUS ||
-      forUserType === GLOBALS.USER_ROLE.ADMIN ||
+    refreshToken &&
+    (forUserType === GLOBALS.USER_ROLE.ADMIN ||
       forUserType === GLOBALS.USER_ROLE.MODERATOR ||
       forUserType === GLOBALS.USER_ROLE.BASIC)
   ) {
@@ -29,7 +28,6 @@ PrivateRoute.defaultProps = {
 
 PrivateRoute.propTypes = {
   forUserType: PropTypes.oneOf([
-    GLOBALS.USER_ROLE.ANONYMOUS,
     GLOBALS.USER_ROLE.ADMIN,
     GLOBALS.USER_ROLE.MODERATOR,
     GLOBALS.USER_ROLE.BASIC,

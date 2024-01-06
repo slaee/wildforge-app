@@ -1,33 +1,32 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { ClassRoomsService } from '../services';
 
-const useClassRoom = (classId) => {
+const useClassMember = (classId, userId) => {
   const navigate = useNavigate();
   const [isRetrieving, setIsRetrieving] = useState(true);
-  const [classRoom, setClassRoom] = useState([]);
+  const [classMember, setClassMember] = useState(null);
 
   useEffect(() => {
     const get = async () => {
       let responseCode;
-      let retrievedClassRoom;
+      let retrievedClassMember;
 
       try {
-        const res = await ClassRoomsService.get(classId);
+        const res = await ClassRoomsService.member(classId, userId);
 
         responseCode = res?.status;
-        retrievedClassRoom = res?.data;
+        retrievedClassMember = res?.data;
       } catch (error) {
         responseCode = error?.response?.status;
       }
 
       switch (responseCode) {
         case 200:
-          setClassRoom(retrievedClassRoom);
+          setClassMember(retrievedClassMember);
           break;
         case 404:
-          navigate('/classes');
+          navigate(`/classes/${classId}/members`);
           break;
         case 500:
           navigate('/classes');
@@ -39,9 +38,9 @@ const useClassRoom = (classId) => {
     };
 
     get();
-  }, [isRetrieving]);
+  }, []);
 
-  return { isRetrieving, classRoom };
+  return { isRetrieving, classMember };
 };
 
-export default useClassRoom;
+export default useClassMember;

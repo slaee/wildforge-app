@@ -13,22 +13,21 @@ const useClassRooms = () => {
       let retrievedClasses;
 
       try {
-        const { status, data } = await ClassRoomsService.all();
+        const res = await ClassRoomsService.all();
 
-        responseCode = status;
-        retrievedClasses = data;
+        responseCode = res?.status;
+        retrievedClasses = res?.data;
       } catch (error) {
-        responseCode = error.response.status;
+        responseCode = error?.response?.status;
       }
 
       switch (responseCode) {
         case 200:
           setClasses(retrievedClasses);
           break;
-        case 401:
         case 404:
         case 500:
-          navigate('/logout');
+          navigate('/classes');
           break;
         default:
       }

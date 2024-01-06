@@ -1,31 +1,32 @@
+// React Imports
 import React, { useState, useEffect } from 'react';
 
+// Hooks Imports
+import jwtDecode from 'jwt-decode';
+import { useClassRooms } from '../../../hooks';
+import { useAuth } from '../../../contexts/AuthContext';
+
+// Components Imports
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 import ClassCards from '../../../components/cards/class_cards';
 import CreateClass from '../../../components/modals/create_class';
 import JoinClass from '../../../components/modals/join_class';
-
-import 'primeicons/primeicons.css';
-import './index.scss';
 import Search from '../../../components/search';
-import { useClassRooms } from '../../../hooks';
-import { useAuth } from '../../../contexts/AuthContext';
 import GLOBALS from '../../../app_globals';
 
-function Classes() {
-  const { classes } = useClassRooms();
-  const { user } = useAuth();
+// Styles Imports
+import 'primeicons/primeicons.css';
+import './index.scss';
 
-  const buttons = [
-    { id: 1, label: 'Classes', className: 'classes', path: '/classes' },
-    {
-      id: 2,
-      label: 'Peer Evaluation',
-      className: 'peer-eval',
-      path: '/peer-eval',
-    },
-  ];
+function Classes() {
+  const { accessToken } = useAuth();
+  const user = jwtDecode(accessToken);
+
+  const { classes } = useClassRooms();
+
+  const buttons = GLOBALS.SIDENAV_DEFAULT;
+
   const [isCreateClassModalOpen, setCreateClassModalOpen] = useState(false);
   const [isJoinClassModalOpen, setJoinClassModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');

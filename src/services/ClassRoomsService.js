@@ -1,11 +1,11 @@
-import axios from 'axios';
-import config from './config';
+import apiConfig from './config';
+import { api } from './axiosConfig';
 
-const BASE_URL = `${config.API_URL}/classes`;
+const BASE_URL = `${apiConfig.API_URL}/classes`;
 
 const ClassRoomsService = {
   /// GET /classes
-  all: () => axios.get(BASE_URL),
+  all: () => api.get(BASE_URL),
 
   /// POST /classes
   /*
@@ -16,7 +16,7 @@ const ClassRoomsService = {
       "max_teams_members": 5
     }
   */
-  create: (data) => axios.post(BASE_URL, data),
+  create: (data) => api.post(BASE_URL, data),
 
   /// POST /classes/join
   /*
@@ -24,36 +24,43 @@ const ClassRoomsService = {
       "class_code": "string"
     }
   */
-  join: (data) => axios.post(`${BASE_URL}/join`, data),
+  join: (data) => api.post(`${BASE_URL}/join`, data),
 
   /// GET /classes/{id}
-  get: (id) => axios.get(`${BASE_URL}/${id}`),
+  get: (id) => api.get(`${BASE_URL}/${id}`),
+
+  member: (classPK, userId) =>
+    api.get(`${BASE_URL}/${classPK}/members/${userId}`),
 
   /// GET /classes/{class_pk}/members/
-  members: (classPK) => axios.get(`${BASE_URL}/${classPK}/members`),
+  members: (classPK) => api.get(`${BASE_URL}/${classPK}/members`),
+
+  // GET /classes/{class_pk}/members/{id}/teamrole
+  teamMemberRole: (classPK, memberID) =>
+    api.get(`${BASE_URL}/${classPK}/members/${memberID}/teamrole`),
 
   /// PUT /classes/{class_pk}/members/{id}/accept
   accept: (classPK, memberID) =>
-    axios.put(`${BASE_URL}/${classPK}/members/${memberID}/accept`),
+    api.put(`${BASE_URL}/${classPK}/members/${memberID}/accept`),
 
   /// DELETE /classes/{class_pk}/members/{id}
   delete: (classPK, memberID) =>
-    axios.delete(`${BASE_URL}/${classPK}/members/${memberID}`),
+    api.delete(`${BASE_URL}/${classPK}/members/${memberID}`),
 
   /// PUT /classes/{class_pk}/members/{id}/acceptasleader
   acceptLeader: (classPK, memberID) =>
-    axios.put(`${BASE_URL}/${classPK}/members/${memberID}/acceptasleader`),
+    api.put(`${BASE_URL}/${classPK}/members/${memberID}/acceptasleader`),
 
   /// DELETE /classes/{class_pk}/members/{id}/removeasleader
   removeLeader: (classPK, memberID) =>
-    axios.delete(`${BASE_URL}/${classPK}/members/${memberID}/removeasleader`),
+    api.delete(`${BASE_URL}/${classPK}/members/${memberID}/removeasleader`),
 
   /// PUT /classes/{class_pk}/members/{id}/setleader
   setLeader: (classPK, memberID) =>
-    axios.put(`${BASE_URL}/${classPK}/members/${memberID}/setleader`),
+    api.put(`${BASE_URL}/${classPK}/members/${memberID}/setleader`),
 
   /// GET /classes/{class_pk}/teams
-  teams: (classPK) => axios.get(`${BASE_URL}/${classPK}/teams`),
+  teams: (classPK) => api.get(`${BASE_URL}/${classPK}/teams`),
 
   /// POST /classes/{class_pk}/teams
   /*
@@ -63,12 +70,10 @@ const ClassRoomsService = {
         "status": 1
       }
   */
-  createTeam: (classPK, data) =>
-    axios.post(`${BASE_URL}/${classPK}/teams`, data),
+  createTeam: (classPK, data) => api.post(`${BASE_URL}/${classPK}/teams`, data),
 
   /// GET /classes/{class_pk}/teams/{id}
-  team: (classPK, teamID) =>
-    axios.get(`${BASE_URL}/${classPK}/teams/${teamID}`),
+  team: (classPK, teamID) => api.get(`${BASE_URL}/${classPK}/teams/${teamID}`),
 
   /// PUT /classes/{class_pk}/teams/{id}
   /*
@@ -79,48 +84,48 @@ const ClassRoomsService = {
       }
   */
   updateTeam: (classPK, teamID, data) =>
-    axios.put(`${BASE_URL}/${classPK}/teams/${teamID}`, data),
+    api.put(`${BASE_URL}/${classPK}/teams/${teamID}`, data),
 
   /// DELETE /classes/{class_pk}/teams/{id}
   deleteTeam: (classPK, teamID) =>
-    axios.delete(`${BASE_URL}/${classPK}/teams/${teamID}`),
+    api.delete(`${BASE_URL}/${classPK}/teams/${teamID}`),
 
   /// PUT /classes/{class_pk}/teams/{id}/close
   closeTeams: (classPK, teamID) =>
-    axios.put(`${BASE_URL}/${classPK}/teams/${teamID}/close`),
+    api.put(`${BASE_URL}/${classPK}/teams/${teamID}/close`),
 
   /// PUT /classes/{class_pk}/teams/{id}/open
   openTeams: (classPK, teamID) =>
-    axios.put(`${BASE_URL}/${classPK}/teams/${teamID}/open`),
+    api.put(`${BASE_URL}/${classPK}/teams/${teamID}/open`),
 
   /// POST /classes/{class_pk}/teams/{id}/join
   joinTeam: (classPK, teamID) =>
-    axios.post(`${BASE_URL}/${classPK}/teams/${teamID}/join`),
+    api.post(`${BASE_URL}/${classPK}/teams/${teamID}/join`),
 
   /// GET /classes/{class_pk}/teams/{id}/members
   teamMembers: (classPK, teamID) =>
-    axios.get(`${BASE_URL}/${classPK}/teams/${teamID}/members`),
+    api.get(`${BASE_URL}/${classPK}/teams/${teamID}/members`),
 
   /// PUT /classes/{class_pk}/teams/{team_pk}/members/{id}/accept
   acceptTeamMember: (classPK, teamPK, memberID) =>
-    axios.put(
+    api.put(
       `${BASE_URL}/${classPK}/teams/${teamPK}/members/${memberID}/accept`
     ),
 
   /// DELETE /classes/{class_pk}/teams/{team_pk}/members/{id}/leave
   leaveTeam: (classPK, teamPK, memberID) =>
-    axios.delete(
+    api.delete(
       `${BASE_URL}/${classPK}/teams/${teamPK}/members/${memberID}/leave`
     ),
 
   /// DELETE /classes/{class_pk}/teams/{team_pk}/members/{id}/remove
   removeTeamMember: (classPK, teamPK, memberID) =>
-    axios.delete(
+    api.delete(
       `${BASE_URL}/${classPK}/teams/${teamPK}/members/${memberID}/remove`
     ),
 
   /// GET /classes/{id}/evals
-  evals: (id) => axios.get(`${BASE_URL}/${id}/evals`),
+  evals: (id) => api.get(`${BASE_URL}/${id}/evals`),
 };
 
 export default ClassRoomsService;

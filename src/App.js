@@ -1,33 +1,37 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-import './App.css';
+// React Imports
+import { Route, Routes } from 'react-router-dom';
 
-import PropTypes from 'prop-types';
+// Context Imports
 import { AuthProvider } from './contexts/AuthContext';
-import Classes from './screens/class_management/classes';
-import ViewClass from './screens/class_management/view_class';
-import Login from './screens/login';
-import Signup from './screens/signup';
-import ForgotPassword from './screens/forgot_password';
-import Logout from './screens/logout';
 import { NoAuthRoute } from './hocs/NoAuthRoute';
 import { PrivateRoute } from './hocs/PrivateRoute';
+
+// Screen Imports
+import Login from './screens/login';
+import Logout from './screens/logout';
+import ForgotPassword from './screens/forgot_password';
+import Signup from './screens/signup';
+import Classes from './screens/class_management/classes';
+import ViewClass from './screens/class_management/view_class';
 import ViewClassMembers from './screens/class_management/view_class_members';
 import Teams from './screens/team_management/teams';
 import PeerEval from './screens/peer_evaluation/view_peer_eval';
 
-function App() {
-  const isAuthenticated = true;
+// Style Imports
+import './App.css';
 
+function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route
           path="/"
-          element={<AuthWrapper isAuthenticated={isAuthenticated} />}
+          element={
+            <NoAuthRoute>
+              <Login />
+            </NoAuthRoute>
+          }
         />
-
-        <Route path="/logout" element={<Logout />} />
-
         <Route
           path="/login"
           element={
@@ -45,46 +49,52 @@ function App() {
           }
         />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
-        <Route
-          path="/classes"
-          element={
-            <PrivateRoute>
-              <Classes />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/classes/:id"
-          element={
-            <PrivateRoute>
-              <ViewClass />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/classes/:id/members"
-          element={
-            <PrivateRoute>
-              <ViewClassMembers />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/classes/:id/teamleaders"
-          element={
-            <PrivateRoute>
-              <Teams />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/classes/:id/teams"
-          element={
-            <PrivateRoute>
-              <Teams />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/logout" element={<Logout />} />
+
+        {/* Classroom routes */}
+        <Route path="classes">
+          <Route
+            index
+            element={
+              <PrivateRoute>
+                <Classes />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path=":id"
+            element={
+              <PrivateRoute>
+                <ViewClass />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path=":id/members"
+            element={
+              <PrivateRoute>
+                <ViewClassMembers />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path=":id/teamleaders"
+            element={
+              <PrivateRoute>
+                <Teams />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path=":id/teams"
+            element={
+              <PrivateRoute>
+                <Teams />
+              </PrivateRoute>
+            }
+          />
+        </Route>
+
         <Route
           path="/peer-eval"
           element={
@@ -97,21 +107,5 @@ function App() {
     </AuthProvider>
   );
 }
-
-function AuthWrapper({ isAuthenticated }) {
-  return isAuthenticated ? (
-    <Navigate to="/classes" replace />
-  ) : (
-    <Navigate to="/login" replace />
-  );
-}
-
-AuthWrapper.defaultProps = {
-  isAuthenticated: false,
-};
-
-AuthWrapper.propTypes = {
-  isAuthenticated: PropTypes.bool,
-};
 
 export default App;

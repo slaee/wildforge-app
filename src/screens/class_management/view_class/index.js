@@ -1,57 +1,49 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../../../contexts/AuthContext';
+import jwtDecode from 'jwt-decode';
 
-import { useClassRoom, useClassRooms } from '../../../hooks';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useClassMember, useClassRoom } from '../../../hooks';
+
+import GLOBALS from '../../../app_globals';
+
+import Loading from '../../../components/loading';
 import Navbar from '../../../components/navbar';
 import Header from '../../../components/header';
 
 import './index.scss';
 
 function ViewClass() {
-  const { id: classId } = useParams();
-  const { user } = useAuth();
-
   const navigate = useNavigate();
 
-  const { isLoading: isClassesLoading, classes } = useClassRooms();
+  const { accessToken } = useAuth();
+  const user = jwtDecode(accessToken);
+
+  const { id: classId } = useParams();
+  const { classRoom } = useClassRoom(classId);
+  const { classMember, isRetrieving } = useClassMember(classId, user?.user_id);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [buttons, setButtons] = useState([]);
 
   useEffect(() => {
-    if (!isClassesLoading) {
-      const foundClass = classes.find((c) => c.id === parseInt(classId, 10));
+    if (isRetrieving) {
+      setTimeout(() => setIsLoading(false), 350);
+    } else {
+      if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
+        navigate(`/classes/${classId}/teams`);
+        setButtons(GLOBALS.SIDENAV_CLASSMEMBER(classId));
+      }
 
-      if (!foundClass) {
+      if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.TEACHER) {
+        setButtons(GLOBALS.SIDENAV_TEACHER(classId));
+      }
+
+      if (!classMember) {
         navigate('/classes');
       }
     }
-  }, [isClassesLoading]);
-
-  const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
-
-  const buttons = [
-    {
-      id: 1,
-      label: 'Dashboard',
-      className: 'classes',
-      path: `/classes/${classId}`,
-    },
-    {
-      id: 2,
-      label: 'Members',
-      className: 'members',
-      path: `/classes/${classId}/members`,
-    },
-    {
-      id: 3,
-      label: 'Teams',
-      className: 'teams',
-      path: `/classes/${classId}/teams`,
-    },
-  ];
-
-  if (!user.is_staff) {
-    buttons.splice(0, 1);
-  }
+  }, [isRetrieving]);
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
@@ -71,15 +63,13 @@ function ViewClass() {
           <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
             {classRoom?.class_code}
           </div>
-          {user.is_staff && (
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm"
-              onClick={handleCopyCode}
-            >
-              Copy
-            </button>
-          )}
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={handleCopyCode}
+          >
+            Copy
+          </button>
         </div>
       </div>
     </div>
@@ -111,6 +101,8 @@ function ViewClass() {
     </div>
   );
 
+  const renderContent = () => <div>{renderBody()}</div>;
+
   return (
     <div className="d-flex">
       <Navbar
@@ -121,7 +113,7 @@ function ViewClass() {
       <div className="container-fluid d-flex flex-column">
         <Header />
         {renderSubheader()}
-        {renderBody()}
+        {isLoading ? <Loading /> : renderContent()}
       </div>
     </div>
   );

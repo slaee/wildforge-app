@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
-import Cookies from 'universal-cookie';
+
 import { useAuth } from '../../contexts/AuthContext';
+import { useAcquireTokens } from '../../hooks';
+
 import { isValidEmail } from '../../utils/strings';
 import { isObjectEmpty } from '../../utils/object';
+
 import ControlInput from '../../components/controlinput';
-import { useAcquireTokens, useLogin } from '../../hooks';
 
 import './index.scss';
 
@@ -30,10 +32,7 @@ const validate = (values) => {
 };
 
 function Login() {
-  const cookies = new Cookies();
-
-  const { loginUpdate } = useAuth();
-  const { isLoggingIn, loginUser } = useLogin();
+  const { setAccessToken, setRefreshToken } = useAuth();
   const { isAcquiring, acquireTokens } = useAcquireTokens();
 
   return (
@@ -59,12 +58,8 @@ function Login() {
 
               const acquireTokensCallbacks = {
                 acquired: async ({ accessToken, refreshToken }) => {
-                  cookies.set('accessToken', accessToken, {
-                    path: '/',
-                  });
-                  cookies.set('refreshToken', refreshToken, {
-                    path: '/',
-                  });
+                  setAccessToken(accessToken);
+                  setRefreshToken(refreshToken);
                 },
                 invalidFields: () =>
                   setErrors({
@@ -76,31 +71,10 @@ function Login() {
                   }),
               };
 
-              const loginUserCallbacks = {
-                loggedIn: async ({ retrievedUser }) => {
-                  await acquireTokens({
-                    email: values.email,
-                    password: values.password,
-                    callbacks: acquireTokensCallbacks,
-                  });
-
-                  loginUpdate(retrievedUser);
-                },
-                invalidFields: () =>
-                  setErrors({
-                    overall: 'Invalid email address and/or password.',
-                  }),
-                internalError: () =>
-                  setErrors({
-                    overall: 'Oops, something went wrong.',
-                  }),
-              };
-
-              // Login user
-              await loginUser({
+              await acquireTokens({
                 email: values.email,
                 password: values.password,
-                callbacks: loginUserCallbacks,
+                callbacks: acquireTokensCallbacks,
               });
             }}
           >
@@ -121,6 +95,7 @@ function Login() {
                   className="yellow-on-focus"
                   value={values.password}
                   onChange={(e) => setFieldValue('password', e.target.value)}
+                  autoComplete="on"
                   error={errors.password}
                 />
                 <Link
@@ -138,9 +113,9 @@ function Login() {
                   <button
                     type="submit"
                     className="btn btn-wild-primary btn-large fw-bold fs-5"
-                    disabled={isLoggingIn || isAcquiring}
+                    disabled={isAcquiring}
                   >
-                    {isLoggingIn || isAcquiring ? 'Logging In...' : 'Login'}
+                    {isAcquiring ? 'Logging In...' : 'Login'}
                   </button>
                 </div>
               </form>

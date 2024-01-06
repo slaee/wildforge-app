@@ -3,9 +3,9 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 export function NoAuthRoute({ children }) {
-  const { user } = useAuth();
+  const { accessToken } = useAuth();
 
-  if (user) {
+  if (accessToken) {
     return <Navigate to="/classes" />;
   }
 

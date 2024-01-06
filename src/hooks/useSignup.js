@@ -19,7 +19,7 @@ const useSignup = () => {
     let retrievedUser;
 
     try {
-      const { status, data } = await UsersService.signup({
+      const res = await UsersService.signup({
         first_name,
         last_name,
         email,
@@ -27,10 +27,10 @@ const useSignup = () => {
         role,
       });
 
-      responseCode = status;
-      retrievedUser = data;
+      responseCode = res?.status;
+      retrievedUser = res?.data;
     } catch (error) {
-      responseCode = error.response.status;
+      responseCode = error?.response?.status;
     }
 
     switch (responseCode) {

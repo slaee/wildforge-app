@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
-import Cookies from 'universal-cookie';
+
 import { useAuth } from '../../contexts/AuthContext';
-import { isValidEmail } from '../../utils/strings';
+import { useAcquireTokens, useSignup } from '../../hooks';
+
 import ControlInput from '../../components/controlinput';
+
 import GLOBALS from '../../app_globals';
+import { isObjectEmpty } from '../../utils/object';
+import { isValidEmail } from '../../utils/strings';
 
 import './index.scss';
-import { isObjectEmpty } from '../../utils/object';
-import useSignup from '../../hooks/useSignup';
-import { useAcquireTokens } from '../../hooks';
 
 const validate = (values) => {
   const errors = {};
@@ -57,9 +58,8 @@ function Signup() {
   const [step, setStep] = useState(1);
   const [firstNameError, setFirstNameError] = useState('');
   const [lastNameError, setLastNameError] = useState('');
-  const cookies = new Cookies();
 
-  const { loginUpdate } = useAuth();
+  const { setAccessToken, setRefreshToken } = useAuth();
   const { signupUser } = useSignup();
   const { acquireTokens } = useAcquireTokens();
 
@@ -224,12 +224,8 @@ function Signup() {
 
               const acquireTokensCallbacks = {
                 acquired: async ({ accessToken, refreshToken }) => {
-                  cookies.set('accessToken', accessToken, {
-                    path: '/',
-                  });
-                  cookies.set('refreshToken', refreshToken, {
-                    path: '/',
-                  });
+                  setAccessToken(accessToken);
+                  setRefreshToken(refreshToken);
                 },
                 invalidFields: () =>
                   setErrors({
@@ -248,8 +244,6 @@ function Signup() {
                     password: values.password,
                     callbacks: acquireTokensCallbacks,
                   });
-
-                  loginUpdate(retrievedUser);
                 },
                 emailExists: () =>
                   setErrors({

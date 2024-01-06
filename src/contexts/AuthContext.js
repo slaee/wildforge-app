@@ -1,49 +1,68 @@
 import React, { useState, createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie';
+import jwtDecode from 'jwt-decode';
+
+import { hash, dehash } from '../utils/mask';
 
 const AuthContext = createContext({
-  user: null,
-  loginUpdate: () => {},
-  loginRestart: () => {},
+  uuid: null,
+  accessToken: null,
+  refreshToken: null,
+  setUuid: () => {},
+  setAccessToken: () => {},
+  setRefreshToken: () => {},
 });
 
-const cookies = new Cookies();
-
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(cookies.get('user'));
+  const [uuid, setUuid] = useState(localStorage.getItem('uuid'));
+  const [accessToken, setAccessToken_] = useState(Cookies.get('access_token'));
+  const [refreshToken, setRefreshToken_] = useState(
+    dehash(Cookies.get('refresh_token'), uuid)
+  );
 
-  const loginUpdate = (userData) => {
-    cookies.set('user', userData, {
-      path: '/',
-    });
+  const setAccessToken = (newAccessToken) => {
+    if (newAccessToken) {
+      Cookies.set('access_token', newAccessToken, {
+        secure: true,
+        sameSite: 'Strict',
+      });
+    } else {
+      Cookies.remove('access_token');
+    }
 
-    setUser(userData);
+    setAccessToken_(newAccessToken);
   };
 
-  const loginRestart = () => {
-    cookies.remove('user', {
-      path: '/',
-    });
+  const setRefreshToken = (newRefreshToken) => {
+    if (newRefreshToken) {
+      const jti = jwtDecode(newRefreshToken)?.jti;
+      localStorage.setItem('uuid', jti);
+      setUuid(jti);
 
-    cookies.remove('accessToken', {
-      path: '/',
-    });
+      const token = hash(newRefreshToken, jti);
+      Cookies.set('refresh_token', token, {
+        secure: true,
+        sameSite: 'Strict',
+      });
+    } else {
+      Cookies.remove('refresh_token');
+      localStorage.removeItem('uuid');
+    }
 
-    cookies.remove('refreshToken', {
-      path: '/',
-    });
-
-    setUser(null);
+    setRefreshToken_(newRefreshToken);
   };
 
   const authContextValue = useMemo(
     () => ({
-      user,
-      loginUpdate,
-      loginRestart,
+      uuid,
+      accessToken,
+      refreshToken,
+      setUuid,
+      setAccessToken,
+      setRefreshToken,
     }),
-    [user]
+    [accessToken, refreshToken]
   );
 
   return (
