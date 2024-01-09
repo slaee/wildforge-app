@@ -93,11 +93,17 @@ function Classes() {
           </div>
         </div>
         <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
-          {classes && classes.length === 0 && (
-            <div className="grey-text text-center fw-semibold py-2">
-              No Classes. Create a new Class
-            </div>
-          )}
+          {classes &&
+            classes.length === 0 &&
+            (user.role === GLOBALS.USER_ROLE.MODERATOR ? (
+              <div className="grey-text text-center fw-semibold py-2">
+                No Classes. Create a new Class
+              </div>
+            ) : (
+              <div className="grey-text text-center fw-semibold py-2">
+                No Classes. Join a Class
+              </div>
+            ))}
           <div className="d-flex flex-row justify-content-start py-2 gap-2 flex-wrap">
             {classes &&
               filteredClasses.map((classRoom) => (

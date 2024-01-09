@@ -3,7 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import jwtDecode from 'jwt-decode';
 import { useAuth } from '../../../contexts/AuthContext';
-import { useClassMember, useClassRoom } from '../../../hooks';
+import {
+  useClassMember,
+  useClassRoom,
+  useTeams,
+  useTeam,
+  useTeamMemberRole,
+} from '../../../hooks';
 
 import GLOBALS from '../../../app_globals';
 
@@ -27,12 +33,23 @@ function Teams() {
   const { id: classId } = useParams();
   const { classRoom } = useClassRoom(classId);
   const { classMember, isRetrieving } = useClassMember(classId, user?.user_id);
+  const { team, isRetrieving: isTeamRetrieving } = useTeam(
+    classId,
+    classMember?.team_id
+  );
+  const { teams, nonLeaders, setLeader, acceptLeader, removeLeader } =
+    useTeams(classId);
+  const {
+    teamMemberRole,
+    teamMemberRoleStatus,
+    isRetrieving: isRoleRetrieving,
+  } = useTeamMemberRole(classId, user?.user_id);
 
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
-  const [hasTeam, setHasTeam] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [buttons, setButtons] = useState([]);
+  const [showNotif, setShowNotif] = useState(false);
 
   useEffect(() => {
     if (isRetrieving) {
@@ -52,7 +69,18 @@ function Teams() {
     }
   }, [isRetrieving]);
 
+  useEffect(() => {
+    if (!isRoleRetrieving) {
+      if (teamMemberRoleStatus === GLOBALS.MEMBER_STATUS.PENDING) {
+        setShowNotif(true);
+      } else {
+        setShowNotif(false);
+      }
+    }
+  }, [teamMemberRoleStatus]);
+
   const teamLeaderHeaders = ['id', 'name', 'team', 'status'];
+  const [teamsTableData, setTeamsTableData] = useState([]);
   const teamsHeaders = ['id', 'team', 'leader', 'members', 'actions'];
   const membersHeaders = ['id', 'name', 'role', 'actions'];
   const [selectedValue, setSelectedValue] = useState('');
@@ -70,7 +98,7 @@ function Teams() {
       >
         VIEW
       </button>
-      {user.is_staff && (
+      {classMember?.role === GLOBALS.CLASSMEMBER_ROLE.TEACHER && (
         <>
           <button
             type="button"
@@ -91,38 +119,32 @@ function Teams() {
     </>
   );
 
-  const dataTL = [
-    {
-      id: 1,
-      name: 'John Doe',
-      team: 'Team A',
-      status: 'Active',
-    },
-    {
-      id: 2,
-      name: 'Jane Doe',
-      team: 'Team B',
-      status: 'Pending',
-    },
-    {
-      id: 3,
-      name: 'Bob Smith',
-      team: 'Team C',
-      status: 'Inactive',
-    },
-  ];
+  useEffect(() => {
+    if (teams) {
+      const teamsData = teams.map((t) => {
+        const { id, name, team_members } = t;
 
-  const dataT = [
-    {
-      id: 1,
-      team: 'Team A',
-      leader: 'John Doe',
-      members: '3',
-      actions: actionButtons(),
-    },
-  ];
+        let tb_data = {};
 
-  const dataM = [];
+        const leader = team_members.find(
+          (team_member) => team_member.role === GLOBALS.TEAMMEMBER_ROLE.LEADER
+        );
+        const members = team_members.length;
+
+        tb_data = {
+          id,
+          team: name,
+          leader: `${leader?.first_name} ${leader?.last_name}`,
+          members,
+          actions: actionButtons(),
+        };
+
+        return tb_data;
+      });
+
+      setTeamsTableData(teamsData);
+    }
+  }, [teams]);
 
   const openAddLeadersModal = () => {
     setAddLeadersModalOpen(true);
@@ -182,10 +204,7 @@ function Teams() {
           </div>
         </div>
       );
-    } else if (
-      classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT &&
-      hasTeam
-    ) {
+    } else if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT && team) {
       subheaderContent = (
         <div className="subheader-body d-flex pt-2 pb-2">
           <div className="mx-5">
@@ -228,10 +247,7 @@ function Teams() {
           </div>
         </div>
       );
-    } else if (
-      classMember?.role !== GLOBALS.CLASSMEMBER_ROLE.STUDENT &&
-      hasTeam
-    ) {
+    } else if (classMember?.role !== GLOBALS.CLASSMEMBER_ROLE.STUDENT && team) {
       subheaderContent = (
         <div className="subheader-body d-flex pt-2 pb-2">
           <div className="mx-5">
@@ -322,21 +338,13 @@ function Teams() {
 
   const renderTeamData = () => (
     <div>
-      <div className="fw-bold fs-3 px-5 py-3">[Team Name]</div>
+      <div className="fw-bold fs-3 px-5 py-3">{team.name}</div>
       <div className="px-5 py-3 lh-lg text-justify">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-        lacinia nisl vel nisl feugiat vestibulum. Praesent finibus lacus
-        scelerisque nibh dapibus pellentesque. Morbi eget urna id metus finibus
-        mollis vitae non massa. Ut at condimentum odio. Cras viverra, mauris ut
-        mattis convallis, urna est lacinia velit, vitae vehicula dui erat id
-        nisi. Quisque ultricies vestibulum nulla, vitae semper lacus rhoncus et.
-        Cras nec tellus laoreet, fringilla felis non, facilisis magna. Mauris
-        lacinia, leo ut gravida imperdiet, magna ligula suscipit nulla, at
-        volutpat nisi mi quis arcu.
+        {team.description || 'No description yet.'}
       </div>
       <div className="container">
         <div className="fw-bold fs-4 px-5 py-3">Members</div>
-        {renderTable(membersHeaders, dataM, "There's no members yet.")}
+        {renderTable(membersHeaders, [], "There's no members yet.")}
       </div>
     </div>
   );
@@ -376,11 +384,11 @@ function Teams() {
               Add Leaders
             </button>
           </div>
-          {renderTable(teamLeaderHeaders, dataTL, 'No Leaders Identified Yet.')}
+          {renderTable(teamLeaderHeaders, [], 'No Leaders Identified Yet.')}
         </>
       )}
       {activeTab === 'teams' && (
-        <>{renderTable(teamsHeaders, dataT, 'No Teams Formed Yet.')}</>
+        <>{renderTable(teamsHeaders, teamsTableData, 'No Teams Formed Yet.')}</>
       )}
       {selectedTeam && (
         <div className="modal-apply-team p-4">
@@ -415,7 +423,7 @@ function Teams() {
 
   const renderStudentNoTeam = () => (
     <div className="d-flex flex-column pt-3 pb-3 px-5">
-      {renderTable(teamsHeaders, dataT, 'No Teams Formed Yet.')}
+      {renderTable(teamsHeaders, teamsTableData, 'No Teams Formed Yet.')}
       {selectedTeam && (
         <ApplyTeam
           visible={selectedTeam}
@@ -425,16 +433,17 @@ function Teams() {
     </div>
   );
 
-  const isTeacher = user.role === GLOBALS.USER_ROLE.MODERATOR;
-
   const renderBody = () => {
-    if (isTeacher) {
+    if (user.role === GLOBALS.USER_ROLE.MODERATOR) {
       return renderTeacherTeamManagement();
     }
-    if (user.role === 'tl') {
-      return hasTeam ? renderTeamData() : renderTeamLeaderNoTeam();
+    if (
+      teamMemberRole === GLOBALS.TEAMMEMBER_ROLE.LEADER &&
+      teamMemberRoleStatus === GLOBALS.MEMBER_STATUS.ACCEPTED
+    ) {
+      return team ? renderTeamData() : renderTeamLeaderNoTeam();
     }
-    return hasTeam ? renderTeamData() : renderStudentNoTeam();
+    return team ? renderTeamData() : renderStudentNoTeam();
   };
 
   const renderContent = () => (
@@ -451,8 +460,40 @@ function Teams() {
     </div>
   );
 
+  const handleAcceptLeader = () => {
+    acceptLeader(user?.user_id);
+    window.location.reload();
+  };
+
+  const handleDeclineLeader = () => {
+    removeLeader(user?.user_id);
+    window.location.reload();
+  };
+
+  const renderPendingLeader = () => (
+    <div className="notif-pending-bar fw-semibold">
+      You have been Identified/Selected as a Team Leader. &nbsp;
+      <button
+        type="button"
+        className="btn notif-pending-btn align-middle"
+        onClick={handleAcceptLeader}
+      >
+        Accept
+      </button>
+      <button
+        type="button"
+        className="btn notif-pending-btn align-middle"
+        onClick={handleDeclineLeader}
+      >
+        Decline
+      </button>
+    </div>
+  );
+
   return (
     <div className="d-flex">
+      {showNotif ? renderPendingLeader() : null}
+      {console.log(teamMemberRoleStatus)}
       <Navbar
         name={`${user?.first_name} ${user?.last_name}`}
         buttons={buttons}
