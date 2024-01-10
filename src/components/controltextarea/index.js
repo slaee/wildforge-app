@@ -20,7 +20,7 @@ function ControlTextArea({
       </label>
       <InputTextarea
         id={name}
-        rows={10}
+        style={{ height: '15rem' }}
         cols={30}
         value={value}
         onChange={onChange}

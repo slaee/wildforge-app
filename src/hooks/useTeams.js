@@ -9,6 +9,7 @@ const useTeams = (classId) => {
   const [nonLeaders, setNonLeaders] = useState([]);
   const [isRetrieving, setIsRetrieving] = useState(false);
   const [isSettingLeader, setIsSettingLeader] = useState(false);
+  const [isCreatingTeam, setIsCreatingTeam] = useState(false);
 
   useEffect(() => {
     const get = async () => {
@@ -109,27 +110,38 @@ const useTeams = (classId) => {
     }
   };
 
-  const createTeam = async (data) => {
+  const createTeam = async ({ team_name, team_description, callbacks }) => {
+    setIsCreatingTeam(true);
+
     let responseCode;
+    let retrievedTeam;
 
     try {
-      const res = await ClassRoomsService.createTeam(classId, data);
+      const res = await ClassRoomsService.createTeam(classId, {
+        team_name,
+        team_description,
+      });
+
       responseCode = res?.status;
+      retrievedTeam = res?.data;
     } catch (error) {
       responseCode = error?.response?.status;
     }
 
     switch (responseCode) {
       case 201:
+        await callbacks.created({ retrievedTeam });
         break;
-      case 404:
-        navigate(`/classes/${classId}/teams`);
+      case 400:
+        await callbacks.invalidFields();
         break;
       case 500:
-        navigate('/classes');
+        await callbacks.internalError();
         break;
       default:
     }
+
+    setIsCreatingTeam(false);
   };
 
   const updateTeam = async (teamID, data) => {
