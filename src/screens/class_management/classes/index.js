@@ -7,7 +7,7 @@ import { useClassRooms } from '../../../hooks';
 import { useAuth } from '../../../contexts/AuthContext';
 
 // Components Imports
-import Navbar from '../../../components/navbar';
+import Sidebar from '../../../components/Sidebar';
 import Header from '../../../components/header';
 import ClassCards from '../../../components/cards/class_cards';
 import CreateClass from '../../../components/modals/create_class';
@@ -65,7 +65,7 @@ function Classes() {
 
   return (
     <div className="d-flex">
-      <Navbar name={`${user?.first_name} ${user?.last_name}`} buttons={buttons} />
+      <Sidebar name={`${user?.first_name} ${user?.last_name}`} sidebarItems={buttons} />
       <div className="container-fluid d-flex flex-column">
         <Header />
         <div className="d-flex pt-2 pb-2">

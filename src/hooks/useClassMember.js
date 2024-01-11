@@ -26,8 +26,6 @@ const useClassMember = (classId, userId) => {
           setClassMember(retrievedClassMember);
           break;
         case 404:
-          navigate(`/classes/${classId}/members`);
-          break;
         case 500:
           navigate('/classes');
           break;

@@ -4,7 +4,7 @@ import jwtDecode from 'jwt-decode';
 import { Dialog } from 'primereact/dialog';
 import { useAuth } from '../../../contexts/AuthContext';
 
-import Navbar from '../../../components/navbar';
+import Sidebar from '../../../components/Sidebar';
 import Header from '../../../components/header';
 import Search from '../../../components/search';
 import Table from '../../../components/table';
@@ -122,7 +122,7 @@ function PeerEval() {
 
   return (
     <div className="d-flex">
-      <Navbar name={`${user?.first_name} ${user?.last_name}`} buttons={buttons} />
+      <Sidebar name={`${user?.first_name} ${user?.last_name}`} sidebarItems={buttons} />
       <div className="container-fluid d-flex flex-column">
         <Header />
         <div className="d-flex pt-2 pb-2">

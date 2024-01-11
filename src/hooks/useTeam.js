@@ -5,7 +5,7 @@ import { ClassRoomsService } from '../services';
 const useTeam = (classId, teamId) => {
   const navigate = useNavigate();
   const [isRetrieving, setIsRetrieving] = useState(true);
-  const [team, setTeam] = useState([]);
+  const [team, setTeam] = useState(null);
 
   useEffect(() => {
     const get = async () => {
