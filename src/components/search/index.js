@@ -7,12 +7,7 @@ import './index.scss';
 
 function Search({ value, onChange }) {
   return (
-    <InputText
-      className="search-input"
-      placeholder="Search"
-      value={value}
-      onChange={onChange}
-    />
+    <InputText className="search-input" placeholder="Search" value={value} onChange={onChange} />
   );
 }
 

@@ -91,16 +91,8 @@ function PeerEval() {
       showHeader={false}
     >
       <div className="d-flex flex-column p-5">
-        <ControlInput
-          name="team_name"
-          label="Name"
-          placeholder="Enter Peer Evaluation Name"
-        />
-        <ControlInput
-          name="eval_link"
-          label="Forms Link"
-          placeholder="Enter Google Forms Link"
-        />
+        <ControlInput name="team_name" label="Name" placeholder="Enter Peer Evaluation Name" />
+        <ControlInput name="eval_link" label="Forms Link" placeholder="Enter Google Forms Link" />
         <button
           type="btn"
           className="btn btn-outline-warning fw-semibold mt-4"
@@ -130,10 +122,7 @@ function PeerEval() {
 
   return (
     <div className="d-flex">
-      <Navbar
-        name={`${user?.first_name} ${user?.last_name}`}
-        buttons={buttons}
-      />
+      <Navbar name={`${user?.first_name} ${user?.last_name}`} buttons={buttons} />
       <div className="container-fluid d-flex flex-column">
         <Header />
         <div className="d-flex pt-2 pb-2">
@@ -151,9 +140,7 @@ function PeerEval() {
           </div>
         </div>
         <div className="d-flex flex-column">
-          <div className="brown-text fw-bold fs-5 py-2 px-5">
-            PEER EVALUATION
-          </div>
+          <div className="brown-text fw-bold fs-5 py-2 px-5">PEER EVALUATION</div>
           <Table headers={peerEvalHeaders} data={[]} className="mt-3" />
           {peerEvalModal && renderPeerEvalModal()}
           {assignClassModal && renderAssignTeamModal()}

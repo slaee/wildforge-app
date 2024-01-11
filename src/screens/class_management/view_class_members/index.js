@@ -99,13 +99,11 @@ function ViewClassMembers() {
             id,
             name: `${first_name} ${last_name}`,
             team: team || 'N/A',
-            status:
-              status === GLOBALS.MEMBER_STATUS.PENDING ? 'pending' : 'accepted',
+            status: status === GLOBALS.MEMBER_STATUS.PENDING ? 'pending' : 'accepted',
             role: 'Student',
           };
 
-          if (user?.role === GLOBALS.USER_ROLE.MODERATOR)
-            tb_data.actions = actions;
+          if (user?.role === GLOBALS.USER_ROLE.MODERATOR) tb_data.actions = actions;
 
           return tb_data;
         });
@@ -155,17 +153,11 @@ function ViewClassMembers() {
           {classRoom?.name} {classRoom?.sections}
         </div>
         <div className="d-flex py-2">
-          <div className="d-flex align-items-center fw-semibold fs-6">
-            {classRoom?.schedule}
-          </div>
+          <div className="d-flex align-items-center fw-semibold fs-6">{classRoom?.schedule}</div>
           <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
             {classRoom?.class_code}
           </div>
-          <button
-            type="button"
-            className="btn btn-secondary btn-sm"
-            onClick={handleCopyCode}
-          >
+          <button type="button" className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
             Copy
           </button>
         </div>
@@ -177,9 +169,7 @@ function ViewClassMembers() {
     <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
       {tableData && filteredData.length === 0 ? (
         <div className="d-flex justify-content-center align-items-center">
-          <div className="brown-text fw-bold fs-5 py-2 mx-5">
-            No members found
-          </div>
+          <div className="brown-text fw-bold fs-5 py-2 mx-5">No members found</div>
         </div>
       ) : (
         <Table headers={headers} data={filteredData} className="mt-3" />
@@ -201,11 +191,7 @@ function ViewClassMembers() {
 
   return (
     <div className="d-flex">
-      <Navbar
-        name={`${user?.first_name} ${user?.last_name}`}
-        buttons={buttons}
-        hasBackButton
-      />
+      <Navbar name={`${user?.first_name} ${user?.last_name}`} buttons={buttons} hasBackButton />
       <div className="container-fluid d-flex flex-column">
         <Header />
 

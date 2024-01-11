@@ -3,13 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import jwtDecode from 'jwt-decode';
 import { useAuth } from '../../../contexts/AuthContext';
-import {
-  useClassMember,
-  useClassRoom,
-  useTeams,
-  useTeam,
-  useTeamMemberRole,
-} from '../../../hooks';
+import { useClassMember, useClassRoom, useTeams, useTeam, useTeamMemberRole } from '../../../hooks';
 
 import GLOBALS from '../../../app_globals';
 
@@ -33,12 +27,8 @@ function Teams() {
   const { id: classId } = useParams();
   const { classRoom } = useClassRoom(classId);
   const { classMember, isRetrieving } = useClassMember(classId, user?.user_id);
-  const { team, isRetrieving: isTeamRetrieving } = useTeam(
-    classId,
-    classMember?.team_id
-  );
-  const { teams, nonLeaders, setLeader, acceptLeader, removeLeader } =
-    useTeams(classId);
+  const { team, isRetrieving: isTeamRetrieving } = useTeam(classId, classMember?.team_id);
+  const { teams, nonLeaders, setLeader, acceptLeader, removeLeader } = useTeams(classId);
   const {
     teamMemberRole,
     teamMemberRoleStatus,
@@ -190,11 +180,7 @@ function Teams() {
               <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
                 {classRoom?.class_code}
               </div>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={handleCopyCode}
-              >
+              <button type="button" className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
                 Copy
               </button>
             </div>
@@ -216,11 +202,7 @@ function Teams() {
               <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
                 {classRoom?.class_code}
               </div>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={handleCopyCode}
-              >
+              <button type="button" className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
                 Copy
               </button>
             </div>
@@ -259,11 +241,7 @@ function Teams() {
               <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
                 {classRoom?.class_code}
               </div>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={handleCopyCode}
-              >
+              <button type="button" className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
                 Copy
               </button>
             </div>
@@ -299,14 +277,8 @@ function Teams() {
             </div>
             <div className="d-flex py-2">
               <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
-              <div className="ms-4 me-2 fw-semibold fs-6">
-                {classRoom?.class_code}
-              </div>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={handleCopyCode}
-              >
+              <div className="ms-4 me-2 fw-semibold fs-6">{classRoom?.class_code}</div>
+              <button type="button" className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
                 Copy
               </button>
             </div>
@@ -326,9 +298,7 @@ function Teams() {
       {tableData.length === 0 ? (
         <div className="d-flex flex-column justify-content-center align-items-center">
           <Table headers={headerData} data={tableData} className="mt-3" />
-          <div className="brown-text fw-bold fs-5 py-2 mx-5">
-            {emptyMessage}
-          </div>
+          <div className="brown-text fw-bold fs-5 py-2 mx-5">{emptyMessage}</div>
         </div>
       ) : (
         <Table headers={headerData} data={tableData} className="mt-3" />
@@ -356,9 +326,7 @@ function Teams() {
       <ul className="nav nav-underline">
         <li className="nav-item">
           <button
-            className={`nav-link ${
-              activeTab === 'teamLeaders' ? 'active' : ''
-            }`}
+            className={`nav-link ${activeTab === 'teamLeaders' ? 'active' : ''}`}
             onClick={() => setActiveTab('teamLeaders')}
           >
             Team Leaders
@@ -425,10 +393,7 @@ function Teams() {
     <div className="d-flex flex-column pt-3 pb-3 px-5">
       {renderTable(teamsHeaders, teamsTableData, 'No Teams Formed Yet.')}
       {selectedTeam && (
-        <ApplyTeam
-          visible={selectedTeam}
-          handleModal={() => setSelectedTeam(false)}
-        />
+        <ApplyTeam visible={selectedTeam} handleModal={() => setSelectedTeam(false)} />
       )}
     </div>
   );
@@ -494,11 +459,7 @@ function Teams() {
     <div className="d-flex">
       {showNotif ? renderPendingLeader() : null}
       {console.log(team.name)}
-      <Navbar
-        name={`${user?.first_name} ${user?.last_name}`}
-        buttons={buttons}
-        hasBackButton
-      />
+      <Navbar name={`${user?.first_name} ${user?.last_name}`} buttons={buttons} hasBackButton />
       <div className="container-fluid d-flex flex-column">
         <Header />
         {isLoading ? <Loading /> : renderContent()}

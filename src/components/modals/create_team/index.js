@@ -28,18 +28,9 @@ function CreateTeam({ visible, handleModal }) {
   const { createTeam } = useTeams(classId);
 
   return (
-    <Dialog
-      className="hiring-post-modal"
-      visible={visible}
-      onHide={handleModal}
-      showHeader={false}
-    >
+    <Dialog className="hiring-post-modal" visible={visible} onHide={handleModal} showHeader={false}>
       <div className="d-grid gap-3 p-3">
-        <button
-          aria-label="Close Modal"
-          className="btn btn-close ms-auto"
-          onClick={handleModal}
-        />
+        <button aria-label="Close Modal" className="btn btn-close ms-auto" onClick={handleModal} />
         <div className="px-3">
           <div className="text-center fs-4 fw-bold">Team Creation</div>
           <Formik
@@ -95,9 +86,7 @@ function CreateTeam({ visible, handleModal }) {
                   className="yellow-on-focus"
                   placeholder="Enter Team Description"
                   value={values.team_description}
-                  onChange={(e) =>
-                    setFieldValue('team_description', e.target.value)
-                  }
+                  onChange={(e) => setFieldValue('team_description', e.target.value)}
                   error={errors.team_description}
                 />
                 <div className="d-flex flex-row justify-content-center pb-3">

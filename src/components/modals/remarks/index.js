@@ -9,21 +9,14 @@ import './index.scss';
 
 function Remarks({ modalTitle, visible, handleModal, hasDropdown }) {
   return (
-    <Dialog
-      className="remarks-modal"
-      visible={visible}
-      onHide={handleModal}
-      showHeader={false}
-    >
+    <Dialog className="remarks-modal" visible={visible} onHide={handleModal} showHeader={false}>
       <div className="d-flex flex-column p-5">
         <div className="d-grid gap-3">
           <div className="text-center fs-4 fw-bold">{modalTitle}</div>
           <ControlTextArea name="remarks" label="Add Remarks" />
           {hasDropdown && (
             <div className="d-flex flex-column">
-              <div className="text-left fs-5 fw-semibold">
-                Nominate a New Leader
-              </div>
+              <div className="text-left fs-5 fw-semibold">Nominate a New Leader</div>
               <select className="form-select form-select-sm">
                 <option className="text-success fw-semibold" value="1">
                   OPEN
@@ -35,10 +28,7 @@ function Remarks({ modalTitle, visible, handleModal, hasDropdown }) {
             </div>
           )}
           <div className="d-flex flex-row justify-content-center mt-3">
-            <button
-              className="btn btn-cancel-secondary fw-semibold mx-auto"
-              onClick={handleModal}
-            >
+            <button className="btn btn-cancel-secondary fw-semibold mx-auto" onClick={handleModal}>
               Cancel
             </button>
             <button

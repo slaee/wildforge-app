@@ -11,11 +11,7 @@ function Table({ headers, data }) {
       <thead>
         <tr>
           {filteredHeaders.map((header) => (
-            <th
-              scope="col"
-              key={header}
-              className={header === 'actions' ? 'text-center' : ''}
-            >
+            <th scope="col" key={header} className={header === 'actions' ? 'text-center' : ''}>
               {header.toUpperCase()}
             </th>
           ))}
@@ -25,10 +21,7 @@ function Table({ headers, data }) {
         {data.map((row) => (
           <tr key={row.id}>
             {filteredHeaders.map((header) => (
-              <td
-                key={header}
-                className={header === 'actions' ? 'text-center' : ''}
-              >
+              <td key={header} className={header === 'actions' ? 'text-center' : ''}>
                 {row[header]}
               </td>
             ))}

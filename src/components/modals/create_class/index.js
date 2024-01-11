@@ -26,11 +26,7 @@ const validate = (values) => {
     errors.schedule = 'This field is required.';
   } else if (values.schedule.length > 50) {
     errors.schedule = 'The maximum length of this field is 50 characters.';
-  } else if (
-    !values.schedule.match(
-      /^[0-9]{1,2}:[0-9]{2}[AP]M - [0-9]{1,2}:[0-9]{2}[AP]M$/
-    )
-  ) {
+  } else if (!values.schedule.match(/^[0-9]{1,2}:[0-9]{2}[AP]M - [0-9]{1,2}:[0-9]{2}[AP]M$/)) {
     errors.schedule = 'The format of this field is invalid.';
   }
 
@@ -159,9 +155,7 @@ function CreateClass({ visible, handleModal }) {
                     onChange={(e) => setFieldValue('sections', e.target.value)}
                     error={errors.sections}
                   />
-                  <div className="format-instructions">
-                    e.g F1-F2, E2, Honesty
-                  </div>
+                  <div className="format-instructions">e.g F1-F2, E2, Honesty</div>
                   <ControlInput
                     name="schedule"
                     label="Schedule"
@@ -170,18 +164,14 @@ function CreateClass({ visible, handleModal }) {
                     onChange={(e) => setFieldValue('schedule', e.target.value)}
                     error={errors.schedule}
                   />
-                  <div className="format-instructions">
-                    Sample Format: 1:00PM - 2:00PM
-                  </div>
+                  <div className="format-instructions">Sample Format: 1:00PM - 2:00PM</div>
                   <ControlInput
                     name="max_teams_members"
                     label="Max team members"
                     className="yellow-on-focus"
                     value={values.max_teams_members}
                     type="number"
-                    onChange={(e) =>
-                      setFieldValue('max_teams_members', e.target.value)
-                    }
+                    onChange={(e) => setFieldValue('max_teams_members', e.target.value)}
                     error={errors.max_teams_members}
                   />
                 </div>

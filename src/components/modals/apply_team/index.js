@@ -35,24 +35,17 @@ function ApplyTeam({ visible, handleModal }) {
       showHeader={false}
     >
       <div className="d-grid gap-3 p-3">
-        <button
-          aria-label="Close Modal"
-          className="btn btn-close ms-auto"
-          onClick={handleModal}
-        />
+        <button aria-label="Close Modal" className="btn btn-close ms-auto" onClick={handleModal} />
         <div className="px-3">
           <div className="fw-bold fs-4">[Team Name]</div>
           <div className="py-3 lh-lg text-justify">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Pellentesque lacinia nisl vel nisl feugiat vestibulum. Praesent
-            finibus lacus scelerisque nibh dapibus pellentesque. Morbi eget urna
-            id metus finibus mollis vitae non massa. Ut at condimentum odio.
-            Cras viverra, mauris ut mattis convallis, urna est lacinia velit,
-            vitae vehicula dui erat id nisi. Quisque ultricies vestibulum nulla,
-            vitae semper lacus rhoncus et. Cras nec tellus laoreet, fringilla
-            felis non, facilisis magna. Mauris lacinia, leo ut gravida
-            imperdiet, magna ligula suscipit nulla, at volutpat nisi mi quis
-            arcu.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lacinia nisl vel
+            nisl feugiat vestibulum. Praesent finibus lacus scelerisque nibh dapibus pellentesque.
+            Morbi eget urna id metus finibus mollis vitae non massa. Ut at condimentum odio. Cras
+            viverra, mauris ut mattis convallis, urna est lacinia velit, vitae vehicula dui erat id
+            nisi. Quisque ultricies vestibulum nulla, vitae semper lacus rhoncus et. Cras nec tellus
+            laoreet, fringilla felis non, facilisis magna. Mauris lacinia, leo ut gravida imperdiet,
+            magna ligula suscipit nulla, at volutpat nisi mi quis arcu.
           </div>
           <div className="d-flex flex-column justify-content-center align-items-center">
             <Table headers={tableheaders} data={tableData} />

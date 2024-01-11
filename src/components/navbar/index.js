@@ -12,9 +12,7 @@ function Navbar({ buttons, name, hasBackButton, onButtonClick }) {
 
   useEffect(() => {
     // Determine the selected button based on the current location
-    const currentButton = buttons.find(
-      (button) => button.path === location.pathname
-    );
+    const currentButton = buttons.find((button) => button.path === location.pathname);
     if (currentButton) {
       setSelectedButton(currentButton.id);
     }
@@ -27,14 +25,8 @@ function Navbar({ buttons, name, hasBackButton, onButtonClick }) {
   return (
     <div className="position-relative top-0 start-0 d-flex flex-column p-4 nav-bar">
       {hasBackButton && (
-        <Link
-          to="/classes"
-          className="nav-button text-decoration-none align-middle"
-        >
-          <i
-            className="pi pi-angle-double-left align-middle"
-            style={{ fontSize: '1.25rem' }}
-          />
+        <Link to="/classes" className="nav-button text-decoration-none align-middle">
+          <i className="pi pi-angle-double-left align-middle" style={{ fontSize: '1.25rem' }} />
           <span className="align-middle ps-2 fw-semibold">BACK</span>
         </Link>
       )}

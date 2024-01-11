@@ -19,8 +19,7 @@ function AddLeaders({ visible, handleModal }) {
   const user = jwtDecode(accessToken);
 
   const { id: classId } = useParams();
-  const { teams, isRetrieving, nonLeaders, setLeader, isSettingLeader } =
-    useTeams(classId);
+  const { teams, isRetrieving, nonLeaders, setLeader, isSettingLeader } = useTeams(classId);
 
   const [showManualModal, setShowManualModal] = useState(false);
   const [showAutomaticModal, setShowAutomaticModal] = useState(false);
@@ -62,11 +61,7 @@ function AddLeaders({ visible, handleModal }) {
           name: `${first_name} ${last_name}`,
           actions:
             teamember_status === GLOBALS.MEMBER_STATUS.PENDING ? (
-              <button
-                type="button"
-                className="btn btn-yellow-primary fw-semibold"
-                disabled
-              >
+              <button type="button" className="btn btn-yellow-primary fw-semibold" disabled>
                 Pending
               </button>
             ) : (
@@ -124,11 +119,7 @@ function AddLeaders({ visible, handleModal }) {
           <span>Students List</span>
           <Search value={searchQuery} onChange={handleSearchChange} />
         </div>
-        <Table
-          headers={manualHeaders}
-          data={nonLeadersTable}
-          className="mt-3"
-        />
+        <Table headers={manualHeaders} data={nonLeadersTable} className="mt-3" />
       </div>
     </Dialog>
   );
@@ -150,11 +141,7 @@ function AddLeaders({ visible, handleModal }) {
           <span>Activities List</span>
           <Search value={searchQuery} onChange={handleSearchChange} />
         </div>
-        <Table
-          headers={automaticHeaders}
-          data={automaticSelectionData}
-          className="mt-3"
-        />
+        <Table headers={automaticHeaders} data={automaticSelectionData} className="mt-3" />
 
         <div className="mt-auto position-fixed bottom-0 start-50 translate-middle-x pb-5">
           <button type="btn" className="btn btn-wild-primary fw-bold btn-large">

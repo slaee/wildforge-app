@@ -57,17 +57,11 @@ function ViewClass() {
           {classRoom?.name} {classRoom?.sections}
         </div>
         <div className="d-flex py-2">
-          <div className="d-flex align-items-center fw-semibold fs-6">
-            {classRoom?.schedule}
-          </div>
+          <div className="d-flex align-items-center fw-semibold fs-6">{classRoom?.schedule}</div>
           <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
             {classRoom?.class_code}
           </div>
-          <button
-            type="button"
-            className="btn btn-secondary btn-sm"
-            onClick={handleCopyCode}
-          >
+          <button type="button" className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
             Copy
           </button>
         </div>
@@ -105,11 +99,7 @@ function ViewClass() {
 
   return (
     <div className="d-flex">
-      <Navbar
-        name={`${user?.first_name} ${user?.last_name}`}
-        buttons={buttons}
-        hasBackButton
-      />
+      <Navbar name={`${user?.first_name} ${user?.last_name}`} buttons={buttons} hasBackButton />
       <div className="container-fluid d-flex flex-column">
         <Header />
         {renderSubheader()}

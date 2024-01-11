@@ -5,13 +5,7 @@ import { ClassRoomsService } from '../services';
 const useCreateClass = () => {
   const [isCreating, setIsCreating] = useState(false);
 
-  const createClass = async ({
-    course_name,
-    sections,
-    schedule,
-    max_teams_members,
-    callbacks,
-  }) => {
+  const createClass = async ({ course_name, sections, schedule, max_teams_members, callbacks }) => {
     setIsCreating(true);
 
     let responseCode;
