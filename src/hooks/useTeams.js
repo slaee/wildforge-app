@@ -17,7 +17,7 @@ const useTeams = (classId) => {
       let retrievedNonleaders;
 
       try {
-        const res = await ClassRoomsService.noneleaders(classId);
+        const res = await ClassRoomsService.nonleaders(classId);
 
         responseCode = res?.status;
         retrievedNonleaders = res?.data;
