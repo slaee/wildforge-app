@@ -16,7 +16,7 @@ import './index.scss';
 function Teams() {
   const { user, classId, classMember, classRoom } = useOutletContext();
 
-  const { teams, acceptLeader, removeLeader } = useTeams(classId);
+  const { teams, leaders, acceptLeader, removeLeader, openTeams, closeTeams } = useTeams(classId);
 
   const [showNotif, setShowNotif] = useState(false);
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
@@ -24,10 +24,11 @@ function Teams() {
   const [selectedValue, setSelectedValue] = useState('');
   const [selectedTeam, setSelectedTeam] = useState(false);
 
-  const teamLeaderHeaders = ['id', 'name', 'team', 'status'];
+  const teamLeaderHeaders = ['id', 'name', 'status'];
   const teamsHeaders = ['id', 'team', 'leader', 'members', 'actions'];
   const membersHeaders = ['id', 'name', 'role', 'actions'];
 
+  const [teamLeaderTableData, setTeamLeaderTableData] = useState([]);
   const [teamsTableData, setTeamsTableData] = useState([]);
   const [membersTableData, setMembersTableData] = useState([]);
 
@@ -66,30 +67,78 @@ function Teams() {
 
   useEffect(() => {
     if (teams) {
-      const teamsData = teams.map((t) => {
-        const { id, name, team_members } = t;
-
-        let tb_data = {};
+      const teamsData = teams.map((team) => {
+        const { id, name, team_members } = team;
 
         const leader = team_members.find(
           (team_member) => team_member.role === GLOBALS.TEAMMEMBER_ROLE.LEADER
         );
         const members = team_members.length;
 
-        tb_data = {
+        return {
           id,
           team: name,
           leader: `${leader?.first_name} ${leader?.last_name}`,
           members,
           actions: actionButtons(),
         };
-
-        return tb_data;
       });
 
       setTeamsTableData(teamsData);
+
+      const mappedTeamMembers = teams.flatMap((team) =>
+        team.team_members.map((member) => {
+          const { class_member_id, first_name, last_name, role } = member;
+
+          return {
+            id: class_member_id,
+            name: `${first_name} ${last_name}`,
+            role: role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? 'Leader' : 'Member',
+            actions:
+              role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? (
+                <button
+                  type="button"
+                  className="btn btn-sm fw-bold text-danger"
+                  onClick={() => {
+                    console.log('Leave Team');
+                  }}
+                >
+                  LEAVE
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-sm fw-bold text-danger"
+                  onClick={() => {
+                    console.log('Kick Member');
+                  }}
+                >
+                  VIEW
+                </button>
+              ),
+          };
+        })
+      );
+
+      setMembersTableData(mappedTeamMembers);
     }
   }, [teams]);
+
+  useEffect(() => {
+    if (leaders) {
+      const leadersData = leaders.map((l) => {
+        const { class_member_id, first_name, last_name, teamember_status } = l;
+
+        return {
+          id: class_member_id,
+          name: `${first_name} ${last_name}`,
+          status: teamember_status === GLOBALS.MEMBER_STATUS.ACCEPTED ? 'ACCEPTED' : 'PENDING',
+        };
+      });
+
+      setTeamLeaderTableData(leadersData);
+    }
+  }, [leaders]);
 
   const openAddLeadersModal = () => {
     setAddLeadersModalOpen(true);
@@ -104,7 +153,7 @@ function Teams() {
     console.log('copied');
   };
 
-  const handleChange = (event) => {
+  const handleChange = (event, teamId) => {
     setSelectedValue(event.target.value);
   };
 
@@ -139,7 +188,7 @@ function Teams() {
       </div>
       <div className="container">
         <div className="fw-bold fs-4 px-5 py-3">Members</div>
-        {renderTable(membersHeaders, [], "There's no members yet.")}
+        {renderTable(membersHeaders, membersTableData, "There's no members yet.")}
       </div>
     </div>
   );
@@ -177,7 +226,7 @@ function Teams() {
               Add Leaders
             </button>
           </div>
-          {renderTable(teamLeaderHeaders, [], 'No Leaders Identified Yet.')}
+          {renderTable(teamLeaderHeaders, teamLeaderTableData, 'No Leaders Identified Yet.')}
         </>
       )}
       {activeTab === 'teams' && (
