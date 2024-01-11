@@ -177,19 +177,12 @@ function Signup() {
       )}
 
       <div className="d-grid gap-4 pt-3 pb-2">
-        <button
-          type="submit"
-          className="btn btn-wild-primary btn-large fw-bold fs-5"
-        >
+        <button type="submit" className="btn btn-wild-primary btn-large fw-bold fs-5">
           Sign Up
         </button>
       </div>
       <div className="d-flex justify-content-start pt-3 pb-3">
-        <span
-          className="fs-5 redirect-text"
-          aria-hidden="true"
-          onClick={prevStep}
-        >
+        <span className="fs-5 redirect-text" aria-hidden="true" onClick={prevStep}>
           Go Back
         </span>
       </div>

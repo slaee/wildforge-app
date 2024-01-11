@@ -45,10 +45,7 @@ api.interceptors.response.use(
       originalRequest.sent = true;
 
       try {
-        const refreshToken = dehash(
-          Cookies.get('refresh_token'),
-          localStorage.getItem('uuid')
-        );
+        const refreshToken = dehash(Cookies.get('refresh_token'), localStorage.getItem('uuid'));
 
         // if the REFRESH TOKEN is still valid, we'll try to renew it
         const { data: renewedTokens } = await TokensService.refresh({

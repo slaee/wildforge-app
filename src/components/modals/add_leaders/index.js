@@ -1,17 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Dialog } from 'primereact/dialog';
 import PropTypes from 'prop-types';
 
 import './index.scss';
+import { useNavigate, useParams } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 import Table from '../../table';
 import Search from '../../search';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useTeams } from '../../../hooks';
+import GLOBALS from '../../../app_globals';
 
 function AddLeaders({ visible, handleModal }) {
+  const navigate = useNavigate;
+
+  const { accessToken } = useAuth();
+  const user = jwtDecode(accessToken);
+
+  const { id: classId } = useParams();
+  const { teams, isRetrieving, nonLeaders, setLeader, isSettingLeader } = useTeams(classId);
+
   const [showManualModal, setShowManualModal] = useState(false);
   const [showAutomaticModal, setShowAutomaticModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
+  const [nonLeadersTable, setNonLeadersTable] = useState([]);
 
   const openManualModal = () => {
     setShowManualModal(true);
@@ -20,6 +34,7 @@ function AddLeaders({ visible, handleModal }) {
 
   const closeManualModal = () => {
     setShowManualModal(false);
+    console.log('close manual');
   };
 
   const openAutomaticModal = () => {
@@ -34,20 +49,47 @@ function AddLeaders({ visible, handleModal }) {
     setSearchQuery(e.target.value);
   };
 
-  const actionButtons = () => {
-    if (showManualModal) {
-      return (
-        <button
-          type="button"
-          className="btn btn-yellow-primary fw-semibold"
-          onClick={() => console.log('clicked')}
-        >
-          Select as Leader
-        </button>
-      );
+  const manualHeaders = ['id', 'name', 'actions'];
+
+  useEffect(() => {
+    if (nonLeaders) {
+      const nonLeadersData = nonLeaders.map((n) => {
+        const { class_member_id, first_name, last_name, teamember_status } = n;
+
+        const tb_data = {
+          id: class_member_id,
+          name: `${first_name} ${last_name}`,
+          actions:
+            teamember_status === GLOBALS.MEMBER_STATUS.PENDING ? (
+              <button type="button" className="btn btn-yellow-primary fw-semibold" disabled>
+                Pending
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn btn-yellow-primary fw-semibold"
+                onClick={() => {
+                  setLeader(class_member_id);
+                }}
+              >
+                Select as Leader
+              </button>
+            ),
+        };
+
+        return tb_data;
+      });
+      setNonLeadersTable(nonLeadersData);
     }
-    if (showAutomaticModal) {
-      return (
+  }, [nonLeaders, isSettingLeader]);
+
+  const automaticHeaders = ['id', 'activity', 'actions'];
+  const automaticSelectionData = [
+    {
+      id: 1,
+
+      activity: 'Activity 1',
+      actions: (
         <div className="d-flex justify-content-center form-check form-switch">
           <input
             className="form-check-input"
@@ -56,59 +98,9 @@ function AddLeaders({ visible, handleModal }) {
             id="flexSwitchCheckDefault"
           />
         </div>
-      );
-    }
-    return null; // Default to null if neither condition is met
-  };
-
-  const manualHeaders = ['id', 'name', 'actions'];
-  const manualSelectionData = [
-    {
-      id: 1,
-      name: 'John Doe',
-      actions: actionButtons(),
-    },
-    {
-      id: 2,
-      name: 'Sheldon Cooper',
-      actions: actionButtons(),
-    },
-    {
-      id: 3,
-      name: 'Loki Laufeyson',
-      actions: actionButtons(),
+      ),
     },
   ];
-  const automaticHeaders = ['id', 'activity', 'actions'];
-  const automaticSelectionData = [
-    {
-      id: 1,
-      activity: 'Activity 1',
-      actions: actionButtons(),
-    },
-    {
-      id: 2,
-      activity: 'Activity 2',
-      actions: actionButtons(),
-    },
-    {
-      id: 3,
-      activity: 'Activity 3',
-      actions: actionButtons(),
-    },
-  ];
-
-  // useEffect(() => {
-  //   const lowerCaseQuery = searchQuery.toLowerCase();
-  //   const filtered = data.filter(
-  //     (item) =>
-  //       item.name.toLowerCase().includes(lowerCaseQuery) ||
-  //       item.team.toLowerCase().includes(lowerCaseQuery) ||
-  //       item.role.toLowerCase().includes(lowerCaseQuery) ||
-  //       item.status.toLowerCase().includes(lowerCaseQuery)
-  //   );
-  //   setFilteredData(filtered);
-  // }, [searchQuery, data]);
 
   const renderManualModal = () => (
     <Dialog
@@ -123,15 +115,11 @@ function AddLeaders({ visible, handleModal }) {
           className="btn btn-close ms-auto"
           onClick={closeManualModal}
         />
-        <div className="text-left fs-5 fw-bold">Students List</div>
-        <div className="ms-auto">
+        <div className="d-flex align-items-center justify-content-between text-left fs-5 fw-bold">
+          <span>Students List</span>
           <Search value={searchQuery} onChange={handleSearchChange} />
         </div>
-        <Table
-          headers={manualHeaders}
-          data={manualSelectionData}
-          className="mt-3"
-        />
+        <Table headers={manualHeaders} data={nonLeadersTable} className="mt-3" />
       </div>
     </Dialog>
   );
@@ -149,15 +137,11 @@ function AddLeaders({ visible, handleModal }) {
           className="btn btn-close ms-auto"
           onClick={closeAutomaticModal}
         />
-        <div className="text-left fs-5 fw-semibold">Activity Lists</div>
-        <div className="ms-auto">
+        <div className="d-flex align-items-center justify-content-between text-left fs-5 fw-bold">
+          <span>Activities List</span>
           <Search value={searchQuery} onChange={handleSearchChange} />
         </div>
-        <Table
-          headers={automaticHeaders}
-          data={automaticSelectionData}
-          className="mt-3"
-        />
+        <Table headers={automaticHeaders} data={automaticSelectionData} className="mt-3" />
 
         <div className="mt-auto position-fixed bottom-0 start-50 translate-middle-x pb-5">
           <button type="btn" className="btn btn-wild-primary fw-bold btn-large">

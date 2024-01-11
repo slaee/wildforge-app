@@ -29,8 +29,7 @@ const ClassRoomsService = {
   /// GET /classes/{id}
   get: (id) => api.get(`${BASE_URL}/${id}`),
 
-  member: (classPK, userId) =>
-    api.get(`${BASE_URL}/${classPK}/members/${userId}`),
+  member: (classPK, userId) => api.get(`${BASE_URL}/${classPK}/members/${userId}`),
 
   /// GET /classes/{class_pk}/members/
   members: (classPK) => api.get(`${BASE_URL}/${classPK}/members`),
@@ -40,12 +39,10 @@ const ClassRoomsService = {
     api.get(`${BASE_URL}/${classPK}/members/${memberID}/teamrole`),
 
   /// PUT /classes/{class_pk}/members/{id}/accept
-  accept: (classPK, memberID) =>
-    api.put(`${BASE_URL}/${classPK}/members/${memberID}/accept`),
+  accept: (classPK, memberID) => api.put(`${BASE_URL}/${classPK}/members/${memberID}/accept`),
 
   /// DELETE /classes/{class_pk}/members/{id}
-  delete: (classPK, memberID) =>
-    api.delete(`${BASE_URL}/${classPK}/members/${memberID}`),
+  delete: (classPK, memberID) => api.delete(`${BASE_URL}/${classPK}/members/${memberID}`),
 
   /// PUT /classes/{class_pk}/members/{id}/acceptasleader
   acceptLeader: (classPK, memberID) =>
@@ -56,8 +53,10 @@ const ClassRoomsService = {
     api.delete(`${BASE_URL}/${classPK}/members/${memberID}/removeasleader`),
 
   /// PUT /classes/{class_pk}/members/{id}/setleader
-  setLeader: (classPK, memberID) =>
-    api.put(`${BASE_URL}/${classPK}/members/${memberID}/setleader`),
+  setLeader: (classPK, memberID) => api.put(`${BASE_URL}/${classPK}/members/${memberID}/setleader`),
+
+  /// GET /classes/{class_pk}/noneleaders
+  noneleaders: (classPK) => api.get(`${BASE_URL}/${classPK}/noneleaders`),
 
   /// GET /classes/{class_pk}/teams
   teams: (classPK) => api.get(`${BASE_URL}/${classPK}/teams`),
@@ -83,46 +82,34 @@ const ClassRoomsService = {
         "status": 1
       }
   */
-  updateTeam: (classPK, teamID, data) =>
-    api.put(`${BASE_URL}/${classPK}/teams/${teamID}`, data),
+  updateTeam: (classPK, teamID, data) => api.put(`${BASE_URL}/${classPK}/teams/${teamID}`, data),
 
   /// DELETE /classes/{class_pk}/teams/{id}
-  deleteTeam: (classPK, teamID) =>
-    api.delete(`${BASE_URL}/${classPK}/teams/${teamID}`),
+  deleteTeam: (classPK, teamID) => api.delete(`${BASE_URL}/${classPK}/teams/${teamID}`),
 
   /// PUT /classes/{class_pk}/teams/{id}/close
-  closeTeams: (classPK, teamID) =>
-    api.put(`${BASE_URL}/${classPK}/teams/${teamID}/close`),
+  closeTeams: (classPK, teamID) => api.put(`${BASE_URL}/${classPK}/teams/${teamID}/close`),
 
   /// PUT /classes/{class_pk}/teams/{id}/open
-  openTeams: (classPK, teamID) =>
-    api.put(`${BASE_URL}/${classPK}/teams/${teamID}/open`),
+  openTeams: (classPK, teamID) => api.put(`${BASE_URL}/${classPK}/teams/${teamID}/open`),
 
   /// POST /classes/{class_pk}/teams/{id}/join
-  joinTeam: (classPK, teamID) =>
-    api.post(`${BASE_URL}/${classPK}/teams/${teamID}/join`),
+  joinTeam: (classPK, teamID) => api.post(`${BASE_URL}/${classPK}/teams/${teamID}/join`),
 
   /// GET /classes/{class_pk}/teams/{id}/members
-  teamMembers: (classPK, teamID) =>
-    api.get(`${BASE_URL}/${classPK}/teams/${teamID}/members`),
+  teamMembers: (classPK, teamID) => api.get(`${BASE_URL}/${classPK}/teams/${teamID}/members`),
 
   /// PUT /classes/{class_pk}/teams/{team_pk}/members/{id}/accept
   acceptTeamMember: (classPK, teamPK, memberID) =>
-    api.put(
-      `${BASE_URL}/${classPK}/teams/${teamPK}/members/${memberID}/accept`
-    ),
+    api.put(`${BASE_URL}/${classPK}/teams/${teamPK}/members/${memberID}/accept`),
 
   /// DELETE /classes/{class_pk}/teams/{team_pk}/members/{id}/leave
   leaveTeam: (classPK, teamPK, memberID) =>
-    api.delete(
-      `${BASE_URL}/${classPK}/teams/${teamPK}/members/${memberID}/leave`
-    ),
+    api.delete(`${BASE_URL}/${classPK}/teams/${teamPK}/members/${memberID}/leave`),
 
   /// DELETE /classes/{class_pk}/teams/{team_pk}/members/{id}/remove
   removeTeamMember: (classPK, teamPK, memberID) =>
-    api.delete(
-      `${BASE_URL}/${classPK}/teams/${teamPK}/members/${memberID}/remove`
-    ),
+    api.delete(`${BASE_URL}/${classPK}/teams/${teamPK}/members/${memberID}/remove`),
 
   /// GET /classes/{id}/evals
   evals: (id) => api.get(`${BASE_URL}/${id}/evals`),

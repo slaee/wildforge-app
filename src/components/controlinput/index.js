@@ -3,16 +3,7 @@ import PropTypes from 'prop-types';
 
 import './index.scss';
 
-function ControlInput({
-  name,
-  label,
-  type,
-  value,
-  onChange,
-  error,
-  disabled,
-  ...rest
-}) {
+function ControlInput({ name, label, type, value, onChange, error, disabled, ...rest }) {
   return (
     <div className="d-flex flex-column">
       <label className="fs-5 fw-bold pt-2 pb-2" htmlFor={name}>

@@ -16,6 +16,7 @@ import ViewClass from './screens/class_management/view_class';
 import ViewClassMembers from './screens/class_management/view_class_members';
 import Teams from './screens/team_management/teams';
 import PeerEval from './screens/peer_evaluation/view_peer_eval';
+import ClassroomLayout from './components/Layouts/ClassroomLayouts';
 
 // Style Imports
 import './App.css';
@@ -61,38 +62,41 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
-            path=":id"
-            element={
-              <PrivateRoute>
-                <ViewClass />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path=":id/members"
-            element={
-              <PrivateRoute>
-                <ViewClassMembers />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path=":id/teamleaders"
-            element={
-              <PrivateRoute>
-                <Teams />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path=":id/teams"
-            element={
-              <PrivateRoute>
-                <Teams />
-              </PrivateRoute>
-            }
-          />
+
+          <Route path=":id" element={<ClassroomLayout />}>
+            <Route
+              index
+              element={
+                <PrivateRoute>
+                  <ViewClass />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="members"
+              element={
+                <PrivateRoute>
+                  <ViewClassMembers />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="teamleaders"
+              element={
+                <PrivateRoute>
+                  <Teams />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="teams"
+              element={
+                <PrivateRoute>
+                  <Teams />
+                </PrivateRoute>
+              }
+            />
+          </Route>
         </Route>
 
         <Route

@@ -73,10 +73,7 @@ function JoinClass({ visible, handleModal }) {
                   onChange={(e) => setFieldValue('class_code', e.target.value)}
                   error={errors.class_code}
                 />
-                <button
-                  className="btn btn-yellow-primary fw-semibold ms-2 mt-5"
-                  type="submit"
-                >
+                <button className="btn btn-yellow-primary fw-semibold ms-2 mt-5" type="submit">
                   {isJoining ? 'Joining...' : 'Join'}
                 </button>
               </div>

@@ -17,9 +17,7 @@ const AuthContext = createContext({
 export function AuthProvider({ children }) {
   const [uuid, setUuid] = useState(localStorage.getItem('uuid'));
   const [accessToken, setAccessToken_] = useState(Cookies.get('access_token'));
-  const [refreshToken, setRefreshToken_] = useState(
-    dehash(Cookies.get('refresh_token'), uuid)
-  );
+  const [refreshToken, setRefreshToken_] = useState(dehash(Cookies.get('refresh_token'), uuid));
 
   const setAccessToken = (newAccessToken) => {
     if (newAccessToken) {
@@ -65,11 +63,7 @@ export function AuthProvider({ children }) {
     [accessToken, refreshToken]
   );
 
-  return (
-    <AuthContext.Provider value={authContextValue}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={authContextValue}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => useContext(AuthContext);

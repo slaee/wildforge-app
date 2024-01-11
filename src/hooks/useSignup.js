@@ -5,14 +5,7 @@ import { UsersService } from '../services';
 const useSignup = () => {
   const [isSigningUp, setIsSigningUp] = useState(false);
 
-  const signupUser = async ({
-    first_name,
-    last_name,
-    email,
-    password,
-    role,
-    callbacks,
-  }) => {
+  const signupUser = async ({ first_name, last_name, email, password, role, callbacks }) => {
     setIsSigningUp(true);
 
     let responseCode;

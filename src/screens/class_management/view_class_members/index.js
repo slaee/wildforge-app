@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 
-import jwtDecode from 'jwt-decode';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useClassRoom, useClassMembers, useClassMember } from '../../../hooks';
+import { useClassMembers } from '../../../hooks';
 
 import Search from '../../../components/search';
-import Navbar from '../../../components/navbar';
-import Header from '../../../components/header';
 import Table from '../../../components/table';
-import Loading from '../../../components/loading';
 
 import GLOBALS from '../../../app_globals';
 
@@ -17,40 +12,13 @@ import 'primeicons/primeicons.css';
 import './index.scss';
 
 function ViewClassMembers() {
-  const navigate = useNavigate();
-  const { id: classId } = useParams();
+  const { user, classId, classRoom } = useOutletContext();
 
-  const { accessToken } = useAuth();
-  const user = jwtDecode(accessToken);
-
-  const { classMember, isRetrieving } = useClassMember(classId, user?.user_id);
   const { deleteMember, acceptMember, classMembers } = useClassMembers(classId);
-  const { classRoom } = useClassRoom(classId);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [tableData, setTableData] = useState([]);
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [buttons, setButtons] = useState([]);
-
-  useEffect(() => {
-    if (isRetrieving) {
-      setTimeout(() => setIsLoading(false), 350);
-    } else {
-      if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
-        setButtons(GLOBALS.SIDENAV_CLASSMEMBER(classId));
-      }
-
-      if (classMember?.role === GLOBALS.CLASSMEMBER_ROLE.TEACHER) {
-        setButtons(GLOBALS.SIDENAV_TEACHER(classId));
-      }
-
-      if (!classMember) {
-        navigate('/classes');
-      }
-    }
-  }, [isRetrieving]);
 
   useEffect(() => {
     if (classMembers) {
@@ -99,13 +67,11 @@ function ViewClassMembers() {
             id,
             name: `${first_name} ${last_name}`,
             team: team || 'N/A',
-            status:
-              status === GLOBALS.MEMBER_STATUS.PENDING ? 'pending' : 'accepted',
+            status: status === GLOBALS.MEMBER_STATUS.PENDING ? 'pending' : 'accepted',
             role: 'Student',
           };
 
-          if (user?.role === GLOBALS.USER_ROLE.MODERATOR)
-            tb_data.actions = actions;
+          if (user?.role === GLOBALS.USER_ROLE.MODERATOR) tb_data.actions = actions;
 
           return tb_data;
         });
@@ -155,17 +121,11 @@ function ViewClassMembers() {
           {classRoom?.name} {classRoom?.sections}
         </div>
         <div className="d-flex py-2">
-          <div className="d-flex align-items-center fw-semibold fs-6">
-            {classRoom?.schedule}
-          </div>
+          <div className="d-flex align-items-center fw-semibold fs-6">{classRoom?.schedule}</div>
           <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
             {classRoom?.class_code}
           </div>
-          <button
-            type="button"
-            className="btn btn-secondary btn-sm"
-            onClick={handleCopyCode}
-          >
+          <button type="button" className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
             Copy
           </button>
         </div>
@@ -177,9 +137,7 @@ function ViewClassMembers() {
     <div className="d-flex flex-column justify-content-center pt-3 pb-3 px-5">
       {tableData && filteredData.length === 0 ? (
         <div className="d-flex justify-content-center align-items-center">
-          <div className="brown-text fw-bold fs-5 py-2 mx-5">
-            No members found
-          </div>
+          <div className="brown-text fw-bold fs-5 py-2 mx-5">No members found</div>
         </div>
       ) : (
         <Table headers={headers} data={filteredData} className="mt-3" />
@@ -199,20 +157,7 @@ function ViewClassMembers() {
     </div>
   );
 
-  return (
-    <div className="d-flex">
-      <Navbar
-        name={`${user?.first_name} ${user?.last_name}`}
-        buttons={buttons}
-        hasBackButton
-      />
-      <div className="container-fluid d-flex flex-column">
-        <Header />
-
-        {isLoading ? <Loading /> : renderContent()}
-      </div>
-    </div>
-  );
+  return <div>{renderContent()}</div>;
 }
 
 export default ViewClassMembers;

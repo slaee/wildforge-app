@@ -15,21 +15,9 @@ function TeamFormationSettings({ visible, handleModal }) {
       showHeader={false}
     >
       <div className="d-grid gap-4">
-        <button
-          aria-label="Close Modal"
-          className="btn btn-close ms-auto"
-          onClick={handleModal}
-        />
-        <ControlInput
-          name="name"
-          label="Minimum Number of Members:"
-          className="yellow-on-focus"
-        />
-        <ControlInput
-          name="name"
-          label="Maximum Number of Members:"
-          className="yellow-on-focus"
-        />
+        <button aria-label="Close Modal" className="btn btn-close ms-auto" onClick={handleModal} />
+        <ControlInput name="name" label="Minimum Number of Members:" className="yellow-on-focus" />
+        <ControlInput name="name" label="Maximum Number of Members:" className="yellow-on-focus" />
         <button
           aria-label="Save"
           className="btn btn-yellow-primary fs-5 fw-semibold"
