@@ -55,8 +55,11 @@ const ClassRoomsService = {
   /// PUT /classes/{class_pk}/members/{id}/setleader
   setLeader: (classPK, memberID) => api.put(`${BASE_URL}/${classPK}/members/${memberID}/setleader`),
 
-  /// GET /classes/{class_pk}/noneleaders
-  noneleaders: (classPK) => api.get(`${BASE_URL}/${classPK}/noneleaders`),
+  /// GET /classes/{class_pk}/nonleaders
+  nonleaders: (classPK) => api.get(`${BASE_URL}/${classPK}/nonleaders`),
+
+  /// GET /classes/{class_pk}/leaders
+  leaders: (classPK) => api.get(`${BASE_URL}/${classPK}/leaders`),
 
   /// GET /classes/{class_pk}/teams
   teams: (classPK) => api.get(`${BASE_URL}/${classPK}/teams`),
