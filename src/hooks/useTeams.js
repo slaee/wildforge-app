@@ -1,44 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ClassRoomsService } from '../services';
-import GLOBALS from '../app_globals';
 
 const useTeams = (classId) => {
   const navigate = useNavigate();
   const [teams, setTeams] = useState([]);
-  const [nonLeaders, setNonLeaders] = useState([]);
   const [isRetrieving, setIsRetrieving] = useState(false);
   const [isSettingLeader, setIsSettingLeader] = useState(false);
   const [isCreatingTeam, setIsCreatingTeam] = useState(false);
-
-  useEffect(() => {
-    const get = async () => {
-      let responseCode;
-      let retrievedNonleaders;
-
-      try {
-        const res = await ClassRoomsService.nonleaders(classId);
-
-        responseCode = res?.status;
-        retrievedNonleaders = res?.data;
-      } catch (error) {
-        responseCode = error?.response?.status;
-      }
-
-      switch (responseCode) {
-        case 200:
-          setNonLeaders(retrievedNonleaders);
-        case 404:
-          navigate(`/classes/${classId}/teams`);
-          break;
-        case 500:
-          navigate('/classes');
-          break;
-        default:
-      }
-    };
-    get();
-  }, []);
 
   const setLeader = async (memberID) => {
     let responseCode;
@@ -227,7 +196,6 @@ const useTeams = (classId) => {
     teams,
     isRetrieving,
     isSettingLeader,
-    nonLeaders,
     setLeader,
     acceptLeader,
     removeLeader,
