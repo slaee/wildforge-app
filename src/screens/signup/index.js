@@ -13,7 +13,7 @@ import { isValidEmail } from '../../utils/strings';
 
 import './index.scss';
 
-const validate = (values) => {
+const validateName = (values) => {
   const errors = {};
 
   if (!values.first_name) {
@@ -27,6 +27,12 @@ const validate = (values) => {
   } else if (values.last_name.length > 50) {
     errors.last_name = 'The maximum length of this field is 50 characters.';
   }
+
+  return errors;
+};
+
+const validate = (values) => {
+  const errors = {};
 
   if (!values.email) {
     errors.email = 'This email is required.';
@@ -94,9 +100,9 @@ function Signup() {
           type="button"
           className="btn btn-wild-primary btn-large fw-bold fs-5"
           onClick={(e) => {
-            const name_errors = validate(values);
+            e.preventDefault();
+            const name_errors = validateName(values);
             if (name_errors.first_name || name_errors.last_name) {
-              e.preventDefault();
               setFirstNameError(name_errors.first_name);
               setLastNameError(name_errors.last_name);
             } else {
@@ -112,9 +118,9 @@ function Signup() {
           type="button"
           className="btn btn-wild-secondary btn-large fw-bold fs-5"
           onClick={(e) => {
-            const name_errors = validate(values);
+            e.preventDefault();
+            const name_errors = validateName(values);
             if (name_errors.first_name || name_errors.last_name) {
-              e.preventDefault();
               setFirstNameError(name_errors.first_name);
               setLastNameError(name_errors.last_name);
             } else {

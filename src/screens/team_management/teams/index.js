@@ -16,7 +16,7 @@ import './index.scss';
 function Teams() {
   const { user, classId, classMember, classRoom } = useOutletContext();
 
-  const { teams, nonLeaders, setLeader, acceptLeader, removeLeader } = useTeams(classId);
+  const { teams, acceptLeader, removeLeader } = useTeams(classId);
 
   const [showNotif, setShowNotif] = useState(false);
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
@@ -253,20 +253,20 @@ function Teams() {
   /// STUDENT section
   if (classMember.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
     const {
-      teamMember,
+      currentTeamMember,
       team,
       isRetrieving: isRoleRetrieving,
     } = useClassMemberTeam(classId, classMember?.id);
 
     useEffect(() => {
       if (!isRoleRetrieving) {
-        if (teamMember?.status === GLOBALS.MEMBER_STATUS.PENDING) {
+        if (currentTeamMember?.status === GLOBALS.MEMBER_STATUS.PENDING) {
           setShowNotif(true);
         } else {
           setShowNotif(false);
         }
       }
-    }, [teamMember]);
+    }, [currentTeamMember]);
 
     if (team) {
       subheaderContent = (
@@ -330,8 +330,8 @@ function Teams() {
         </div>
       );
       if (
-        teamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER &&
-        teamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED
+        currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER &&
+        currentTeamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED
       ) {
         bodyContent = renderTeamLeaderNoTeam();
       } else {

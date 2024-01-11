@@ -10,3 +10,4 @@ export { default as useJoinClass } from './useJoinClass';
 export { default as useClassMemberTeam } from './useClassMemberTeam';
 export { default as useTeams } from './useTeams';
 export { default as useTeam } from './useTeam';
+export { default as useNonLeaders } from './useNonLeaders';

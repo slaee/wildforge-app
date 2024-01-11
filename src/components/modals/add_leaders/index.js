@@ -4,22 +4,19 @@ import { Dialog } from 'primereact/dialog';
 import PropTypes from 'prop-types';
 
 import './index.scss';
-import { useNavigate, useParams } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
+import { useParams } from 'react-router-dom';
+
+import { useNonLeaders, useTeams } from '../../../hooks';
+
 import Table from '../../table';
 import Search from '../../search';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useTeams } from '../../../hooks';
+
 import GLOBALS from '../../../app_globals';
 
 function AddLeaders({ visible, handleModal }) {
-  const navigate = useNavigate;
-
-  const { accessToken } = useAuth();
-  const user = jwtDecode(accessToken);
-
   const { id: classId } = useParams();
-  const { teams, isRetrieving, nonLeaders, setLeader, isSettingLeader } = useTeams(classId);
+  const { setLeader, isSettingLeader } = useTeams(classId);
+  const { nonLeaders, isRetrieving } = useNonLeaders(classId);
 
   const [showManualModal, setShowManualModal] = useState(false);
   const [showAutomaticModal, setShowAutomaticModal] = useState(false);
