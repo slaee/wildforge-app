@@ -493,7 +493,7 @@ function Teams() {
   return (
     <div className="d-flex">
       {showNotif ? renderPendingLeader() : null}
-      {console.log(teamMemberRoleStatus)}
+      {console.log(team.name)}
       <Navbar
         name={`${user?.first_name} ${user?.last_name}`}
         buttons={buttons}
