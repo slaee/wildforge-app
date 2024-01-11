@@ -9,6 +9,32 @@ const useTeams = (classId) => {
   const [isSettingLeader, setIsSettingLeader] = useState(false);
   const [isCreatingTeam, setIsCreatingTeam] = useState(false);
 
+  const getLeaders = async () => {
+    let responseCode;
+    let retrievedLeaders;
+
+    try {
+      const res = await ClassRoomsService.leaders(classId);
+
+      responseCode = res?.status;
+      retrievedLeaders = res?.data;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+
+    switch (responseCode) {
+      case 200:
+        return retrievedLeaders;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+  };
+
   const setLeader = async (memberID) => {
     let responseCode;
 
@@ -196,6 +222,8 @@ const useTeams = (classId) => {
     teams,
     isRetrieving,
     isSettingLeader,
+    isCreatingTeam,
+    getLeaders,
     setLeader,
     acceptLeader,
     removeLeader,

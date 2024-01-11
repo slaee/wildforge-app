@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
-import { useTeams, useTeam, useClassMemberTeam } from '../../../hooks';
+import { useTeams, useClassMemberTeam } from '../../../hooks';
 
 import GLOBALS from '../../../app_globals';
 
@@ -21,13 +21,15 @@ function Teams() {
   const [showNotif, setShowNotif] = useState(false);
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
-  const [teamsTableData, setTeamsTableData] = useState([]);
   const [selectedValue, setSelectedValue] = useState('');
   const [selectedTeam, setSelectedTeam] = useState(false);
 
   const teamLeaderHeaders = ['id', 'name', 'team', 'status'];
   const teamsHeaders = ['id', 'team', 'leader', 'members', 'actions'];
   const membersHeaders = ['id', 'name', 'role', 'actions'];
+
+  const [teamsTableData, setTeamsTableData] = useState([]);
+  const [membersTableData, setMembersTableData] = useState([]);
 
   const actionButtons = () => (
     <>
@@ -276,7 +278,9 @@ function Teams() {
               {classRoom?.name} {classRoom?.sections}
             </div>
             <div className="d-flex py-2">
-              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+              <div className="d-flex align-items-center fw-semibold fs-6">
+                {classRoom?.schedule}
+              </div>
               <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
                 {classRoom?.class_code}
               </div>
@@ -317,7 +321,9 @@ function Teams() {
               {classRoom?.name} {classRoom?.sections}
             </div>
             <div className="d-flex py-2">
-              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+              <div className="d-flex align-items-center fw-semibold fs-6">
+                {classRoom?.schedule}
+              </div>
               <div className="ms-4 me-2 fw-semibold fs-6">{classRoom?.class_code}</div>
               <button type="button" className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
                 Copy
@@ -388,6 +394,7 @@ function Teams() {
     <div>
       {showNotif && renderPendingLeader()}
       {renderContent()}
+      {console.log('teams', teams)}
     </div>
   );
 }
