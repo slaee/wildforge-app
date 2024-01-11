@@ -35,8 +35,8 @@ const ClassRoomsService = {
   members: (classPK) => api.get(`${BASE_URL}/${classPK}/members`),
 
   // GET /classes/{class_pk}/members/{id}/teamrole
-  teamMemberRole: (classPK, memberID) =>
-    api.get(`${BASE_URL}/${classPK}/members/${memberID}/teamrole`),
+  classMemberTeam: (classPK, memberID) =>
+    api.get(`${BASE_URL}/${classPK}/members/${memberID}/team`),
 
   /// PUT /classes/{class_pk}/members/{id}/accept
   accept: (classPK, memberID) => api.put(`${BASE_URL}/${classPK}/members/${memberID}/accept`),
@@ -55,8 +55,11 @@ const ClassRoomsService = {
   /// PUT /classes/{class_pk}/members/{id}/setleader
   setLeader: (classPK, memberID) => api.put(`${BASE_URL}/${classPK}/members/${memberID}/setleader`),
 
-  /// GET /classes/{class_pk}/noneleaders
-  noneleaders: (classPK) => api.get(`${BASE_URL}/${classPK}/noneleaders`),
+  /// GET /classes/{class_pk}/nonleaders
+  nonleaders: (classPK) => api.get(`${BASE_URL}/${classPK}/nonleaders`),
+
+  /// GET /classes/{class_pk}/leaders
+  leaders: (classPK) => api.get(`${BASE_URL}/${classPK}/leaders`),
 
   /// GET /classes/{class_pk}/teams
   teams: (classPK) => api.get(`${BASE_URL}/${classPK}/teams`),

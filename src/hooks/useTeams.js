@@ -110,7 +110,7 @@ const useTeams = (classId) => {
     }
   };
 
-  const createTeam = async ({ team_name, team_description, callbacks }) => {
+  const createTeam = async ({ name, description, callbacks }) => {
     setIsCreatingTeam(true);
 
     let responseCode;
@@ -118,8 +118,8 @@ const useTeams = (classId) => {
 
     try {
       const res = await ClassRoomsService.createTeam(classId, {
-        team_name,
-        team_description,
+        name,
+        description,
       });
 
       responseCode = res?.status;
