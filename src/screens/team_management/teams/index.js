@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
-import { useTeams, useTeam, useTeamMemberRole } from '../../../hooks';
+import { useTeams, useTeam, useClassMemberTeam } from '../../../hooks';
 
 import GLOBALS from '../../../app_globals';
 
@@ -253,22 +253,20 @@ function Teams() {
   /// STUDENT section
   if (classMember.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
     const {
-      teamMemberRole,
-      teamMemberRoleStatus,
+      teamMember,
+      team,
       isRetrieving: isRoleRetrieving,
-    } = useTeamMemberRole(classId, classMember?.id);
-
-    const { team } = useTeam(classId, classMember?.team_id);
+    } = useClassMemberTeam(classId, classMember?.id);
 
     useEffect(() => {
       if (!isRoleRetrieving) {
-        if (teamMemberRoleStatus === GLOBALS.MEMBER_STATUS.PENDING) {
+        if (teamMember?.status === GLOBALS.MEMBER_STATUS.PENDING) {
           setShowNotif(true);
         } else {
           setShowNotif(false);
         }
       }
-    }, [teamMemberRoleStatus]);
+    }, [teamMember]);
 
     if (team) {
       subheaderContent = (
@@ -332,8 +330,8 @@ function Teams() {
         </div>
       );
       if (
-        teamMemberRole === GLOBALS.TEAMMEMBER_ROLE.LEADER &&
-        teamMemberRoleStatus === GLOBALS.MEMBER_STATUS.ACCEPTED
+        teamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER &&
+        teamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED
       ) {
         bodyContent = renderTeamLeaderNoTeam();
       } else {

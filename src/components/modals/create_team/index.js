@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dialog } from 'primereact/dialog';
-import { useParams } from 'react-router-dom';
+import { useOutletContext, useParams } from 'react-router-dom';
 import { Formik } from 'formik';
 import ControlInput from '../../controlinput';
 import { isObjectEmpty } from '../../../utils/object';
@@ -23,8 +23,7 @@ const validate = (values) => {
 };
 
 function CreateTeam({ visible, handleModal }) {
-  const { id: classId } = useParams();
-  const { classRoom } = useClassRoom(classId);
+  const { classId } = useOutletContext();
   const { createTeam } = useTeams(classId);
 
   return (

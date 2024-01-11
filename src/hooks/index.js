@@ -7,6 +7,6 @@ export { default as useClassRoom } from './useClassRoom';
 export { default as useClassMembers } from './useClassMembers';
 export { default as useClassMember } from './useClassMember';
 export { default as useJoinClass } from './useJoinClass';
-export { default as useTeamMemberRole } from './useTeamMemberRole';
+export { default as useClassMemberTeam } from './useClassMemberTeam';
 export { default as useTeams } from './useTeams';
 export { default as useTeam } from './useTeam';
