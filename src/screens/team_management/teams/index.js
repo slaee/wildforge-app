@@ -16,13 +16,14 @@ import './index.scss';
 function Teams() {
   const { user, classId, classMember, classRoom } = useOutletContext();
 
-  const { teams, leaders, acceptLeader, removeLeader, openTeams, closeTeams } = useTeams(classId);
+  const { teams, leaders, acceptLeader, removeLeader, joinTeam, openTeams, closeTeams } =
+    useTeams(classId);
 
   const [showNotif, setShowNotif] = useState(false);
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('');
-  const [selectedTeam, setSelectedTeam] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [isSelectedTeam, setIsSelectedTeam] = useState(false);
 
   const teamLeaderHeaders = ['id', 'name', 'status'];
   const teamsHeaders = ['id', 'team', 'leader', 'members', 'actions'];
@@ -32,14 +33,15 @@ function Teams() {
   const [teamsTableData, setTeamsTableData] = useState([]);
   const [membersTableData, setMembersTableData] = useState([]);
 
-  const actionButtons = () => (
+  const actionButtons = (team) => (
     <>
       <button
         type="button"
         className="btn btn-sm fw-bold text-success"
         onClick={() => {
           console.log('View Team');
-          setSelectedTeam(true);
+          setIsSelectedTeam(true);
+          setSelectedTeam(team);
         }}
       >
         VIEW
@@ -49,7 +51,10 @@ function Teams() {
           <button
             type="button"
             className="btn btn-sm fw-bold text-primary"
-            onClick={() => console.log('Edit Team')}
+            onClick={() => {
+              console.log('Edit Team');
+              setSelectedTeam(team);
+            }}
           >
             EDIT
           </button>
@@ -80,7 +85,7 @@ function Teams() {
           team: name,
           leader: `${leader?.first_name} ${leader?.last_name}`,
           members,
-          actions: actionButtons(),
+          actions: actionButtons(team),
         };
       });
 
@@ -154,14 +159,14 @@ function Teams() {
   };
 
   const handleChange = (event, teamId) => {
-    setSelectedValue(event.target.value);
+    setSelectedTeam(event.target.value);
   };
 
   const getColorClass = () => {
-    if (selectedValue === '1') {
+    if (selectedTeam === '1') {
       return 'text-success';
     }
-    if (selectedValue === '2') {
+    if (selectedTeam === '2') {
       return 'text-danger';
     }
     return 'text-default';
@@ -188,7 +193,7 @@ function Teams() {
       </div>
       <div className="container">
         <div className="fw-bold fs-4 px-5 py-3">Members</div>
-        {renderTable(membersHeaders, membersTableData, "There's no members yet.")}
+        {renderTable(membersHeaders, [], "There's no members yet.")}
       </div>
     </div>
   );
@@ -232,12 +237,12 @@ function Teams() {
       {activeTab === 'teams' && (
         <>{renderTable(teamsHeaders, teamsTableData, 'No Teams Formed Yet.')}</>
       )}
-      {selectedTeam && (
+      {isSelectedTeam && (
         <div className="modal-apply-team p-4">
           <button
             aria-label="Close Modal"
             className="btn d-flex btn-close ms-auto"
-            onClick={() => setSelectedTeam(false)}
+            onClick={() => setIsSelectedTeam(false)}
           />
           {renderTeamData()}
         </div>
@@ -266,8 +271,13 @@ function Teams() {
   const renderStudentNoTeam = () => (
     <div className="d-flex flex-column pt-3 pb-3 px-5">
       {renderTable(teamsHeaders, teamsTableData, 'No Teams Formed Yet.')}
-      {selectedTeam && (
-        <ApplyTeam visible={selectedTeam} handleModal={() => setSelectedTeam(false)} />
+      {isSelectedTeam && (
+        <ApplyTeam
+          visible={isSelectedTeam}
+          handleModal={() => setIsSelectedTeam(false)}
+          teamData={selectedTeam}
+          applyToTeam={joinTeam}
+        />
       )}
     </div>
   );
@@ -346,7 +356,7 @@ function Teams() {
               <select
                 className={`form-select form-select-sm ${getColorClass()} fw-bold`}
                 onChange={handleChange}
-                value={selectedValue}
+                value={selectedTeam}
               >
                 <option className="text-success fw-semibold" value="1">
                   OPEN

@@ -5,6 +5,7 @@ import { ClassRoomsService } from '../services';
 const useTeams = (classId) => {
   const navigate = useNavigate();
   const [teams, setTeams] = useState(null);
+  const [getTeam, setGetTeam] = useState(null);
   const [leaders, setLeaders] = useState(null);
   const [isRetrieving, setIsRetrieving] = useState(false);
   const [isRetrievingLeaders, setIsRetrievingLeaders] = useState(false);
@@ -43,6 +44,33 @@ const useTeams = (classId) => {
 
     get();
   }, []);
+
+  // const team = async (teamID) => {
+  //   let responseCode;
+  //   let retrievedTeam;
+
+  //   try {
+  //     const res = await ClassRoomsService.team(classId, teamID);
+
+  //     responseCode = res?.status;
+  //     retrievedTeam = res?.data;
+  //   } catch (error) {
+  //     responseCode = error?.response?.status;
+  //   }
+
+  //   switch (responseCode) {
+  //     case 200:
+  //       setGetTeam(retrievedTeam);
+  //       break;
+  //     case 404:
+  //       navigate(`/classes/${classId}/teams`);
+  //       break;
+  //     case 500:
+  //       navigate('/classes');
+  //       break;
+  //     default:
+  //   }
+  // };
 
   const setLeader = async (memberID) => {
     let responseCode;
@@ -229,8 +257,56 @@ const useTeams = (classId) => {
     }
 
     switch (responseCode) {
-      case 200:
+      case 204:
         break;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+  };
+
+  const joinTeam = async (teamID) => {
+    let responseCode;
+
+    try {
+      const res = await ClassRoomsService.joinTeam(classId, teamID);
+      responseCode = res?.status;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+
+    switch (responseCode) {
+      case 201:
+        break;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+  };
+
+  const teamMembers = async (teamID) => {
+    let responseCode;
+    let retrievedMembers;
+
+    try {
+      const res = await ClassRoomsService.teamMembers(classId, teamID);
+      responseCode = res?.status;
+      retrievedMembers = res?.data;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+
+    switch (responseCode) {
+      case 200:
+        return retrievedMembers;
       case 404:
         navigate(`/classes/${classId}/teams`);
         break;
@@ -282,6 +358,8 @@ const useTeams = (classId) => {
     isCreatingTeam,
     openTeams,
     closeTeams,
+    joinTeam,
+    teamMembers,
     setLeader,
     acceptLeader,
     removeLeader,
