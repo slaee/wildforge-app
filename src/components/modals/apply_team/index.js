@@ -40,7 +40,11 @@ function ApplyTeam({ visible, handleModal, teamData, applyToTeam }) {
         <button
           type="submit"
           className="btn btn-yellow-primary btn-create-team-modal mx-auto fw-semibold"
-          onClick={() => applyToTeam(teamData.id)}
+          onClick={() => {
+            applyToTeam(teamData.id);
+            alert('Please wait for the Leader to accept your request');
+            handleModal();
+          }}
         >
           Apply
         </button>

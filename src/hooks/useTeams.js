@@ -341,6 +341,28 @@ const useTeams = (classId) => {
     }
   };
 
+  const leaveTeam = async (teamID, memberID) => {
+    let responseCode;
+
+    try {
+      const res = await ClassRoomsService.leaveTeam(classId, teamID, memberID);
+      responseCode = res?.status;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+    switch (responseCode) {
+      case 204:
+        break;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+  };
+
   useEffect(() => {
     const get = async () => {
       let responseCode;
@@ -392,6 +414,7 @@ const useTeams = (classId) => {
     deleteTeam,
     acceptTeamMember,
     removeTeamMember,
+    leaveTeam,
   };
 };
 

@@ -24,6 +24,7 @@ function Teams() {
     joinTeam,
     openTeams,
     closeTeams,
+    leaveTeam,
     acceptTeamMember,
     removeTeamMember,
   } = useTeams(classId);
@@ -283,7 +284,7 @@ function Teams() {
                   type="button"
                   className="btn btn-sm fw-bold text-danger"
                   onClick={() => {
-                    removeLeader(tmId);
+                    leaveTeam(team.id, currentTeamMember.id);
                   }}
                 >
                   LEAVE
@@ -310,7 +311,7 @@ function Teams() {
                     REJECT
                   </button>
                 </>
-              ) : role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? (
+              ) : currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? (
                 <button
                   type="button"
                   className="btn btn-sm fw-bold text-danger"
@@ -321,7 +322,9 @@ function Teams() {
                   KICK
                 </button>
               ) : (
-                <p> No action </p>
+                <button type="button" className="btn btn-sm fw-bold" disabled>
+                  No Action
+                </button>
               ),
           };
         });
