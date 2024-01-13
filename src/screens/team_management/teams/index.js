@@ -278,7 +278,7 @@ function Teams() {
             name: `${first_name} ${last_name}`,
             role: role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? 'Leader' : 'Member',
             actions:
-              role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? (
+              currentTeamMember?.id === tmId ? (
                 <button
                   type="button"
                   className="btn btn-sm fw-bold text-danger"
@@ -288,7 +288,7 @@ function Teams() {
                 >
                   LEAVE
                 </button>
-              ) : role === GLOBALS.TEAMMEMBER_ROLE.LEAD &&
+              ) : currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER &&
                 status === GLOBALS.MEMBER_STATUS.PENDING ? (
                 <>
                   <button
@@ -310,7 +310,7 @@ function Teams() {
                     REJECT
                   </button>
                 </>
-              ) : (
+              ) : role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? (
                 <button
                   type="button"
                   className="btn btn-sm fw-bold text-danger"
@@ -320,6 +320,8 @@ function Teams() {
                 >
                   KICK
                 </button>
+              ) : (
+                <p> No action </p>
               ),
           };
         });
