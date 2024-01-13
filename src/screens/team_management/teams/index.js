@@ -70,6 +70,7 @@ function Teams() {
     </>
   );
 
+  // move to teacher and student with no team content
   useEffect(() => {
     if (teams) {
       const teamsData = teams.map((team) => {
@@ -90,42 +91,6 @@ function Teams() {
       });
 
       setTeamsTableData(teamsData);
-
-      const mappedTeamMembers = teams.flatMap((team) =>
-        team.team_members.map((member) => {
-          const { class_member_id, first_name, last_name, role } = member;
-
-          return {
-            id: class_member_id,
-            name: `${first_name} ${last_name}`,
-            role: role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? 'Leader' : 'Member',
-            actions:
-              role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? (
-                <button
-                  type="button"
-                  className="btn btn-sm fw-bold text-danger"
-                  onClick={() => {
-                    console.log('Leave Team');
-                  }}
-                >
-                  LEAVE
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="btn btn-sm fw-bold text-danger"
-                  onClick={() => {
-                    console.log('Kick Member');
-                  }}
-                >
-                  VIEW
-                </button>
-              ),
-          };
-        })
-      );
-
-      setMembersTableData(mappedTeamMembers);
     }
   }, [teams]);
 
@@ -193,7 +158,7 @@ function Teams() {
       </div>
       <div className="container">
         <div className="fw-bold fs-4 px-5 py-3">Members</div>
-        {renderTable(membersHeaders, [], "There's no members yet.")}
+        {renderTable(membersHeaders, membersTableData, "There's no members yet.")}
       </div>
     </div>
   );
@@ -318,6 +283,44 @@ function Teams() {
       team,
       isRetrieving: isRoleRetrieving,
     } = useClassMemberTeam(classId, classMember?.id);
+
+    useEffect(() => {
+      if (team) {
+        const mappedTeamMembers = team.members.map((member) => {
+          const { class_member_id, first_name, last_name, role } = member;
+
+          return {
+            id: class_member_id,
+            name: `${first_name} ${last_name}`,
+            role: role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? 'Leader' : 'Member',
+            actions:
+              role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? (
+                <button
+                  type="button"
+                  className="btn btn-sm fw-bold text-danger"
+                  onClick={() => {
+                    console.log('Leave Team');
+                  }}
+                >
+                  LEAVE
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-sm fw-bold text-danger"
+                  onClick={() => {
+                    console.log('Kick Member');
+                  }}
+                >
+                  VIEW
+                </button>
+              ),
+          };
+        });
+
+        setMembersTableData(mappedTeamMembers);
+      }
+    }, [team]);
 
     useEffect(() => {
       if (!isRoleRetrieving) {

@@ -39,7 +39,7 @@ function ApplyTeam({ visible, handleModal, teamData, applyToTeam }) {
         <button
           type="submit"
           className="btn btn-yellow-primary btn-create-team-modal mx-auto fw-semibold"
-          onClick={() => applyToTeam}
+          onClick={() => applyToTeam(teamData.team_id)}
         >
           Apply
         </button>
