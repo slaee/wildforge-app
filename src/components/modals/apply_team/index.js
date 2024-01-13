@@ -8,6 +8,7 @@ import './index.scss';
 function ApplyTeam({ visible, handleModal, teamData, applyToTeam }) {
   const tableheaders = ['id', 'members'];
 
+  console.log(teamData);
   const members = teamData.team_members.map((member) => {
     const { class_member_id, first_name, last_name } = member;
     return {
@@ -39,7 +40,7 @@ function ApplyTeam({ visible, handleModal, teamData, applyToTeam }) {
         <button
           type="submit"
           className="btn btn-yellow-primary btn-create-team-modal mx-auto fw-semibold"
-          onClick={() => applyToTeam(teamData.team_id)}
+          onClick={() => applyToTeam(teamData.id)}
         >
           Apply
         </button>

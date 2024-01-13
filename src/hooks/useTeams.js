@@ -7,10 +7,11 @@ const useTeams = (classId) => {
   const [teams, setTeams] = useState(null);
   const [getTeam, setGetTeam] = useState(null);
   const [leaders, setLeaders] = useState(null);
-  const [isRetrieving, setIsRetrieving] = useState(false);
-  const [isRetrievingLeaders, setIsRetrievingLeaders] = useState(false);
-  const [isSettingLeader, setIsSettingLeader] = useState(false);
-  const [isCreatingTeam, setIsCreatingTeam] = useState(false);
+  const [isRetrieving, setIsRetrieving] = useState(true);
+  const [isRetrievingLeaders, setIsRetrievingLeaders] = useState(true);
+  const [isSettingLeader, setIsSettingLeader] = useState(true);
+  const [isCreatingTeam, setIsCreatingTeam] = useState(true);
+  const [isJoiningTeam, setIsJoiningTeam] = useState(true);
 
   // leaders
   useEffect(() => {
@@ -44,33 +45,6 @@ const useTeams = (classId) => {
 
     get();
   }, []);
-
-  // const team = async (teamID) => {
-  //   let responseCode;
-  //   let retrievedTeam;
-
-  //   try {
-  //     const res = await ClassRoomsService.team(classId, teamID);
-
-  //     responseCode = res?.status;
-  //     retrievedTeam = res?.data;
-  //   } catch (error) {
-  //     responseCode = error?.response?.status;
-  //   }
-
-  //   switch (responseCode) {
-  //     case 200:
-  //       setGetTeam(retrievedTeam);
-  //       break;
-  //     case 404:
-  //       navigate(`/classes/${classId}/teams`);
-  //       break;
-  //     case 500:
-  //       navigate('/classes');
-  //       break;
-  //     default:
-  //   }
-  // };
 
   const setLeader = async (memberID) => {
     let responseCode;
@@ -271,16 +245,21 @@ const useTeams = (classId) => {
 
   const joinTeam = async (teamID) => {
     let responseCode;
+    let responseMessage;
 
     try {
       const res = await ClassRoomsService.joinTeam(classId, teamID);
       responseCode = res?.status;
+      responseMessage = res?.data?.detail;
     } catch (error) {
       responseCode = error?.response?.status;
     }
 
     switch (responseCode) {
-      case 201:
+      case 200:
+        break;
+      case 400:
+        alert(responseMessage);
         break;
       case 404:
         navigate(`/classes/${classId}/teams`);
@@ -290,6 +269,7 @@ const useTeams = (classId) => {
         break;
       default:
     }
+    setIsJoiningTeam(false);
   };
 
   const teamMembers = async (teamID) => {
@@ -307,6 +287,50 @@ const useTeams = (classId) => {
     switch (responseCode) {
       case 200:
         return retrievedMembers;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+  };
+
+  const acceptTeamMember = async (teamID, memberID) => {
+    let responseCode;
+
+    try {
+      const res = await ClassRoomsService.acceptTeamMember(classId, teamID, memberID);
+      responseCode = res?.status;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+    switch (responseCode) {
+      case 200:
+        break;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+  };
+
+  const removeTeamMember = async (teamID, memberID) => {
+    let responseCode;
+
+    try {
+      const res = await ClassRoomsService.removeTeamMember(classId, teamID, memberID);
+      responseCode = res?.status;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+    switch (responseCode) {
+      case 204:
+        break;
       case 404:
         navigate(`/classes/${classId}/teams`);
         break;
@@ -366,6 +390,8 @@ const useTeams = (classId) => {
     createTeam,
     updateTeam,
     deleteTeam,
+    acceptTeamMember,
+    removeTeamMember,
   };
 };
 

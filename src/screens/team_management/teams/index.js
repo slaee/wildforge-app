@@ -16,8 +16,17 @@ import './index.scss';
 function Teams() {
   const { user, classId, classMember, classRoom } = useOutletContext();
 
-  const { teams, leaders, acceptLeader, removeLeader, joinTeam, openTeams, closeTeams } =
-    useTeams(classId);
+  const {
+    teams,
+    leaders,
+    acceptLeader,
+    removeLeader,
+    joinTeam,
+    openTeams,
+    closeTeams,
+    acceptTeamMember,
+    removeTeamMember,
+  } = useTeams(classId);
 
   const [showNotif, setShowNotif] = useState(false);
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
@@ -32,43 +41,6 @@ function Teams() {
   const [teamLeaderTableData, setTeamLeaderTableData] = useState([]);
   const [teamsTableData, setTeamsTableData] = useState([]);
   const [membersTableData, setMembersTableData] = useState([]);
-
-  const actionButtons = (team) => (
-    <>
-      <button
-        type="button"
-        className="btn btn-sm fw-bold text-success"
-        onClick={() => {
-          console.log('View Team');
-          setIsSelectedTeam(true);
-          setSelectedTeam(team);
-        }}
-      >
-        VIEW
-      </button>
-      {classMember?.role === GLOBALS.CLASSMEMBER_ROLE.TEACHER && (
-        <>
-          <button
-            type="button"
-            className="btn btn-sm fw-bold text-primary"
-            onClick={() => {
-              console.log('Edit Team');
-              setSelectedTeam(team);
-            }}
-          >
-            EDIT
-          </button>
-          <button
-            type="button"
-            className="btn btn-sm fw-bold text-danger"
-            onClick={() => console.log('Delete Team')}
-          >
-            DELETE
-          </button>
-        </>
-      )}
-    </>
-  );
 
   // move to teacher and student with no team content
   useEffect(() => {
@@ -86,7 +58,19 @@ function Teams() {
           team: name,
           leader: `${leader?.first_name} ${leader?.last_name}`,
           members,
-          actions: actionButtons(team),
+          actions: (
+            <button
+              type="button"
+              className="btn btn-sm fw-bold text-success"
+              onClick={() => {
+                console.log('View Team');
+                setIsSelectedTeam(true);
+                setSelectedTeam(team);
+              }}
+            >
+              VIEW
+            </button>
+          ),
         };
       });
 
@@ -287,10 +271,10 @@ function Teams() {
     useEffect(() => {
       if (team) {
         const mappedTeamMembers = team.members.map((member) => {
-          const { class_member_id, first_name, last_name, role } = member;
+          const { id: tmId, first_name, last_name, role, status } = member;
 
           return {
-            id: class_member_id,
+            id: tmId,
             name: `${first_name} ${last_name}`,
             role: role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? 'Leader' : 'Member',
             actions:
@@ -299,20 +283,42 @@ function Teams() {
                   type="button"
                   className="btn btn-sm fw-bold text-danger"
                   onClick={() => {
-                    console.log('Leave Team');
+                    removeLeader(tmId);
                   }}
                 >
                   LEAVE
                 </button>
+              ) : role === GLOBALS.TEAMMEMBER_ROLE.LEAD &&
+                status === GLOBALS.MEMBER_STATUS.PENDING ? (
+                <>
+                  <button
+                    type="button"
+                    className="btn btn-sm fw-bold text-success"
+                    onClick={() => {
+                      acceptTeamMember(team.id, tmId);
+                    }}
+                  >
+                    ACCEPT
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-sm fw-bold text-danger"
+                    onClick={() => {
+                      removeTeamMember(team.id, tmId);
+                    }}
+                  >
+                    REJECT
+                  </button>
+                </>
               ) : (
                 <button
                   type="button"
                   className="btn btn-sm fw-bold text-danger"
                   onClick={() => {
-                    console.log('Kick Member');
+                    removeTeamMember(team.id, tmId);
                   }}
                 >
-                  VIEW
+                  KICK
                 </button>
               ),
           };
@@ -456,7 +462,6 @@ function Teams() {
     <div>
       {showNotif && renderPendingLeader()}
       {renderContent()}
-      {console.log('teams', teams)}
     </div>
   );
 }
