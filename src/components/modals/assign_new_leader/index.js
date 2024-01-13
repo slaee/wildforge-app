@@ -18,6 +18,8 @@ function AssignNewLeader({
 }) {
   const [selectedOption, setSelectedOption] = useState('');
 
+  console.log(members);
+
   const handleDropdownChange = (event) => {
     setSelectedOption(event.target.value);
     console.log(event.target.value);
@@ -45,7 +47,7 @@ function AssignNewLeader({
                 {members
                   .filter((member) => member.role === GLOBALS.TEAMMEMBER_ROLE.MEMBER)
                   .map((member) => (
-                    <option key={member.id} value={member.id}>
+                    <option key={member.class_member_id} value={member.class_member_id}>
                       {member?.first_name} {member?.last_name}
                     </option>
                   ))}
