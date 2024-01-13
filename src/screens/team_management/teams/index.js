@@ -270,7 +270,7 @@ function Teams() {
     } = useClassMemberTeam(classId, classMember?.id);
 
     useEffect(() => {
-      if (team) {
+      if (team && currentTeamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED) {
         const mappedTeamMembers = team.members.map((member) => {
           const { id: tmId, first_name, last_name, role, status } = member;
 
@@ -335,7 +335,10 @@ function Teams() {
 
     useEffect(() => {
       if (!isRoleRetrieving) {
-        if (currentTeamMember?.status === GLOBALS.MEMBER_STATUS.PENDING) {
+        if (
+          currentTeamMember?.status === GLOBALS.MEMBER_STATUS.PENDING &&
+          currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER
+        ) {
           setShowNotif(true);
         } else {
           setShowNotif(false);
