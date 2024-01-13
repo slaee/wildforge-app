@@ -12,6 +12,7 @@ import Search from '../../../components/search';
 import ApplyTeam from '../../../components/modals/apply_team';
 
 import './index.scss';
+import AssignNewLeader from '../../../components/modals/assign_new_leader';
 
 function Teams() {
   const { user, classId, classMember, classRoom } = useOutletContext();
@@ -21,6 +22,7 @@ function Teams() {
     leaders,
     acceptLeader,
     removeLeader,
+    setLeader,
     joinTeam,
     openTeams,
     closeTeams,
@@ -34,6 +36,10 @@ function Teams() {
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isSelectedTeam, setIsSelectedTeam] = useState(false);
+  const [currentLeaderId, setCurrentLeaderId] = useState(null);
+  const [currentTeamId, setCurrentTeamId] = useState(null);
+  const [currentTeamMembers, setCurrentTeamMembers] = useState([]);
+  const [isLeavingTeam, setIsLeavingTeam] = useState(false);
 
   const teamLeaderHeaders = ['id', 'name', 'status'];
   const teamsHeaders = ['id', 'team', 'leader', 'members', 'actions'];
@@ -52,7 +58,9 @@ function Teams() {
         const leader = team_members.find(
           (team_member) => team_member.role === GLOBALS.TEAMMEMBER_ROLE.LEADER
         );
-        const members = team_members.length;
+        const members = team_members.filter(
+          (member) => member.status === GLOBALS.MEMBER_STATUS.ACCEPTED
+        ).length;
 
         return {
           id,
@@ -270,7 +278,7 @@ function Teams() {
     } = useClassMemberTeam(classId, classMember?.id);
 
     useEffect(() => {
-      if (team && currentTeamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED) {
+      if (team) {
         const mappedTeamMembers = team.members.map((member) => {
           const { id: tmId, first_name, last_name, role, status } = member;
 
@@ -284,7 +292,11 @@ function Teams() {
                   type="button"
                   className="btn btn-sm fw-bold text-danger"
                   onClick={() => {
-                    leaveTeam(team.id, currentTeamMember.id);
+                    // leaveTeam(team.id, currentTeamMember.id);
+                    setCurrentLeaderId(currentTeamMember.id);
+                    setCurrentTeamId(team.id);
+                    setIsLeavingTeam(true);
+                    setCurrentTeamMembers(team.members);
                   }}
                 >
                   LEAVE
@@ -346,7 +358,7 @@ function Teams() {
       }
     }, [currentTeamMember]);
 
-    if (team) {
+    if (team && currentTeamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED) {
       subheaderContent = (
         <div className="subheader-body d-flex pt-2 pb-2">
           <div className="mx-5">
@@ -470,6 +482,16 @@ function Teams() {
     <div>
       {showNotif && renderPendingLeader()}
       {renderContent()}
+      <AssignNewLeader
+        visible={isLeavingTeam}
+        handleModal={() => setIsLeavingTeam(false)}
+        hasDropdown
+        members={currentTeamMembers}
+        teamId={currentTeamId}
+        leaderId={currentLeaderId}
+        leaveTeam={leaveTeam}
+        setLeader={setLeader}
+      />
     </div>
   );
 }
