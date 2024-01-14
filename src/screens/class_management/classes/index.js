@@ -25,7 +25,12 @@ function Classes() {
 
   const { classes } = useClassRooms();
 
-  const buttons = GLOBALS.SIDENAV_DEFAULT;
+  let buttons;
+  if (user?.role === GLOBALS.USER_ROLE.MODERATOR) {
+    buttons = GLOBALS.SIDENAV_MODERATOR;
+  } else {
+    buttons = GLOBALS.SIDENAV_DEFAULT;
+  }
 
   const [isCreateClassModalOpen, setCreateClassModalOpen] = useState(false);
   const [isJoinClassModalOpen, setJoinClassModalOpen] = useState(false);

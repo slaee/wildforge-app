@@ -1,4 +1,6 @@
-const SIDENAV_DEFAULT = [
+const SIDENAV_DEFAULT = [{ id: 1, label: 'Classes', className: 'classes', path: '/classes' }];
+
+const SIDENAV_MODERATOR = [
   { id: 1, label: 'Classes', className: 'classes', path: '/classes' },
   {
     id: 2,
@@ -44,4 +46,4 @@ const SIDENAV_CLASSMEMBER = (classId) => [
   },
 ];
 
-export { SIDENAV_DEFAULT, SIDENAV_TEACHER, SIDENAV_CLASSMEMBER };
+export { SIDENAV_DEFAULT, SIDENAV_TEACHER, SIDENAV_CLASSMEMBER, SIDENAV_MODERATOR };

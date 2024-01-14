@@ -14,6 +14,7 @@ const EvalsService = {
     data: {
       "name": "string",
       "forms_link": "string"
+      "sheet_link": "string"
     }
   */
   create: (data) => instance.post(BASE_URL, data),
@@ -26,6 +27,7 @@ const EvalsService = {
     data: {
       "name": "string",
       "forms_link": "string"
+      "sheet_link": "string"
     }
   */
   update: (id, data) => instance.put(`${BASE_URL}/${id}`, data),
@@ -36,7 +38,7 @@ const EvalsService = {
   /// POST /evals/{id}/assign
   /*
     data: {
-      "classrooms": [int],
+      "class_id": "integer",
     }
   */
   assign: (id, data) => instance.post(`${BASE_URL}/${id}/assign`, data),
