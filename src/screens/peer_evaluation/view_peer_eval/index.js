@@ -16,6 +16,7 @@ import GLOBALS from '../../../app_globals';
 
 import './index.scss';
 import { useClassRooms, usePeerEvals } from '../../../hooks';
+import UpdatePeerEvalForm from '../../../components/modals/update_peereval';
 
 function PeerEval() {
   const { accessToken } = useAuth();
@@ -37,6 +38,8 @@ function PeerEval() {
 
   const [peerEvalsTableData, setPeerEvalsTableData] = useState([]);
   const [classRoomsTabledata, setClassRoomsTableData] = useState([]);
+
+  const [selectedPeerEval, setSelectedPeerEval] = useState({});
 
   let buttons;
   if (user?.role === GLOBALS.USER_ROLE.MODERATOR) {
@@ -64,6 +67,14 @@ function PeerEval() {
     setAssignClassModal(false);
   };
 
+  const handleUpdatePeerEvalModal = () => {
+    setPeerEvalModal(true);
+  };
+
+  const handleCloseUpdatePeerEvalModal = () => {
+    setPeerEvalModal(false);
+  };
+
   const actionButtons = (data) => (
     <div>
       <a
@@ -84,7 +95,8 @@ function PeerEval() {
         type="button"
         className="btn btn-sm fw-bold text-warning"
         onClick={() => {
-          console.log(data);
+          setSelectedPeerEval(data);
+          handleUpdatePeerEvalModal();
         }}
       >
         EDIT
@@ -175,6 +187,14 @@ function PeerEval() {
     <CreatePeerEval visible={peerEvalModal} handleModal={handleCloseCreatePeerEvalModal} />
   );
 
+  const renderUpdatePeerEvalModal = () => (
+    <UpdatePeerEvalForm
+      initValues={selectedPeerEval}
+      visible={peerEvalModal}
+      handleModal={handleCloseUpdatePeerEvalModal}
+    />
+  );
+
   return (
     <div className="d-flex">
       <Sidebar name={`${user?.first_name} ${user?.last_name}`} sidebarItems={buttons} />
@@ -201,6 +221,7 @@ function PeerEval() {
           </div>
 
           {peerEvalModal && renderPeerEvalModal()}
+          {peerEvalModal && renderUpdatePeerEvalModal()}
           {assignClassModal && renderAssignTeamModal()}
         </div>
       </div>
