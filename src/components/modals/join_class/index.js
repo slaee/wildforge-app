@@ -44,14 +44,15 @@ function JoinClass({ visible, handleModal }) {
 
             const joinClassCallbacks = {
               joined: ({ retrievedMessage }) => {
-                alert('Please wait for the teacher to accept your request');
+                alert('Please wait for the Teacher to accept your request');
+                handleModal(); // Close modal
               },
               invalidFields: () => {
-                errors.class_code = 'Invalid class code';
+                errors.class_code = 'Invalid Class Code';
                 setErrors(errors);
               },
               internalError: () => {
-                alert('Internal error');
+                alert('Internal Error: Oops, something went wrong. Please try again.');
               },
             };
 

@@ -4,11 +4,7 @@ import TEAM_STATUS from './teamStatus';
 import PE_TAKER_STATUS from './PETakerStatus';
 import CLASSMEMBER_ROLE from './classMemberRole';
 import TEAMMEMBER_ROLE from './teamMemberRole';
-import {
-  SIDENAV_CLASSMEMBER,
-  SIDENAV_DEFAULT,
-  SIDENAV_TEACHER,
-} from './sideNavItems';
+import { SIDENAV_CLASSMEMBER, SIDENAV_DEFAULT, SIDENAV_TEACHER } from './sideNavItems';
 
 const GLOBALS = {
   USER_ROLE,

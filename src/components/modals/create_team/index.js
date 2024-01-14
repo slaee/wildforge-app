@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dialog } from 'primereact/dialog';
-import { useOutletContext, useParams } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import { Formik } from 'formik';
 import ControlInput from '../../controlinput';
 import { isObjectEmpty } from '../../../utils/object';
 import ControlTextArea from '../../controltextarea';
-import { useClassRoom, useTeams } from '../../../hooks';
+import { useTeams } from '../../../hooks';
 
 import './index.scss';
 
@@ -47,17 +47,17 @@ function CreateTeam({ visible, handleModal }) {
               const createTeamCallbacks = {
                 created: async ({ retrievedTeam }) => {
                   if (retrievedTeam) {
-                    handleModal();
+                    alert('Team Created Successfully.');
+                    window.location.reload();
                   }
                 },
-                invalidFields: () =>
-                  setErrors({
-                    overall: 'Invalid team name.',
-                  }),
-                internalError: () =>
-                  setErrors({
-                    overall: 'Oops, something went wrong.',
-                  }),
+                invalidFields: () => {
+                  errors.team_name = 'Invalid team name.';
+                  setErrors(errors);
+                },
+                internalError: () => {
+                  alert('Internal Error: Oops, something went wrong. Please try again.');
+                },
               };
 
               // Create Team
@@ -88,7 +88,7 @@ function CreateTeam({ visible, handleModal }) {
                   onChange={(e) => setFieldValue('team_description', e.target.value)}
                   error={errors.team_description}
                 />
-                <div className="d-flex flex-row justify-content-center pb-3">
+                <div className="d-flex flex-row justify-content-center pb-3 pt-3">
                   <button
                     className="btn btn-cancel-secondary fw-semibold mx-auto"
                     onClick={handleModal}

@@ -4,10 +4,47 @@ import { ClassRoomsService } from '../services';
 
 const useTeams = (classId) => {
   const navigate = useNavigate();
-  const [teams, setTeams] = useState([]);
-  const [isRetrieving, setIsRetrieving] = useState(false);
-  const [isSettingLeader, setIsSettingLeader] = useState(false);
-  const [isCreatingTeam, setIsCreatingTeam] = useState(false);
+  const [teams, setTeams] = useState(null);
+  const [getTeam, setGetTeam] = useState(null);
+  const [leaders, setLeaders] = useState(null);
+  const [isRetrieving, setIsRetrieving] = useState(true);
+  const [isRetrievingLeaders, setIsRetrievingLeaders] = useState(true);
+  const [isSettingLeader, setIsSettingLeader] = useState(true);
+  const [isCreatingTeam, setIsCreatingTeam] = useState(true);
+  const [isJoiningTeam, setIsJoiningTeam] = useState(true);
+
+  // leaders
+  useEffect(() => {
+    const get = async () => {
+      let responseCode;
+      let retrievedLeaders;
+
+      try {
+        const res = await ClassRoomsService.leaders(classId);
+
+        responseCode = res?.status;
+        retrievedLeaders = res?.data;
+      } catch (error) {
+        responseCode = error?.response?.status;
+      }
+
+      switch (responseCode) {
+        case 200:
+          setLeaders(retrievedLeaders);
+          break;
+        case 404:
+          navigate(`/classes/${classId}/teams`);
+          break;
+        case 500:
+          navigate('/classes');
+          break;
+        default:
+      }
+      setIsRetrievingLeaders(false);
+    };
+
+    get();
+  }, []);
 
   const setLeader = async (memberID) => {
     let responseCode;
@@ -160,6 +197,172 @@ const useTeams = (classId) => {
     }
   };
 
+  const openTeams = async (teamID) => {
+    let responseCode;
+
+    try {
+      const res = await ClassRoomsService.openTeams(classId, teamID);
+      responseCode = res?.status;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+
+    switch (responseCode) {
+      case 200:
+        break;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+  };
+
+  const closeTeams = async (teamID) => {
+    let responseCode;
+
+    try {
+      const res = await ClassRoomsService.closeTeams(classId, teamID);
+      responseCode = res?.status;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+
+    switch (responseCode) {
+      case 204:
+        break;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+  };
+
+  const joinTeam = async (teamID) => {
+    let responseCode;
+    let responseMessage;
+
+    try {
+      const res = await ClassRoomsService.joinTeam(classId, teamID);
+      responseCode = res?.status;
+      responseMessage = res?.data?.detail;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+
+    switch (responseCode) {
+      case 200:
+        break;
+      case 400:
+        alert(responseMessage);
+        break;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+    setIsJoiningTeam(false);
+  };
+
+  const teamMembers = async (teamID) => {
+    let responseCode;
+    let retrievedMembers;
+
+    try {
+      const res = await ClassRoomsService.teamMembers(classId, teamID);
+      responseCode = res?.status;
+      retrievedMembers = res?.data;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+
+    switch (responseCode) {
+      case 200:
+        return retrievedMembers;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+  };
+
+  const acceptTeamMember = async (teamID, memberID) => {
+    let responseCode;
+
+    try {
+      const res = await ClassRoomsService.acceptTeamMember(classId, teamID, memberID);
+      responseCode = res?.status;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+    switch (responseCode) {
+      case 200:
+        break;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+  };
+
+  const removeTeamMember = async (teamID, memberID) => {
+    let responseCode;
+
+    try {
+      const res = await ClassRoomsService.removeTeamMember(classId, teamID, memberID);
+      responseCode = res?.status;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+    switch (responseCode) {
+      case 204:
+        break;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+  };
+
+  const leaveTeam = async (teamID, memberID) => {
+    let responseCode;
+
+    try {
+      const res = await ClassRoomsService.leaveTeam(classId, teamID, memberID);
+      responseCode = res?.status;
+    } catch (error) {
+      responseCode = error?.response?.status;
+    }
+    switch (responseCode) {
+      case 204:
+        break;
+      case 404:
+        navigate(`/classes/${classId}/teams`);
+        break;
+      case 500:
+        navigate('/classes');
+        break;
+      default:
+    }
+  };
+
   useEffect(() => {
     const get = async () => {
       let responseCode;
@@ -194,14 +397,24 @@ const useTeams = (classId) => {
 
   return {
     teams,
+    leaders,
     isRetrieving,
+    isRetrievingLeaders,
     isSettingLeader,
+    isCreatingTeam,
+    openTeams,
+    closeTeams,
+    joinTeam,
+    teamMembers,
     setLeader,
     acceptLeader,
     removeLeader,
     createTeam,
     updateTeam,
     deleteTeam,
+    acceptTeamMember,
+    removeTeamMember,
+    leaveTeam,
   };
 };
 

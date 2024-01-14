@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
-import { useTeams, useTeam, useClassMemberTeam } from '../../../hooks';
+import { useTeams, useClassMemberTeam } from '../../../hooks';
 
 import GLOBALS from '../../../app_globals';
 
@@ -12,82 +12,98 @@ import Search from '../../../components/search';
 import ApplyTeam from '../../../components/modals/apply_team';
 
 import './index.scss';
+import AssignNewLeader from '../../../components/modals/assign_new_leader';
 
 function Teams() {
   const { user, classId, classMember, classRoom } = useOutletContext();
 
-  const { teams, acceptLeader, removeLeader } = useTeams(classId);
+  const {
+    teams,
+    leaders,
+    acceptLeader,
+    removeLeader,
+    setLeader,
+    joinTeam,
+    openTeams,
+    closeTeams,
+    leaveTeam,
+    acceptTeamMember,
+    removeTeamMember,
+  } = useTeams(classId);
 
   const [showNotif, setShowNotif] = useState(false);
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
-  const [teamsTableData, setTeamsTableData] = useState([]);
-  const [selectedValue, setSelectedValue] = useState('');
-  const [selectedTeam, setSelectedTeam] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [isSelectedTeam, setIsSelectedTeam] = useState(false);
 
-  const teamLeaderHeaders = ['id', 'name', 'team', 'status'];
+  const [selectedTeamStatus, setSelectedTeamStatus] = useState(0);
+
+  const [currentLeaderId, setCurrentLeaderId] = useState(null);
+  const [currentTeamId, setCurrentTeamId] = useState(null);
+  const [currentTeamMembers, setCurrentTeamMembers] = useState([]);
+  const [isLeavingTeam, setIsLeavingTeam] = useState(false);
+
+  const teamLeaderHeaders = ['id', 'name', 'status'];
   const teamsHeaders = ['id', 'team', 'leader', 'members', 'actions'];
   const membersHeaders = ['id', 'name', 'role', 'actions'];
 
-  const actionButtons = () => (
-    <>
-      <button
-        type="button"
-        className="btn btn-sm fw-bold text-success"
-        onClick={() => {
-          console.log('View Team');
-          setSelectedTeam(true);
-        }}
-      >
-        VIEW
-      </button>
-      {classMember?.role === GLOBALS.CLASSMEMBER_ROLE.TEACHER && (
-        <>
-          <button
-            type="button"
-            className="btn btn-sm fw-bold text-primary"
-            onClick={() => console.log('Edit Team')}
-          >
-            EDIT
-          </button>
-          <button
-            type="button"
-            className="btn btn-sm fw-bold text-danger"
-            onClick={() => console.log('Delete Team')}
-          >
-            DELETE
-          </button>
-        </>
-      )}
-    </>
-  );
+  const [teamLeaderTableData, setTeamLeaderTableData] = useState([]);
+  const [teamsTableData, setTeamsTableData] = useState([]);
+  const [membersTableData, setMembersTableData] = useState([]);
 
+  // move to teacher and student with no team content
   useEffect(() => {
     if (teams) {
-      const teamsData = teams.map((t) => {
-        const { id, name, team_members } = t;
-
-        let tb_data = {};
+      const teamsData = teams.map((team) => {
+        const { id, name, team_members } = team;
 
         const leader = team_members.find(
           (team_member) => team_member.role === GLOBALS.TEAMMEMBER_ROLE.LEADER
         );
-        const members = team_members.length;
+        const members = team_members.filter(
+          (member) => member.status === GLOBALS.MEMBER_STATUS.ACCEPTED
+        ).length;
 
-        tb_data = {
+        return {
           id,
           team: name,
           leader: `${leader?.first_name} ${leader?.last_name}`,
           members,
-          actions: actionButtons(),
+          actions: (
+            <button
+              type="button"
+              className="btn btn-sm fw-bold text-success"
+              onClick={() => {
+                setIsSelectedTeam(true);
+                setSelectedTeam(team);
+              }}
+            >
+              VIEW
+            </button>
+          ),
         };
-
-        return tb_data;
       });
 
       setTeamsTableData(teamsData);
     }
   }, [teams]);
+
+  useEffect(() => {
+    if (leaders) {
+      const leadersData = leaders.map((l) => {
+        const { class_member_id, first_name, last_name, teamember_status } = l;
+
+        return {
+          id: class_member_id,
+          name: `${first_name} ${last_name}`,
+          status: teamember_status === GLOBALS.MEMBER_STATUS.ACCEPTED ? 'ACCEPTED' : 'PENDING',
+        };
+      });
+
+      setTeamLeaderTableData(leadersData);
+    }
+  }, [leaders]);
 
   const openAddLeadersModal = () => {
     setAddLeadersModalOpen(true);
@@ -99,18 +115,23 @@ function Teams() {
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
-    console.log('copied');
   };
 
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
+  const handleOnChangeTeamStatus = (event, teamId) => {
+    const selectedStatus = parseInt(event.target.value);
+    setSelectedTeamStatus(selectedStatus);
+    if (selectedStatus === GLOBALS.TEAM_STATUS.OPEN) {
+      openTeams(teamId);
+    } else {
+      closeTeams(teamId);
+    }
   };
 
   const getColorClass = () => {
-    if (selectedValue === '1') {
+    if (selectedTeamStatus === GLOBALS.TEAM_STATUS.OPEN) {
       return 'text-success';
     }
-    if (selectedValue === '2') {
+    if (selectedTeamStatus === GLOBALS.TEAM_STATUS.CLOSE) {
       return 'text-danger';
     }
     return 'text-default';
@@ -137,7 +158,7 @@ function Teams() {
       </div>
       <div className="container">
         <div className="fw-bold fs-4 px-5 py-3">Members</div>
-        {renderTable(membersHeaders, [], "There's no members yet.")}
+        {renderTable(membersHeaders, membersTableData, "There's no members yet.")}
       </div>
     </div>
   );
@@ -175,18 +196,18 @@ function Teams() {
               Add Leaders
             </button>
           </div>
-          {renderTable(teamLeaderHeaders, [], 'No Leaders Identified Yet.')}
+          {renderTable(teamLeaderHeaders, teamLeaderTableData, 'No Leaders Identified Yet.')}
         </>
       )}
       {activeTab === 'teams' && (
         <>{renderTable(teamsHeaders, teamsTableData, 'No Teams Formed Yet.')}</>
       )}
-      {selectedTeam && (
+      {isSelectedTeam && (
         <div className="modal-apply-team p-4">
           <button
             aria-label="Close Modal"
             className="btn d-flex btn-close ms-auto"
-            onClick={() => setSelectedTeam(false)}
+            onClick={() => setIsSelectedTeam(false)}
           />
           {renderTeamData()}
         </div>
@@ -215,8 +236,13 @@ function Teams() {
   const renderStudentNoTeam = () => (
     <div className="d-flex flex-column pt-3 pb-3 px-5">
       {renderTable(teamsHeaders, teamsTableData, 'No Teams Formed Yet.')}
-      {selectedTeam && (
-        <ApplyTeam visible={selectedTeam} handleModal={() => setSelectedTeam(false)} />
+      {isSelectedTeam && (
+        <ApplyTeam
+          visible={isSelectedTeam}
+          handleModal={() => setIsSelectedTeam(false)}
+          teamData={selectedTeam}
+          applyToTeam={joinTeam}
+        />
       )}
     </div>
   );
@@ -259,8 +285,80 @@ function Teams() {
     } = useClassMemberTeam(classId, classMember?.id);
 
     useEffect(() => {
+      if (team) {
+        setSelectedTeamStatus(team.status);
+        const mappedTeamMembers = team.members.map((member) => {
+          const { id: tmId, first_name, last_name, role, status } = member;
+
+          return {
+            id: tmId,
+            name: `${first_name} ${last_name}`,
+            role: role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? 'Leader' : 'Member',
+            actions:
+              currentTeamMember?.id === tmId ? (
+                <button
+                  type="button"
+                  className="btn btn-sm fw-bold text-danger"
+                  onClick={() => {
+                    // leaveTeam(team.id, currentTeamMember.id);
+                    setCurrentLeaderId(currentTeamMember.id);
+                    setCurrentTeamId(team.id);
+                    setIsLeavingTeam(true);
+                    setCurrentTeamMembers(team.members);
+                  }}
+                >
+                  LEAVE
+                </button>
+              ) : currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER &&
+                status === GLOBALS.MEMBER_STATUS.PENDING ? (
+                <>
+                  <button
+                    type="button"
+                    className="btn btn-sm fw-bold text-success"
+                    onClick={() => {
+                      acceptTeamMember(team.id, tmId);
+                    }}
+                  >
+                    ACCEPT
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-sm fw-bold text-danger"
+                    onClick={() => {
+                      removeTeamMember(team.id, tmId);
+                    }}
+                  >
+                    REJECT
+                  </button>
+                </>
+              ) : currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? (
+                <button
+                  type="button"
+                  className="btn btn-sm fw-bold text-danger"
+                  onClick={() => {
+                    removeTeamMember(team.id, tmId);
+                  }}
+                >
+                  KICK
+                </button>
+              ) : (
+                <button type="button" className="btn btn-sm fw-bold" disabled>
+                  No Action
+                </button>
+              ),
+          };
+        });
+
+        setMembersTableData(mappedTeamMembers);
+      }
+    }, [team]);
+
+    useEffect(() => {
       if (!isRoleRetrieving) {
-        if (currentTeamMember?.status === GLOBALS.MEMBER_STATUS.PENDING) {
+        if (
+          currentTeamMember?.status === GLOBALS.MEMBER_STATUS.PENDING &&
+          currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER
+        ) {
           setShowNotif(true);
         } else {
           setShowNotif(false);
@@ -268,7 +366,10 @@ function Teams() {
       }
     }, [currentTeamMember]);
 
-    if (team) {
+    if (team && currentTeamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED) {
+      const isOpen = team.status === GLOBALS.TEAM_STATUS.OPEN;
+      const isClose = team.status === GLOBALS.TEAM_STATUS.CLOSE;
+
       subheaderContent = (
         <div className="subheader-body d-flex pt-2 pb-2">
           <div className="mx-5">
@@ -276,7 +377,9 @@ function Teams() {
               {classRoom?.name} {classRoom?.sections}
             </div>
             <div className="d-flex py-2">
-              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+              <div className="d-flex align-items-center fw-semibold fs-6">
+                {classRoom?.schedule}
+              </div>
               <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
                 {classRoom?.class_code}
               </div>
@@ -285,26 +388,31 @@ function Teams() {
               </button>
             </div>
           </div>
-          <div className="d-flex align-items-center me-5 ms-auto">
-            <div className="d-flex">
-              <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
-                Hiring:
+
+          {currentTeamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED &&
+            currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER && (
+              <div className="d-flex align-items-center me-5 ms-auto">
+                <div className="d-flex">
+                  <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
+                    Hiring:
+                  </div>
+                  <select
+                    className={`form-select form-select-sm ${getColorClass()} fw-bold`}
+                    onChange={(e) => {
+                      handleOnChangeTeamStatus(e, team.id);
+                    }}
+                    value={selectedTeamStatus}
+                  >
+                    <option className="text-success fw-semibold" value="1">
+                      OPEN
+                    </option>
+                    <option className="text-danger fw-semibold" value="0">
+                      CLOSE
+                    </option>
+                  </select>
+                </div>
               </div>
-              <select
-                className={`form-select form-select-sm ${getColorClass()} fw-bold`}
-                onChange={handleChange}
-                value={selectedValue}
-              >
-                <option className="text-success fw-semibold" value="1">
-                  OPEN
-                </option>
-                <option className="text-danger fw-semibold" value="2">
-                  CLOSE
-                </option>
-              </select>
-            </div>
-            <div className="fw-bold ms-4 red-text">Leave Team</div>
-          </div>
+            )}
         </div>
       );
 
@@ -317,7 +425,9 @@ function Teams() {
               {classRoom?.name} {classRoom?.sections}
             </div>
             <div className="d-flex py-2">
-              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
+              <div className="d-flex align-items-center fw-semibold fs-6">
+                {classRoom?.schedule}
+              </div>
               <div className="ms-4 me-2 fw-semibold fs-6">{classRoom?.class_code}</div>
               <button type="button" className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
                 Copy
@@ -388,6 +498,16 @@ function Teams() {
     <div>
       {showNotif && renderPendingLeader()}
       {renderContent()}
+      <AssignNewLeader
+        visible={isLeavingTeam}
+        handleModal={() => setIsLeavingTeam(false)}
+        hasDropdown
+        members={currentTeamMembers}
+        teamId={currentTeamId}
+        leaderId={currentLeaderId}
+        leaveTeam={leaveTeam}
+        setLeader={setLeader}
+      />
     </div>
   );
 }

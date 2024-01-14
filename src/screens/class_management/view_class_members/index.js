@@ -67,7 +67,7 @@ function ViewClassMembers() {
             id,
             name: `${first_name} ${last_name}`,
             team: team || 'N/A',
-            status: status === GLOBALS.MEMBER_STATUS.PENDING ? 'pending' : 'accepted',
+            status: status === GLOBALS.MEMBER_STATUS.PENDING ? 'PENDING' : 'ACCEPTED',
             role: 'Student',
           };
 
@@ -111,7 +111,6 @@ function ViewClassMembers() {
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
-    console.log('copied');
   };
 
   const renderSubheader = () => (
