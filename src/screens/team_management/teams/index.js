@@ -305,11 +305,15 @@ function Teams() {
                   type="button"
                   className="btn btn-sm fw-bold text-danger"
                   onClick={() => {
-                    // leaveTeam(team.id, currentTeamMember.id);
-                    setCurrentLeaderId(currentTeamMember.id);
-                    setCurrentTeamId(team.id);
-                    setIsLeavingTeam(true);
-                    setCurrentTeamMembers(team.members);
+                    if (currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER) {
+                      setCurrentLeaderId(currentTeamMember.id);
+                      setCurrentTeamId(team.id);
+                      setIsLeavingTeam(true);
+                      setCurrentTeamMembers(team.members);
+                    } else {
+                      leaveTeam(team.id, currentTeamMember.id);
+                      window.location.reload();
+                    }
                   }}
                 >
                   LEAVE

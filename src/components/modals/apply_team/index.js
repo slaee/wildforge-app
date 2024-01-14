@@ -51,7 +51,7 @@ function ApplyTeam({ visible, handleModal, teamData, applyToTeam }) {
             handleModal();
           }}
         >
-          {isFull ? 'Team is full' : 'Apply'}
+          {isFull ? 'Hiring is CLOSED' : 'Apply'}
         </button>
       </div>
     </Dialog>
