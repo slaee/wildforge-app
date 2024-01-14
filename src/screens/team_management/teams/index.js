@@ -36,6 +36,9 @@ function Teams() {
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isSelectedTeam, setIsSelectedTeam] = useState(false);
+
+  const [selectedTeamStatus, setSelectedTeamStatus] = useState(0);
+
   const [currentLeaderId, setCurrentLeaderId] = useState(null);
   const [currentTeamId, setCurrentTeamId] = useState(null);
   const [currentTeamMembers, setCurrentTeamMembers] = useState([]);
@@ -72,7 +75,6 @@ function Teams() {
               type="button"
               className="btn btn-sm fw-bold text-success"
               onClick={() => {
-                console.log('View Team');
                 setIsSelectedTeam(true);
                 setSelectedTeam(team);
               }}
@@ -113,18 +115,23 @@ function Teams() {
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
-    console.log('copied');
   };
 
-  const handleChange = (event, teamId) => {
-    setSelectedTeam(event.target.value);
+  const handleOnChangeTeamStatus = (event, teamId) => {
+    const selectedStatus = parseInt(event.target.value);
+    setSelectedTeamStatus(selectedStatus);
+    if (selectedStatus === GLOBALS.TEAM_STATUS.OPEN) {
+      openTeams(teamId);
+    } else {
+      closeTeams(teamId);
+    }
   };
 
   const getColorClass = () => {
-    if (selectedTeam === '1') {
+    if (selectedTeamStatus === GLOBALS.TEAM_STATUS.OPEN) {
       return 'text-success';
     }
-    if (selectedTeam === '2') {
+    if (selectedTeamStatus === GLOBALS.TEAM_STATUS.CLOSE) {
       return 'text-danger';
     }
     return 'text-default';
@@ -279,6 +286,7 @@ function Teams() {
 
     useEffect(() => {
       if (team) {
+        setSelectedTeamStatus(team.status);
         const mappedTeamMembers = team.members.map((member) => {
           const { id: tmId, first_name, last_name, role, status } = member;
 
@@ -359,6 +367,9 @@ function Teams() {
     }, [currentTeamMember]);
 
     if (team && currentTeamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED) {
+      const isOpen = team.status === GLOBALS.TEAM_STATUS.OPEN;
+      const isClose = team.status === GLOBALS.TEAM_STATUS.CLOSE;
+
       subheaderContent = (
         <div className="subheader-body d-flex pt-2 pb-2">
           <div className="mx-5">
@@ -377,26 +388,31 @@ function Teams() {
               </button>
             </div>
           </div>
-          <div className="d-flex align-items-center me-5 ms-auto">
-            <div className="d-flex">
-              <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
-                Hiring:
+
+          {currentTeamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED &&
+            currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER && (
+              <div className="d-flex align-items-center me-5 ms-auto">
+                <div className="d-flex">
+                  <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
+                    Hiring:
+                  </div>
+                  <select
+                    className={`form-select form-select-sm ${getColorClass()} fw-bold`}
+                    onChange={(e) => {
+                      handleOnChangeTeamStatus(e, team.id);
+                    }}
+                    value={selectedTeamStatus}
+                  >
+                    <option className="text-success fw-semibold" value="1">
+                      OPEN
+                    </option>
+                    <option className="text-danger fw-semibold" value="0">
+                      CLOSE
+                    </option>
+                  </select>
+                </div>
               </div>
-              <select
-                className={`form-select form-select-sm ${getColorClass()} fw-bold`}
-                onChange={handleChange}
-                value={selectedTeam}
-              >
-                <option className="text-success fw-semibold" value="1">
-                  OPEN
-                </option>
-                <option className="text-danger fw-semibold" value="2">
-                  CLOSE
-                </option>
-              </select>
-            </div>
-            <div className="fw-bold ms-4 red-text">Leave Team</div>
-          </div>
+            )}
         </div>
       );
 

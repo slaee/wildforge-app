@@ -18,11 +18,8 @@ function AssignNewLeader({
 }) {
   const [selectedOption, setSelectedOption] = useState('');
 
-  console.log(members);
-
   const handleDropdownChange = (event) => {
     setSelectedOption(event.target.value);
-    console.log(event.target.value);
   };
 
   return (
