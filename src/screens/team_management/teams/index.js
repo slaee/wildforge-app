@@ -209,12 +209,13 @@ function Teams() {
       )}
       {isSelectedTeam && (
         <div className="modal-apply-team p-4">
-          <button
-            aria-label="Close Modal"
-            className="btn d-flex btn-close ms-auto"
-            onClick={() => setIsSelectedTeam(false)}
+          <ApplyTeam
+            visible={isSelectedTeam}
+            handleModal={() => setIsSelectedTeam(false)}
+            teamData={selectedTeam}
+            applyToTeam={joinTeam}
+            isViewOnly
           />
-          {renderTeamData()}
         </div>
       )}
     </div>

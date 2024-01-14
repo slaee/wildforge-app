@@ -27,22 +27,22 @@ function AddLeaders({ visible, handleModal }) {
       const nonLeadersData = nonLeaders.map((n) => {
         const { class_member_id, first_name, last_name, teamember_status } = n;
 
-        const actions =
-          teamember_status === GLOBALS.MEMBER_STATUS.PENDING ? (
-            <button type="button" className="btn btn-yellow-primary fw-semibold" disabled>
-              Pending
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="btn btn-yellow-primary fw-semibold"
-              onClick={() => {
+        const isPending = teamember_status === GLOBALS.MEMBER_STATUS.PENDING;
+
+        const actions = (
+          <button
+            type="button"
+            className="btn btn-yellow-primary fw-semibold"
+            disabled={isPending || isSettingLeader} // Disable the button if it's pending or setting leader
+            onClick={() => {
+              if (!isPending && !isSettingLeader) {
                 setLeader(class_member_id);
-              }}
-            >
-              Select as Leader
-            </button>
-          );
+              }
+            }}
+          >
+            {isPending ? 'Pending' : isSettingLeader ? 'Pending...' : 'Select as Leader'}
+          </button>
+        );
 
         const tb_data = {
           id: class_member_id,
@@ -52,6 +52,7 @@ function AddLeaders({ visible, handleModal }) {
 
         return tb_data;
       });
+
       setNonLeadersTable(nonLeadersData);
     }
   }, [nonLeaders, isSettingLeader]);

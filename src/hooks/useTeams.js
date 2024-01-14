@@ -5,11 +5,10 @@ import { ClassRoomsService } from '../services';
 const useTeams = (classId) => {
   const navigate = useNavigate();
   const [teams, setTeams] = useState(null);
-  const [getTeam, setGetTeam] = useState(null);
   const [leaders, setLeaders] = useState(null);
   const [isRetrieving, setIsRetrieving] = useState(true);
   const [isRetrievingLeaders, setIsRetrievingLeaders] = useState(true);
-  const [isSettingLeader, setIsSettingLeader] = useState(true);
+  const [isSettingLeader, setIsSettingLeader] = useState(false);
   const [isCreatingTeam, setIsCreatingTeam] = useState(true);
   const [isJoiningTeam, setIsJoiningTeam] = useState(true);
 
