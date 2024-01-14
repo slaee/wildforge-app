@@ -26,6 +26,8 @@ function AddLeaders({ visible, handleModal }) {
       const nonLeadersData = nonLeaders.map((n) => {
         const { class_member_id, first_name, last_name, teamember_status } = n;
 
+        let tb_data = {};
+
         const actions =
           teamember_status === GLOBALS.MEMBER_STATUS.PENDING ? (
             <button type="button" className="btn btn-yellow-primary fw-semibold" disabled>
@@ -43,7 +45,7 @@ function AddLeaders({ visible, handleModal }) {
             </button>
           );
 
-        const tb_data = {
+        tb_data = {
           id: class_member_id,
           name: `${first_name} ${last_name}`,
           actions,
@@ -51,8 +53,6 @@ function AddLeaders({ visible, handleModal }) {
 
         return tb_data;
       });
-
-      console.log(nonLeadersData);
 
       setNonLeadersTable(nonLeadersData);
     }

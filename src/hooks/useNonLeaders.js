@@ -53,15 +53,15 @@ const useNonLeaders = (classId) => {
 
     switch (responseCode) {
       case 200:
-        setNonLeaders((prevNonLeaders) => {
+        setNonLeaders((prevNonLeaders) =>
           prevNonLeaders.map((nonLeader) => {
             if (nonLeader.class_member_id === memberID) {
               nonLeader.teamember_status = GLOBALS.MEMBER_STATUS.PENDING;
               return nonLeader;
             }
             return nonLeader;
-          });
-        });
+          })
+        );
         break;
       case 404:
         navigate(`/classes/${classId}/teams`);
