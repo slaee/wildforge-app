@@ -8,7 +8,7 @@ const useTeams = (classId) => {
   const [leaders, setLeaders] = useState(null);
   const [isRetrieving, setIsRetrieving] = useState(true);
   const [isRetrievingLeaders, setIsRetrievingLeaders] = useState(true);
-  const [isSettingLeader, setIsSettingLeader] = useState(false);
+  const [isSettingLeader, setIsSettingLeader] = useState(true);
   const [isCreatingTeam, setIsCreatingTeam] = useState(true);
   const [isJoiningTeam, setIsJoiningTeam] = useState(true);
 
@@ -57,7 +57,7 @@ const useTeams = (classId) => {
 
     switch (responseCode) {
       case 200:
-        setIsSettingLeader(true);
+        setIsSettingLeader(false);
         break;
       case 404:
         navigate(`/classes/${classId}/teams`);

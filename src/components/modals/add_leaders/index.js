@@ -15,7 +15,7 @@ import GLOBALS from '../../../app_globals';
 
 function AddLeaders({ visible, handleModal }) {
   const { id: classId } = useParams();
-  const { setLeader, isSettingLeader } = useTeams(classId);
+  const { setLeader } = useTeams(classId);
   const { nonLeaders, isRetrieving } = useNonLeaders(classId);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,22 +27,22 @@ function AddLeaders({ visible, handleModal }) {
       const nonLeadersData = nonLeaders.map((n) => {
         const { class_member_id, first_name, last_name, teamember_status } = n;
 
-        const isPending = teamember_status === GLOBALS.MEMBER_STATUS.PENDING;
-
-        const actions = (
-          <button
-            type="button"
-            className="btn btn-yellow-primary fw-semibold"
-            disabled={isPending || isSettingLeader} // Disable the button if it's pending or setting leader
-            onClick={() => {
-              if (!isPending && !isSettingLeader) {
+        const actions =
+          teamember_status === GLOBALS.MEMBER_STATUS.PENDING ? (
+            <button type="button" className="btn btn-yellow-primary fw-semibold" disabled>
+              Pending
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-yellow-primary fw-semibold"
+              onClick={() => {
                 setLeader(class_member_id);
-              }
-            }}
-          >
-            {isPending ? 'Pending' : isSettingLeader ? 'Pending...' : 'Select as Leader'}
-          </button>
-        );
+              }}
+            >
+              Select as Leader
+            </button>
+          );
 
         const tb_data = {
           id: class_member_id,
@@ -55,7 +55,7 @@ function AddLeaders({ visible, handleModal }) {
 
       setNonLeadersTable(nonLeadersData);
     }
-  }, [nonLeaders, isSettingLeader]);
+  }, [nonLeaders]);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
