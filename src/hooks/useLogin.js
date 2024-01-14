@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { UsersService } from '../services';
 
 const useLogin = () => {
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(true);
 
   const loginUser = async ({ email, password, callbacks }) => {
     setIsLoggingIn(true);
@@ -12,23 +12,23 @@ const useLogin = () => {
     let retrievedUser;
 
     try {
-      const { status, data } = await UsersService.login({
+      const res = await UsersService.login({
         email,
         password,
       });
 
-      responseCode = status;
-      retrievedUser = data;
+      responseCode = res?.status;
+      retrievedUser = res?.data;
     } catch (error) {
-      responseCode = error.response.status;
+      responseCode = error?.response?.status;
     }
 
     switch (responseCode) {
       case 200:
         await callbacks.loggedIn({ retrievedUser });
         break;
-      case 400:
       case 401:
+      case 400:
         await callbacks.invalidFields();
         break;
       case 500:

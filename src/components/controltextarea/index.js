@@ -3,16 +3,7 @@ import PropTypes from 'prop-types';
 
 import './index.scss';
 
-function ControlTextArea({
-  name,
-  label,
-  type,
-  value,
-  onChange,
-  error,
-  disabled,
-  ...rest
-}) {
+function ControlTextArea({ name, label, type, value, onChange, error, disabled, ...rest }) {
   return (
     <div className="d-flex flex-column">
       <label className="fs-5 fw-bold pt-2 pb-2" htmlFor={name}>
@@ -20,7 +11,7 @@ function ControlTextArea({
       </label>
       <InputTextarea
         id={name}
-        rows={10}
+        style={{ height: '15rem' }}
         cols={30}
         value={value}
         onChange={onChange}

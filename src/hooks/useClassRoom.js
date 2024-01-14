@@ -14,12 +14,12 @@ const useClassRoom = (classId) => {
       let retrievedClassRoom;
 
       try {
-        const { status, data } = await ClassRoomsService.get(classId);
+        const res = await ClassRoomsService.get(classId);
 
-        responseCode = status;
-        retrievedClassRoom = data;
+        responseCode = res?.status;
+        retrievedClassRoom = res?.data;
       } catch (error) {
-        responseCode = error.response.status;
+        responseCode = error?.response?.status;
       }
 
       switch (responseCode) {
@@ -39,7 +39,7 @@ const useClassRoom = (classId) => {
     };
 
     get();
-  }, []);
+  }, [isRetrieving]);
 
   return { isRetrieving, classRoom };
 };

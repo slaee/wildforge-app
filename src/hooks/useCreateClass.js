@@ -3,32 +3,26 @@ import { useState } from 'react';
 import { ClassRoomsService } from '../services';
 
 const useCreateClass = () => {
-  const [isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(true);
 
-  const createClass = async ({
-    course_name,
-    sections,
-    schedule,
-    max_teams_members,
-    callbacks,
-  }) => {
+  const createClass = async ({ course_name, sections, schedule, max_teams_members, callbacks }) => {
     setIsCreating(true);
 
     let responseCode;
     let retrievedClass;
 
     try {
-      const { status, data } = await ClassRoomsService.create({
+      const res = await ClassRoomsService.create({
         course_name,
         sections,
         schedule,
         max_teams_members,
       });
 
-      responseCode = status;
-      retrievedClass = data;
+      responseCode = res?.status;
+      retrievedClass = res?.data;
     } catch (error) {
-      responseCode = error.response.status;
+      responseCode = error?.response?.status;
     }
 
     switch (responseCode) {

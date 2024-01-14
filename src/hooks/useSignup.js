@@ -5,21 +5,14 @@ import { UsersService } from '../services';
 const useSignup = () => {
   const [isSigningUp, setIsSigningUp] = useState(false);
 
-  const signupUser = async ({
-    first_name,
-    last_name,
-    email,
-    password,
-    role,
-    callbacks,
-  }) => {
+  const signupUser = async ({ first_name, last_name, email, password, role, callbacks }) => {
     setIsSigningUp(true);
 
     let responseCode;
     let retrievedUser;
 
     try {
-      const { status, data } = await UsersService.signup({
+      const res = await UsersService.signup({
         first_name,
         last_name,
         email,
@@ -27,10 +20,10 @@ const useSignup = () => {
         role,
       });
 
-      responseCode = status;
-      retrievedUser = data;
+      responseCode = res?.status;
+      retrievedUser = res?.data;
     } catch (error) {
-      responseCode = error.response.status;
+      responseCode = error?.response?.status;
     }
 
     switch (responseCode) {

@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
-import Cookies from 'universal-cookie';
+
 import { useAuth } from '../../contexts/AuthContext';
-import { isValidEmail } from '../../utils/strings';
+import { useAcquireTokens, useSignup } from '../../hooks';
+
 import ControlInput from '../../components/controlinput';
+
 import GLOBALS from '../../app_globals';
+import { isObjectEmpty } from '../../utils/object';
+import { isValidEmail } from '../../utils/strings';
 
 import './index.scss';
-import { isObjectEmpty } from '../../utils/object';
-import useSignup from '../../hooks/useSignup';
-import { useAcquireTokens } from '../../hooks';
 
-const validate = (values) => {
+const validateName = (values) => {
   const errors = {};
 
   if (!values.first_name) {
@@ -26,6 +27,12 @@ const validate = (values) => {
   } else if (values.last_name.length > 50) {
     errors.last_name = 'The maximum length of this field is 50 characters.';
   }
+
+  return errors;
+};
+
+const validate = (values) => {
+  const errors = {};
 
   if (!values.email) {
     errors.email = 'This email is required.';
@@ -57,9 +64,8 @@ function Signup() {
   const [step, setStep] = useState(1);
   const [firstNameError, setFirstNameError] = useState('');
   const [lastNameError, setLastNameError] = useState('');
-  const cookies = new Cookies();
 
-  const { loginUpdate } = useAuth();
+  const { setAccessToken, setRefreshToken } = useAuth();
   const { signupUser } = useSignup();
   const { acquireTokens } = useAcquireTokens();
 
@@ -94,9 +100,9 @@ function Signup() {
           type="button"
           className="btn btn-wild-primary btn-large fw-bold fs-5"
           onClick={(e) => {
-            const name_errors = validate(values);
+            e.preventDefault();
+            const name_errors = validateName(values);
             if (name_errors.first_name || name_errors.last_name) {
-              e.preventDefault();
               setFirstNameError(name_errors.first_name);
               setLastNameError(name_errors.last_name);
             } else {
@@ -112,9 +118,9 @@ function Signup() {
           type="button"
           className="btn btn-wild-secondary btn-large fw-bold fs-5"
           onClick={(e) => {
-            const name_errors = validate(values);
+            e.preventDefault();
+            const name_errors = validateName(values);
             if (name_errors.first_name || name_errors.last_name) {
-              e.preventDefault();
               setFirstNameError(name_errors.first_name);
               setLastNameError(name_errors.last_name);
             } else {
@@ -177,19 +183,12 @@ function Signup() {
       )}
 
       <div className="d-grid gap-4 pt-3 pb-2">
-        <button
-          type="submit"
-          className="btn btn-wild-primary btn-large fw-bold fs-5"
-        >
+        <button type="submit" className="btn btn-wild-primary btn-large fw-bold fs-5">
           Sign Up
         </button>
       </div>
       <div className="d-flex justify-content-start pt-3 pb-3">
-        <span
-          className="fs-5 redirect-text"
-          aria-hidden="true"
-          onClick={prevStep}
-        >
+        <span className="fs-5 redirect-text" aria-hidden="true" onClick={prevStep}>
           Go Back
         </span>
       </div>
@@ -224,12 +223,8 @@ function Signup() {
 
               const acquireTokensCallbacks = {
                 acquired: async ({ accessToken, refreshToken }) => {
-                  cookies.set('accessToken', accessToken, {
-                    path: '/',
-                  });
-                  cookies.set('refreshToken', refreshToken, {
-                    path: '/',
-                  });
+                  setAccessToken(accessToken);
+                  setRefreshToken(refreshToken);
                 },
                 invalidFields: () =>
                   setErrors({
@@ -248,8 +243,6 @@ function Signup() {
                     password: values.password,
                     callbacks: acquireTokensCallbacks,
                   });
-
-                  loginUpdate(retrievedUser);
                 },
                 emailExists: () =>
                   setErrors({

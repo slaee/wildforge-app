@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useClassRoom, useClassRooms } from '../../../hooks';
+import { useOutletContext } from 'react-router-dom';
 
-import Navbar from '../../../components/navbar';
-import Header from '../../../components/header';
+import { useTeams, useClassMemberTeam } from '../../../hooks';
+
+import GLOBALS from '../../../app_globals';
+
 import Table from '../../../components/table';
 import AddLeaders from '../../../components/modals/add_leaders';
 import CreateTeam from '../../../components/modals/create_team';
@@ -12,130 +12,98 @@ import Search from '../../../components/search';
 import ApplyTeam from '../../../components/modals/apply_team';
 
 import './index.scss';
+import AssignNewLeader from '../../../components/modals/assign_new_leader';
 
 function Teams() {
-  const { user } = useAuth();
-  const { id: classId } = useParams();
+  const { user, classId, classMember, classRoom } = useOutletContext();
 
-  const navigate = useNavigate();
+  const {
+    teams,
+    leaders,
+    acceptLeader,
+    removeLeader,
+    setLeader,
+    joinTeam,
+    openTeams,
+    closeTeams,
+    leaveTeam,
+    acceptTeamMember,
+    removeTeamMember,
+  } = useTeams(classId);
 
-  const hasTeam = false;
-
-  // /user.role = 'tl';
-
-  const { isLoading: isClassesLoading, classes } = useClassRooms();
-
-  useEffect(() => {
-    if (!isClassesLoading) {
-      const foundClass = classes.find((c) => c.id === parseInt(classId, 10));
-
-      if (!foundClass) {
-        navigate('/classes');
-      }
-    }
-  }, [isClassesLoading]);
-
-  const { isLoading: isClassLoading, classRoom } = useClassRoom(classId);
-
+  const [showNotif, setShowNotif] = useState(false);
   const [isAddLeadersModalOpen, setAddLeadersModalOpen] = useState(false);
   const [isCreateTeamModalOpen, setCreateTeamModalOpen] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [isSelectedTeam, setIsSelectedTeam] = useState(false);
 
-  const buttons = [
-    {
-      id: 1,
-      label: 'Dashboard',
-      className: 'classes',
-      path: `/classes/${classId}`,
-    },
-    {
-      id: 2,
-      label: 'Members',
-      className: 'members',
-      path: `/classes/${classId}/members`,
-    },
-    {
-      id: 3,
-      label: 'Teams',
-      className: 'teams',
-      path: `/classes/${classId}/teams`,
-    },
-  ];
+  const [selectedTeamStatus, setSelectedTeamStatus] = useState(0);
 
-  if (!user.is_staff) {
-    buttons.splice(0, 1);
-  }
+  const [currentLeaderId, setCurrentLeaderId] = useState(null);
+  const [currentTeamId, setCurrentTeamId] = useState(null);
+  const [currentTeamMembers, setCurrentTeamMembers] = useState([]);
+  const [isLeavingTeam, setIsLeavingTeam] = useState(false);
 
-  const teamLeaderHeaders = ['id', 'name', 'team', 'status'];
+  const teamLeaderHeaders = ['id', 'name', 'status'];
   const teamsHeaders = ['id', 'team', 'leader', 'members', 'actions'];
   const membersHeaders = ['id', 'name', 'role', 'actions'];
-  const [selectedValue, setSelectedValue] = useState('');
-  const [selectedTeam, setSelectedTeam] = useState(false);
 
-  const actionButtons = () => (
-    <>
-      <button
-        type="button"
-        className="btn btn-sm fw-bold text-success"
-        onClick={() => {
-          console.log('View Team');
-          setSelectedTeam(true);
-        }}
-      >
-        VIEW
-      </button>
-      {user.is_staff && (
-        <>
-          <button
-            type="button"
-            className="btn btn-sm fw-bold text-primary"
-            onClick={() => console.log('Edit Team')}
-          >
-            EDIT
-          </button>
-          <button
-            type="button"
-            className="btn btn-sm fw-bold text-danger"
-            onClick={() => console.log('Delete Team')}
-          >
-            DELETE
-          </button>
-        </>
-      )}
-    </>
-  );
+  const [teamLeaderTableData, setTeamLeaderTableData] = useState([]);
+  const [teamsTableData, setTeamsTableData] = useState([]);
+  const [membersTableData, setMembersTableData] = useState([]);
 
-  const dataTL = [
-    {
-      id: 1,
-      name: 'John Doe',
-      team: 'Team A',
-      status: 'Active',
-    },
-    {
-      id: 2,
-      name: 'Jane Doe',
-      team: 'Team B',
-      status: 'Pending',
-    },
-    {
-      id: 3,
-      name: 'Bob Smith',
-      team: 'Team C',
-      status: 'Inactive',
-    },
-  ];
+  // move to teacher and student with no team content
+  useEffect(() => {
+    if (teams) {
+      const teamsData = teams.map((team) => {
+        const { id, name, team_members } = team;
 
-  const dataT = [
-    {
-      id: 1,
-      team: 'Team A',
-      leader: 'John Doe',
-      members: '3',
-      actions: actionButtons(),
-    },
-  ];
+        const leader = team_members.find(
+          (team_member) => team_member.role === GLOBALS.TEAMMEMBER_ROLE.LEADER
+        );
+        const members = team_members.filter(
+          (member) => member.status === GLOBALS.MEMBER_STATUS.ACCEPTED
+        ).length;
 
-  const dataM = [];
+        return {
+          id,
+          team: name,
+          leader: `${leader?.first_name} ${leader?.last_name}`,
+          members,
+          actions: (
+            <button
+              type="button"
+              className="btn btn-sm fw-bold text-success"
+              onClick={() => {
+                setIsSelectedTeam(true);
+                setSelectedTeam(team);
+              }}
+            >
+              VIEW
+            </button>
+          ),
+        };
+      });
+
+      setTeamsTableData(teamsData);
+    }
+  }, [teams]);
+
+  useEffect(() => {
+    if (leaders) {
+      const leadersData = leaders.map((l) => {
+        const { class_member_id, first_name, last_name, teamember_status } = l;
+
+        return {
+          id: class_member_id,
+          name: `${first_name} ${last_name}`,
+          status: teamember_status === GLOBALS.MEMBER_STATUS.ACCEPTED ? 'ACCEPTED' : 'PENDING',
+        };
+      });
+
+      setTeamLeaderTableData(leadersData);
+    }
+  }, [leaders]);
 
   const openAddLeadersModal = () => {
     setAddLeadersModalOpen(true);
@@ -147,169 +115,26 @@ function Teams() {
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
-    console.log('copied');
   };
 
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
+  const handleOnChangeTeamStatus = (event, teamId) => {
+    const selectedStatus = parseInt(event.target.value);
+    setSelectedTeamStatus(selectedStatus);
+    if (selectedStatus === GLOBALS.TEAM_STATUS.OPEN) {
+      openTeams(teamId);
+    } else {
+      closeTeams(teamId);
+    }
   };
 
   const getColorClass = () => {
-    if (selectedValue === '1') {
+    if (selectedTeamStatus === GLOBALS.TEAM_STATUS.OPEN) {
       return 'text-success';
     }
-    if (selectedValue === '2') {
+    if (selectedTeamStatus === GLOBALS.TEAM_STATUS.CLOSE) {
       return 'text-danger';
     }
     return 'text-default';
-  };
-
-  const renderSubheader = () => {
-    let subheaderContent = null;
-
-    if (user.is_staff) {
-      subheaderContent = (
-        <div className="d-flex pt-2 pb-2">
-          <div className="px-5">
-            <div className="d-flex align-items-center fw-bold fs-5 brown-text">
-              {classRoom?.name} {classRoom?.sections}
-            </div>
-            <div className="d-flex py-2">
-              <div className="d-flex align-items-center fw-semibold fs-6">
-                {classRoom?.schedule}
-              </div>
-              <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
-                {classRoom?.class_code}
-              </div>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={handleCopyCode}
-              >
-                Copy
-              </button>
-            </div>
-          </div>
-          <div className="d-flex align-items-center me-5 ms-auto">
-            <Search />
-          </div>
-        </div>
-      );
-    } else if (user.role === 'tl' && hasTeam) {
-      subheaderContent = (
-        <div className="subheader-body d-flex pt-2 pb-2">
-          <div className="mx-5">
-            <div className="fw-bold fs-5 brown-text">
-              {classRoom?.name} {classRoom?.sections}
-            </div>
-            <div className="d-flex py-2">
-              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
-              <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
-                {classRoom?.class_code}
-              </div>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={handleCopyCode}
-              >
-                Copy
-              </button>
-            </div>
-          </div>
-          <div className="d-flex align-items-center me-5 ms-auto">
-            <div className="d-flex">
-              <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
-                Hiring:
-              </div>
-              <select
-                className={`form-select form-select-sm ${getColorClass()} fw-bold`}
-                onChange={handleChange}
-                value={selectedValue}
-              >
-                <option className="text-success fw-semibold" value="1">
-                  OPEN
-                </option>
-                <option className="text-danger fw-semibold" value="2">
-                  CLOSE
-                </option>
-              </select>
-            </div>
-            <div className="fw-bold ms-4 red-text">Leave Team</div>
-          </div>
-        </div>
-      );
-    } else if (user.role !== 'tl' && hasTeam) {
-      subheaderContent = (
-        <div className="subheader-body d-flex pt-2 pb-2">
-          <div className="mx-5">
-            <div className="fw-bold fs-5 brown-text">
-              {classRoom?.name} {classRoom?.sections}
-            </div>
-            <div className="d-flex py-2">
-              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
-              <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
-                {classRoom?.class_code}
-              </div>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={handleCopyCode}
-              >
-                Copy
-              </button>
-            </div>
-          </div>
-          <div className="d-flex align-items-center me-5 ms-auto">
-            <div className="d-flex">
-              <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
-                Hiring:
-              </div>
-              <select
-                className={`form-select form-select-sm ${getColorClass()} fw-semibold`}
-                onChange={handleChange}
-                value={selectedValue}
-                disabled
-              >
-                <option className="text-success fw-semibold" value="1">
-                  OPEN
-                </option>
-                <option className="text-danger fw-semibold" value="2">
-                  CLOSE
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-      );
-    } else {
-      subheaderContent = (
-        <div className="subheader-body d-flex pt-2 pb-2">
-          <div className="mx-5">
-            <div className="fw-bold fs-5 brown-text">
-              {classRoom?.name} {classRoom?.sections}
-            </div>
-            <div className="d-flex py-2">
-              <div className="fw-semibold fs-6">{classRoom?.schedule}</div>
-              <div className="ms-4 me-2 fw-semibold fs-6">
-                {classRoom?.class_code}
-              </div>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={handleCopyCode}
-              >
-                Copy
-              </button>
-            </div>
-          </div>
-          <div className="d-flex align-items-center me-5 ms-auto">
-            <Search />
-          </div>
-        </div>
-      );
-    }
-
-    return subheaderContent;
   };
 
   const renderTable = (headerData, tableData, emptyMessage) => (
@@ -317,9 +142,7 @@ function Teams() {
       {tableData.length === 0 ? (
         <div className="d-flex flex-column justify-content-center align-items-center">
           <Table headers={headerData} data={tableData} className="mt-3" />
-          <div className="brown-text fw-bold fs-5 py-2 mx-5">
-            {emptyMessage}
-          </div>
+          <div className="brown-text fw-bold fs-5 py-2 mx-5">{emptyMessage}</div>
         </div>
       ) : (
         <Table headers={headerData} data={tableData} className="mt-3" />
@@ -327,23 +150,20 @@ function Teams() {
     </div>
   );
 
-  const renderTeamData = () => (
+  const renderTeamData = (team) => (
     <div>
-      <div className="fw-bold fs-3 px-5 py-3">[Team Name]</div>
+      <div className="d-flex flex-column">
+        <div className="fw-bold fs-3 px-5 py-3">{team.name}</div>
+        <div className="fw-semibold fs-7 px-5 text-secondary">
+          TEAM CODE: team-{(team.id * 133337).toString(16)}
+        </div>
+      </div>
       <div className="px-5 py-3 lh-lg text-justify">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-        lacinia nisl vel nisl feugiat vestibulum. Praesent finibus lacus
-        scelerisque nibh dapibus pellentesque. Morbi eget urna id metus finibus
-        mollis vitae non massa. Ut at condimentum odio. Cras viverra, mauris ut
-        mattis convallis, urna est lacinia velit, vitae vehicula dui erat id
-        nisi. Quisque ultricies vestibulum nulla, vitae semper lacus rhoncus et.
-        Cras nec tellus laoreet, fringilla felis non, facilisis magna. Mauris
-        lacinia, leo ut gravida imperdiet, magna ligula suscipit nulla, at
-        volutpat nisi mi quis arcu.
+        {team.description || 'No description yet.'}
       </div>
       <div className="container">
         <div className="fw-bold fs-4 px-5 py-3">Members</div>
-        {renderTable(membersHeaders, dataM, "There's no members yet.")}
+        {renderTable(membersHeaders, membersTableData, "There's no members yet.")}
       </div>
     </div>
   );
@@ -355,9 +175,7 @@ function Teams() {
       <ul className="nav nav-underline">
         <li className="nav-item">
           <button
-            className={`nav-link ${
-              activeTab === 'teamLeaders' ? 'active' : ''
-            }`}
+            className={`nav-link ${activeTab === 'teamLeaders' ? 'active' : ''}`}
             onClick={() => setActiveTab('teamLeaders')}
           >
             Team Leaders
@@ -383,20 +201,20 @@ function Teams() {
               Add Leaders
             </button>
           </div>
-          {renderTable(teamLeaderHeaders, dataTL, 'No Leaders Identified Yet.')}
+          {renderTable(teamLeaderHeaders, teamLeaderTableData, 'No Leaders Identified Yet.')}
         </>
       )}
       {activeTab === 'teams' && (
-        <>{renderTable(teamsHeaders, dataT, 'No Teams Formed Yet.')}</>
+        <>{renderTable(teamsHeaders, teamsTableData, 'No Teams Formed Yet.')}</>
       )}
-      {selectedTeam && (
+      {isSelectedTeam && (
         <div className="modal-apply-team p-4">
-          <button
-            aria-label="Close Modal"
-            className="btn d-flex btn-close ms-auto"
-            onClick={() => setSelectedTeam(false)}
+          <ApplyTeam
+            visible={isSelectedTeam}
+            handleModal={() => setIsSelectedTeam(false)}
+            teamData={selectedTeam}
+            isViewOnly={false}
           />
-          {renderTeamData()}
         </div>
       )}
     </div>
@@ -422,47 +240,284 @@ function Teams() {
 
   const renderStudentNoTeam = () => (
     <div className="d-flex flex-column pt-3 pb-3 px-5">
-      {renderTable(teamsHeaders, dataT, 'No Teams Formed Yet.')}
-      {selectedTeam && (
+      {renderTable(teamsHeaders, teamsTableData, 'No Teams Formed Yet.')}
+      {isSelectedTeam && (
         <ApplyTeam
-          visible={selectedTeam}
-          handleModal={() => setSelectedTeam(false)}
+          visible={isSelectedTeam}
+          handleModal={() => setIsSelectedTeam(false)}
+          teamData={selectedTeam}
+          applyToTeam={joinTeam}
         />
       )}
     </div>
   );
 
-  const isTeacher = user.is_staff;
+  let subheaderContent;
+  let bodyContent;
 
-  const renderContent = () => {
-    if (isTeacher) {
-      return renderTeacherTeamManagement();
+  /// TEACHER section
+  if (classMember.role === GLOBALS.CLASSMEMBER_ROLE.TEACHER) {
+    subheaderContent = (
+      <div className="d-flex pt-2 pb-2">
+        <div className="px-5">
+          <div className="d-flex align-items-center fw-bold fs-5 brown-text">
+            {classRoom?.name} {classRoom?.sections}
+          </div>
+          <div className="d-flex py-2">
+            <div className="d-flex align-items-center fw-semibold fs-6">{classRoom?.schedule}</div>
+            <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
+              {classRoom?.class_code}
+            </div>
+            <button type="button" className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
+              Copy
+            </button>
+          </div>
+        </div>
+        <div className="d-flex align-items-center me-5 ms-auto">
+          <Search />
+        </div>
+      </div>
+    );
+    bodyContent = renderTeacherTeamManagement();
+  }
+
+  /// STUDENT section
+  if (classMember.role === GLOBALS.CLASSMEMBER_ROLE.STUDENT) {
+    const {
+      currentTeamMember,
+      team,
+      isRetrieving: isRoleRetrieving,
+    } = useClassMemberTeam(classId, classMember?.id);
+
+    useEffect(() => {
+      if (team) {
+        setSelectedTeamStatus(team.status);
+        const mappedTeamMembers = team.members.map((member) => {
+          const { id: tmId, first_name, last_name, role, status } = member;
+
+          return {
+            id: tmId,
+            name: `${first_name} ${last_name}`,
+            role: role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? 'Leader' : 'Member',
+            actions:
+              currentTeamMember?.id === tmId ? (
+                <button
+                  type="button"
+                  className="btn btn-sm fw-bold text-danger"
+                  onClick={() => {
+                    if (currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER) {
+                      setCurrentLeaderId(currentTeamMember.id);
+                      setCurrentTeamId(team.id);
+                      setIsLeavingTeam(true);
+                      setCurrentTeamMembers(team.members);
+                    } else {
+                      leaveTeam(team.id, currentTeamMember.id);
+                      window.location.reload();
+                    }
+                  }}
+                >
+                  LEAVE
+                </button>
+              ) : currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER &&
+                status === GLOBALS.MEMBER_STATUS.PENDING ? (
+                <>
+                  <button
+                    type="button"
+                    className="btn btn-sm fw-bold text-success"
+                    onClick={() => {
+                      acceptTeamMember(team.id, tmId);
+                    }}
+                  >
+                    ACCEPT
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-sm fw-bold text-danger"
+                    onClick={() => {
+                      removeTeamMember(team.id, tmId);
+                    }}
+                  >
+                    REJECT
+                  </button>
+                </>
+              ) : currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER ? (
+                <button
+                  type="button"
+                  className="btn btn-sm fw-bold text-danger"
+                  onClick={() => {
+                    removeTeamMember(team.id, tmId);
+                  }}
+                >
+                  KICK
+                </button>
+              ) : (
+                <button type="button" className="btn btn-sm fw-bold" disabled>
+                  No Action
+                </button>
+              ),
+          };
+        });
+
+        setMembersTableData(mappedTeamMembers);
+      }
+    }, [team]);
+
+    useEffect(() => {
+      if (!isRoleRetrieving) {
+        if (
+          currentTeamMember?.status === GLOBALS.MEMBER_STATUS.PENDING &&
+          currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER
+        ) {
+          setShowNotif(true);
+        } else {
+          setShowNotif(false);
+        }
+      }
+    }, [currentTeamMember]);
+
+    if (team && currentTeamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED) {
+      const isOpen = team.status === GLOBALS.TEAM_STATUS.OPEN;
+      const isClose = team.status === GLOBALS.TEAM_STATUS.CLOSE;
+
+      subheaderContent = (
+        <div className="subheader-body d-flex pt-2 pb-2">
+          <div className="mx-5">
+            <div className="fw-bold fs-5 brown-text">
+              {classRoom?.name} {classRoom?.sections}
+            </div>
+            <div className="d-flex py-2">
+              <div className="d-flex align-items-center fw-semibold fs-6">
+                {classRoom?.schedule}
+              </div>
+              <div className="d-flex align-items-center ps-4 pe-2 fw-semibold fs-6">
+                {classRoom?.class_code}
+              </div>
+              <button type="button" className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
+                Copy
+              </button>
+            </div>
+          </div>
+
+          {currentTeamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED &&
+            currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER && (
+              <div className="d-flex align-items-center me-5 ms-auto">
+                <div className="d-flex">
+                  <div className="d-flex fw-semibold justify-content-center align-items-center me-2">
+                    Hiring:
+                  </div>
+                  <select
+                    className={`form-select form-select-sm ${getColorClass()} fw-bold`}
+                    onChange={(e) => {
+                      handleOnChangeTeamStatus(e, team.id);
+                    }}
+                    value={selectedTeamStatus}
+                  >
+                    <option className="text-success fw-semibold" value="1">
+                      OPEN
+                    </option>
+                    <option className="text-danger fw-semibold" value="0">
+                      CLOSE
+                    </option>
+                  </select>
+                </div>
+              </div>
+            )}
+        </div>
+      );
+
+      bodyContent = renderTeamData(team);
+    } else {
+      subheaderContent = (
+        <div className="subheader-body d-flex pt-2 pb-2">
+          <div className="mx-5">
+            <div className="fw-bold fs-5 brown-text">
+              {classRoom?.name} {classRoom?.sections}
+            </div>
+            <div className="d-flex py-2">
+              <div className="d-flex align-items-center fw-semibold fs-6">
+                {classRoom?.schedule}
+              </div>
+              <div className="ms-4 me-2 fw-semibold fs-6">{classRoom?.class_code}</div>
+              <button type="button" className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
+                Copy
+              </button>
+            </div>
+          </div>
+          <div className="d-flex align-items-center me-5 ms-auto">
+            <Search />
+          </div>
+        </div>
+      );
+      if (
+        currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER &&
+        currentTeamMember?.status === GLOBALS.MEMBER_STATUS.ACCEPTED
+      ) {
+        bodyContent = renderTeamLeaderNoTeam();
+      } else {
+        bodyContent = renderStudentNoTeam();
+      }
     }
-    if (user.role === 'tl') {
-      return hasTeam ? renderTeamData() : renderTeamLeaderNoTeam();
-    }
-    return hasTeam ? renderTeamData() : renderStudentNoTeam();
+  }
+
+  const renderAddLeaderModal = () => (
+    <div>
+      <div className="d-flex flex-column">
+        <AddLeaders
+          modalTitle="Add Leaders"
+          visible={isAddLeadersModalOpen}
+          handleModal={closeAddLeadersModal}
+        />
+      </div>
+    </div>
+  );
+
+  const handleAcceptLeader = () => {
+    acceptLeader(classMember?.id);
+    window.location.reload();
   };
 
+  const handleDeclineLeader = () => {
+    removeLeader(user?.user_id);
+    window.location.reload();
+  };
+
+  const renderPendingLeader = () => (
+    <div className="notif-pending-bar fw-semibold">
+      You have been Identified/Selected as a Team Leader. &nbsp;
+      <button
+        type="button"
+        className="btn notif-pending-btn align-middle"
+        onClick={handleAcceptLeader}
+      >
+        Accept
+      </button>
+      <button
+        type="button"
+        className="btn notif-pending-btn align-middle"
+        onClick={handleDeclineLeader}
+      >
+        Decline
+      </button>
+    </div>
+  );
+
   return (
-    <div className="d-flex">
-      <Navbar
-        name={`${user?.first_name} ${user?.last_name}`}
-        buttons={buttons}
-        hasBackButton
+    <div>
+      {subheaderContent}
+      {bodyContent}
+      {showNotif && renderPendingLeader()}
+      {isAddLeadersModalOpen && renderAddLeaderModal()}
+
+      <AssignNewLeader
+        visible={isLeavingTeam}
+        handleModal={() => setIsLeavingTeam(false)}
+        hasDropdown
+        members={currentTeamMembers}
+        teamId={currentTeamId}
+        leaderId={currentLeaderId}
+        leaveTeam={leaveTeam}
+        setLeader={setLeader}
       />
-      <div className="container-fluid d-flex flex-column">
-        <Header />
-        <div className="d-flex flex-column">
-          {renderSubheader()}
-          <AddLeaders
-            modalTitle="Add Leaders"
-            visible={isAddLeadersModalOpen}
-            handleModal={closeAddLeadersModal}
-          />
-        </div>
-        {renderContent()}
-      </div>
     </div>
   );
 }

@@ -1,13 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import './index.scss';
-import { Link } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 import { useAuth } from '../../../contexts/AuthContext';
 
+import './index.scss';
+import GLOBALS from '../../../app_globals';
+
 function ClassCards({ id, name, section, schedule }) {
-  const { user } = useAuth();
-  const isModerator = user.role;
+  const { accessToken } = useAuth();
+  const user = jwtDecode(accessToken);
+  const isModerator = user.role === GLOBALS.USER_ROLE.MODERATOR;
 
   const cardLink = isModerator ? `/classes/${id}` : `/classes/${id}/teams`;
 

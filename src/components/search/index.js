@@ -7,18 +7,13 @@ import './index.scss';
 
 function Search({ value, onChange }) {
   return (
-    <InputText
-      className="search-input"
-      placeholder="Search"
-      value={value}
-      onChange={onChange}
-    />
+    <InputText className="search-input" placeholder="Search" value={value} onChange={onChange} />
   );
 }
 
 Search.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 export default Search;

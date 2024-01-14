@@ -1,7 +1,10 @@
 import axios from 'axios';
-import config from './config';
+import apiConfig from './config';
+import { api } from './axiosConfig';
 
-const BASE_URL = `${config.API_URL}/users`;
+const BASE_URL = `${apiConfig.API_URL}/users`;
+
+const instance = axios.create();
 
 const UsersService = {
   /// POST /users
@@ -14,7 +17,7 @@ const UsersService = {
       "role": 2
     }
   */
-  signup: (user) => axios.post(`${BASE_URL}`, user),
+  signup: (user) => instance.post(`${BASE_URL}`, user),
 
   /// POST /users/login
   /*
@@ -23,7 +26,10 @@ const UsersService = {
       "password": "string"
     }
   */
-  login: (user) => axios.post(`${BASE_URL}/login`, user),
+  login: (user) => instance.post(`${BASE_URL}/login`, user),
+
+  /// GET /users/{id}
+  user: (id) => api.get(`${BASE_URL}/${id}`),
 };
 
 export default UsersService;

@@ -13,14 +13,14 @@ const useAcquireTokens = () => {
     let refreshToken;
 
     try {
-      const { status, data } = await TokensService.acquire({
+      const res = await TokensService.acquire({
         email,
         password,
       });
 
-      responseCode = status;
-      accessToken = data.access;
-      refreshToken = data.refresh;
+      responseCode = res.status;
+      accessToken = res.data.access;
+      refreshToken = res.data.refresh;
     } catch (error) {
       responseCode = error.response.status;
     }
@@ -30,6 +30,7 @@ const useAcquireTokens = () => {
         await callbacks.acquired({ accessToken, refreshToken });
         break;
       case 401:
+      case 400:
         await callbacks.invalidFields();
         break;
       case 500:

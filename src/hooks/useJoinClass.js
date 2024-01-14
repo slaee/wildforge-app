@@ -1,9 +1,11 @@
 import { useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
 import { ClassRoomsService } from '../services';
 
 const useJoinClass = () => {
-  const [isJoining, setIsJoining] = useState(false);
+  const navigate = useNavigate();
+  const [isJoining, setIsJoining] = useState(true);
 
   const joinClass = async ({ classCode, callbacks }) => {
     setIsJoining(true);
@@ -12,14 +14,14 @@ const useJoinClass = () => {
     let retrievedMessage;
 
     try {
-      const { status, data } = await ClassRoomsService.join({
+      const res = await ClassRoomsService.join({
         class_code: classCode,
       });
 
-      responseCode = status;
-      retrievedMessage = data;
+      responseCode = res?.status;
+      retrievedMessage = res?.data;
     } catch (error) {
-      responseCode = error.response.status;
+      responseCode = error?.response?.status;
     }
 
     switch (responseCode) {
@@ -27,9 +29,10 @@ const useJoinClass = () => {
         await callbacks.joined({ retrievedMessage });
         break;
       case 400:
-      case 401:
-      case 404:
         await callbacks.invalidFields();
+        break;
+      case 404:
+        navigate('/classes');
         break;
       case 500:
         await callbacks.internalError();
