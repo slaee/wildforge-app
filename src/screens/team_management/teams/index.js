@@ -459,17 +459,15 @@ function Teams() {
     }
   }
 
-  const renderContent = () => (
+  const renderAddLeaderModal = () => (
     <div>
       <div className="d-flex flex-column">
-        {subheaderContent}
         <AddLeaders
           modalTitle="Add Leaders"
           visible={isAddLeadersModalOpen}
           handleModal={closeAddLeadersModal}
         />
       </div>
-      {bodyContent}
     </div>
   );
 
@@ -505,8 +503,11 @@ function Teams() {
 
   return (
     <div>
+      {subheaderContent}
+      {bodyContent}
       {showNotif && renderPendingLeader()}
-      {renderContent()}
+      {isAddLeadersModalOpen && renderAddLeaderModal()}
+
       <AssignNewLeader
         visible={isLeavingTeam}
         handleModal={() => setIsLeavingTeam(false)}

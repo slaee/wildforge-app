@@ -45,30 +45,6 @@ const useTeams = (classId) => {
     get();
   }, []);
 
-  const setLeader = async (memberID) => {
-    let responseCode;
-
-    try {
-      const res = await ClassRoomsService.setLeader(classId, memberID);
-      responseCode = res?.status;
-    } catch (error) {
-      responseCode = error?.response?.status;
-    }
-
-    switch (responseCode) {
-      case 200:
-        setIsSettingLeader(false);
-        break;
-      case 404:
-        navigate(`/classes/${classId}/teams`);
-        break;
-      case 500:
-        navigate('/classes');
-        break;
-      default:
-    }
-  };
-
   const acceptLeader = async (memberID) => {
     let responseCode;
 
@@ -405,7 +381,6 @@ const useTeams = (classId) => {
     closeTeams,
     joinTeam,
     teamMembers,
-    setLeader,
     acceptLeader,
     removeLeader,
     createTeam,

@@ -15,8 +15,7 @@ import GLOBALS from '../../../app_globals';
 
 function AddLeaders({ visible, handleModal }) {
   const { id: classId } = useParams();
-  const { setLeader } = useTeams(classId);
-  const { nonLeaders, isRetrieving } = useNonLeaders(classId);
+  const { nonLeaders, setLeader, isRetrieving } = useNonLeaders(classId);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
@@ -52,6 +51,8 @@ function AddLeaders({ visible, handleModal }) {
 
         return tb_data;
       });
+
+      console.log(nonLeadersData);
 
       setNonLeadersTable(nonLeadersData);
     }
