@@ -62,12 +62,20 @@ function ApplyTeam({ visible, handleModal, teamData, applyToTeam, isViewOnly }) 
   return <>{renderViewTeamDataModal()}</>;
 }
 
+ApplyTeam.defaultProps = {
+  visible: false,
+  handleModal: () => {},
+  teamData: {},
+  applyToTeam: () => {},
+  isViewOnly: true,
+};
+
 ApplyTeam.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  handleModal: PropTypes.func.isRequired,
-  teamData: PropTypes.objectOf(PropTypes.any).isRequired,
-  applyToTeam: PropTypes.func.isRequired,
-  isViewOnly: PropTypes.bool.isRequired,
+  visible: PropTypes.bool,
+  handleModal: PropTypes.func,
+  teamData: PropTypes.objectOf(PropTypes.any),
+  applyToTeam: PropTypes.func,
+  isViewOnly: PropTypes.bool,
 };
 
 export default ApplyTeam;

@@ -213,8 +213,7 @@ function Teams() {
             visible={isSelectedTeam}
             handleModal={() => setIsSelectedTeam(false)}
             teamData={selectedTeam}
-            applyToTeam={joinTeam}
-            isViewOnly
+            isViewOnly={false}
           />
         </div>
       )}
