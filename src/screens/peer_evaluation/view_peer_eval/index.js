@@ -87,7 +87,14 @@ function PeerEval() {
         VIEW
       </a>
 
-      <button type="button" className="btn btn-sm fw-bold text-info" onClick={openAssignTeamModal}>
+      <button
+        type="button"
+        className="btn btn-sm fw-bold text-info"
+        onClick={() => {
+          setSelectedPeerEval(data);
+          openAssignTeamModal();
+        }}
+      >
         ASSIGN
       </button>
 
@@ -131,17 +138,34 @@ function PeerEval() {
 
   useEffect(() => {
     if (classes.length > 0) {
+      const assigned_classes = selectedPeerEval?.assigned_classes;
+
+      // map classes and set the button as Assigned if the class is already assigned
       const classRoomsData = classes?.map((classRoom) => {
         const { id, course_name } = classRoom;
+        const isAssigned = assigned_classes?.find((assignedClass) => assignedClass.id === id);
+
+        if (isAssigned) {
+          return {
+            id,
+            name: course_name,
+            actions: (
+              <button type="button" className="btn btn-sm btn-outline-success fw-semibold" disabled>
+                Assigned
+              </button>
+            ),
+          };
+        }
+
         return {
           id,
           name: course_name,
           actions: (
             <button
               type="button"
-              className="btn btn-yellow-primary fw-semibold"
+              className="btn btn-sm btn-yellow-primary fw-semibold"
               onClick={() => {
-                console.log(classRoom);
+                assignClassRoomEval(selectedPeerEval.id, classRoom);
               }}
             >
               Assign
@@ -152,7 +176,7 @@ function PeerEval() {
 
       setClassRoomsTableData(classRoomsData);
     }
-  }, [classes]);
+  }, [classes, peerEvals, selectedPeerEval]);
 
   const renderAssignTeamModal = () => (
     <Dialog

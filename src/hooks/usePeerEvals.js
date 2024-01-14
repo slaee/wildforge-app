@@ -122,11 +122,11 @@ const usePeerEvals = () => {
     setIsProcessing(false);
   };
 
-  const assignClassRoomEval = async (class_id) => {
+  const assignClassRoomEval = async (id, classRoom) => {
     let responseCode;
 
     try {
-      const res = await EvalsService.assign({ class_id });
+      const res = await EvalsService.assign(id, { class_id: classRoom.id });
       responseCode = res?.status;
     } catch (error) {
       responseCode = error?.response?.status;
@@ -134,6 +134,14 @@ const usePeerEvals = () => {
 
     switch (responseCode) {
       case 200:
+        setPeerEvals((prevPeerEvals) =>
+          prevPeerEvals.map((peerEval) => {
+            if (peerEval.id === id) {
+              peerEval.assigned_classes.push(classRoom);
+            }
+            return peerEval;
+          })
+        );
         break;
       default:
     }
