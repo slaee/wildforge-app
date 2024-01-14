@@ -26,12 +26,10 @@ function AddLeaders({ visible, handleModal }) {
 
   const openManualModal = () => {
     setShowManualModal(true);
-    console.log('open manual');
   };
 
   const closeManualModal = () => {
     setShowManualModal(false);
-    console.log('close manual');
   };
 
   const openAutomaticModal = () => {

@@ -42,7 +42,6 @@ function Classes() {
 
   const openCreateClassModal = () => {
     setCreateClassModalOpen(true);
-    console.log('open');
   };
 
   const closeCreateClassModal = () => {
