@@ -6,7 +6,7 @@ import Table from '../../table';
 import './index.scss';
 import GLOBALS from '../../../app_globals';
 
-function ApplyTeam({ visible, handleModal, teamData, applyToTeam }) {
+function ApplyTeam({ visible, handleModal, teamData, applyToTeam, isViewOnly }) {
   const tableheaders = ['id', 'members'];
 
   const members = teamData.team_members
@@ -40,31 +40,42 @@ function ApplyTeam({ visible, handleModal, teamData, applyToTeam }) {
           </div>
         </div>
       </div>
-      <div className="d-flex flex-row justify-content-end">
-        <button
-          type="submit"
-          className="btn btn-yellow-primary btn-create-team-modal mx-auto fw-semibold"
-          disabled={isFull}
-          onClick={() => {
-            applyToTeam(teamData.id);
-            alert('Please wait for the Leader to accept your request');
-            handleModal();
-          }}
-        >
-          {isFull ? 'Team is full' : 'Apply'}
-        </button>
-      </div>
+      {isViewOnly && (
+        <div className="d-flex flex-row justify-content-end">
+          <button
+            type="submit"
+            className="btn btn-yellow-primary btn-create-team-modal mx-auto fw-semibold"
+            disabled={isFull}
+            onClick={() => {
+              applyToTeam(teamData.id);
+              alert('Please wait for the Leader to accept your request');
+              handleModal();
+            }}
+          >
+            {isFull ? 'Hiring is CLOSED' : 'Apply'}
+          </button>
+        </div>
+      )}
     </Dialog>
   );
 
   return <>{renderViewTeamDataModal()}</>;
 }
 
+ApplyTeam.defaultProps = {
+  visible: false,
+  handleModal: () => {},
+  teamData: {},
+  applyToTeam: () => {},
+  isViewOnly: true,
+};
+
 ApplyTeam.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  handleModal: PropTypes.func.isRequired,
-  teamData: PropTypes.objectOf(PropTypes.any).isRequired,
-  applyToTeam: PropTypes.func.isRequired,
+  visible: PropTypes.bool,
+  handleModal: PropTypes.func,
+  teamData: PropTypes.objectOf(PropTypes.any),
+  applyToTeam: PropTypes.func,
+  isViewOnly: PropTypes.bool,
 };
 
 export default ApplyTeam;

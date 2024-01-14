@@ -8,7 +8,6 @@ function ViewClass() {
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classRoom?.class_code);
-    console.log('copied');
   };
 
   const renderSubheader = () => (

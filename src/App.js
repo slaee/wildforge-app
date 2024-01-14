@@ -16,6 +16,7 @@ import ViewClass from './screens/class_management/view_class';
 import ViewClassMembers from './screens/class_management/view_class_members';
 import Teams from './screens/team_management/teams';
 import PeerEval from './screens/peer_evaluation/view_peer_eval';
+import StudentPeerEval from './screens/peer_evaluation/view_student_peer_eval';
 import ClassroomLayout from './components/Layouts/ClassroomLayouts';
 
 // Style Imports
@@ -81,7 +82,7 @@ function App() {
               }
             />
             <Route
-              path="teamleaders"
+              path="teams"
               element={
                 <PrivateRoute>
                   <Teams />
@@ -89,10 +90,10 @@ function App() {
               }
             />
             <Route
-              path="teams"
+              path="evals"
               element={
                 <PrivateRoute>
-                  <Teams />
+                  <StudentPeerEval />
                 </PrivateRoute>
               }
             />

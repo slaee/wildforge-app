@@ -152,7 +152,12 @@ function Teams() {
 
   const renderTeamData = (team) => (
     <div>
-      <div className="fw-bold fs-3 px-5 py-3">{team.name}</div>
+      <div className="d-flex flex-column">
+        <div className="fw-bold fs-3 px-5 py-3">{team.name}</div>
+        <div className="fw-semibold fs-7 px-5 text-secondary">
+          TEAM CODE: team-{(team.id * 133337).toString(16)}
+        </div>
+      </div>
       <div className="px-5 py-3 lh-lg text-justify">
         {team.description || 'No description yet.'}
       </div>
@@ -204,12 +209,12 @@ function Teams() {
       )}
       {isSelectedTeam && (
         <div className="modal-apply-team p-4">
-          <button
-            aria-label="Close Modal"
-            className="btn d-flex btn-close ms-auto"
-            onClick={() => setIsSelectedTeam(false)}
+          <ApplyTeam
+            visible={isSelectedTeam}
+            handleModal={() => setIsSelectedTeam(false)}
+            teamData={selectedTeam}
+            isViewOnly={false}
           />
-          {renderTeamData()}
         </div>
       )}
     </div>
@@ -300,11 +305,15 @@ function Teams() {
                   type="button"
                   className="btn btn-sm fw-bold text-danger"
                   onClick={() => {
-                    // leaveTeam(team.id, currentTeamMember.id);
-                    setCurrentLeaderId(currentTeamMember.id);
-                    setCurrentTeamId(team.id);
-                    setIsLeavingTeam(true);
-                    setCurrentTeamMembers(team.members);
+                    if (currentTeamMember?.role === GLOBALS.TEAMMEMBER_ROLE.LEADER) {
+                      setCurrentLeaderId(currentTeamMember.id);
+                      setCurrentTeamId(team.id);
+                      setIsLeavingTeam(true);
+                      setCurrentTeamMembers(team.members);
+                    } else {
+                      leaveTeam(team.id, currentTeamMember.id);
+                      window.location.reload();
+                    }
                   }}
                 >
                   LEAVE
@@ -450,17 +459,15 @@ function Teams() {
     }
   }
 
-  const renderContent = () => (
+  const renderAddLeaderModal = () => (
     <div>
       <div className="d-flex flex-column">
-        {subheaderContent}
         <AddLeaders
           modalTitle="Add Leaders"
           visible={isAddLeadersModalOpen}
           handleModal={closeAddLeadersModal}
         />
       </div>
-      {bodyContent}
     </div>
   );
 
@@ -496,8 +503,11 @@ function Teams() {
 
   return (
     <div>
+      {subheaderContent}
+      {bodyContent}
       {showNotif && renderPendingLeader()}
-      {renderContent()}
+      {isAddLeadersModalOpen && renderAddLeaderModal()}
+
       <AssignNewLeader
         visible={isLeavingTeam}
         handleModal={() => setIsLeavingTeam(false)}

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { UsersService } from '../services';
 
 const useLogin = () => {
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(true);
 
   const loginUser = async ({ email, password, callbacks }) => {
     setIsLoggingIn(true);

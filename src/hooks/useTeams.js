@@ -5,7 +5,6 @@ import { ClassRoomsService } from '../services';
 const useTeams = (classId) => {
   const navigate = useNavigate();
   const [teams, setTeams] = useState(null);
-  const [getTeam, setGetTeam] = useState(null);
   const [leaders, setLeaders] = useState(null);
   const [isRetrieving, setIsRetrieving] = useState(true);
   const [isRetrievingLeaders, setIsRetrievingLeaders] = useState(true);
@@ -45,30 +44,6 @@ const useTeams = (classId) => {
 
     get();
   }, []);
-
-  const setLeader = async (memberID) => {
-    let responseCode;
-
-    try {
-      const res = await ClassRoomsService.setLeader(classId, memberID);
-      responseCode = res?.status;
-    } catch (error) {
-      responseCode = error?.response?.status;
-    }
-
-    switch (responseCode) {
-      case 200:
-        setIsSettingLeader(true);
-        break;
-      case 404:
-        navigate(`/classes/${classId}/teams`);
-        break;
-      case 500:
-        navigate('/classes');
-        break;
-      default:
-    }
-  };
 
   const acceptLeader = async (memberID) => {
     let responseCode;
@@ -406,7 +381,6 @@ const useTeams = (classId) => {
     closeTeams,
     joinTeam,
     teamMembers,
-    setLeader,
     acceptLeader,
     removeLeader,
     createTeam,

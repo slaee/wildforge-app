@@ -25,7 +25,7 @@ function ViewClassMembers() {
       const data = classMembers
         .filter((member) => member.role !== GLOBALS.CLASSMEMBER_ROLE.TEACHER)
         .map((member) => {
-          const { id, first_name, last_name, team, status } = member;
+          const { id, first_name, last_name, status } = member;
 
           let tb_data = {};
 
@@ -66,7 +66,6 @@ function ViewClassMembers() {
           tb_data = {
             id,
             name: `${first_name} ${last_name}`,
-            team: team || 'N/A',
             status: status === GLOBALS.MEMBER_STATUS.PENDING ? 'PENDING' : 'ACCEPTED',
             role: 'Student',
           };
@@ -80,7 +79,7 @@ function ViewClassMembers() {
     }
   }, [classMembers]);
 
-  const headers = ['id', 'name', 'team', 'role', 'status'];
+  const headers = ['id', 'name', 'role', 'status'];
   if (user?.role === GLOBALS.USER_ROLE.MODERATOR) {
     headers.push('actions');
   }
