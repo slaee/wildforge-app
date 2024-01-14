@@ -5,7 +5,7 @@ import { ClassRoomsService } from '../services';
 const useNonLeaders = (classId) => {
   const navigate = useNavigate();
   const [nonLeaders, setNonLeaders] = useState(null);
-  const [isRetrieving, setIsRetrieving] = useState(false);
+  const [isRetrieving, setIsRetrieving] = useState(true);
 
   useEffect(() => {
     const get = async () => {
@@ -24,6 +24,7 @@ const useNonLeaders = (classId) => {
       switch (responseCode) {
         case 200:
           setNonLeaders(retrievedNonleaders);
+          break;
         case 404:
           navigate(`/classes/${classId}/teams`);
           break;

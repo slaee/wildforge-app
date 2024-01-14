@@ -152,7 +152,12 @@ function Teams() {
 
   const renderTeamData = (team) => (
     <div>
-      <div className="fw-bold fs-3 px-5 py-3">{team.name}</div>
+      <div className="d-flex flex-column">
+        <div className="fw-bold fs-3 px-5 py-3">{team.name}</div>
+        <div className="fw-semibold fs-7 px-5 text-secondary">
+          TEAM CODE: team-{(team.id * 133337).toString(16)}
+        </div>
+      </div>
       <div className="px-5 py-3 lh-lg text-justify">
         {team.description || 'No description yet.'}
       </div>

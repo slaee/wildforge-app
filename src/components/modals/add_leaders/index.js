@@ -18,58 +18,36 @@ function AddLeaders({ visible, handleModal }) {
   const { setLeader, isSettingLeader } = useTeams(classId);
   const { nonLeaders, isRetrieving } = useNonLeaders(classId);
 
-  const [showManualModal, setShowManualModal] = useState(false);
-  const [showAutomaticModal, setShowAutomaticModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [nonLeadersTable, setNonLeadersTable] = useState([]);
-
-  const openManualModal = () => {
-    setShowManualModal(true);
-  };
-
-  const closeManualModal = () => {
-    setShowManualModal(false);
-  };
-
-  const openAutomaticModal = () => {
-    setShowAutomaticModal(true);
-  };
-
-  const closeAutomaticModal = () => {
-    setShowAutomaticModal(false);
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const manualHeaders = ['id', 'name', 'actions'];
 
   useEffect(() => {
     if (nonLeaders) {
       const nonLeadersData = nonLeaders.map((n) => {
         const { class_member_id, first_name, last_name, teamember_status } = n;
 
+        const actions =
+          teamember_status === GLOBALS.MEMBER_STATUS.PENDING ? (
+            <button type="button" className="btn btn-yellow-primary fw-semibold" disabled>
+              Pending
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-yellow-primary fw-semibold"
+              onClick={() => {
+                setLeader(class_member_id);
+              }}
+            >
+              Select as Leader
+            </button>
+          );
+
         const tb_data = {
           id: class_member_id,
           name: `${first_name} ${last_name}`,
-          actions:
-            teamember_status === GLOBALS.MEMBER_STATUS.PENDING ? (
-              <button type="button" className="btn btn-yellow-primary fw-semibold" disabled>
-                Pending
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="btn btn-yellow-primary fw-semibold"
-                onClick={() => {
-                  setLeader(class_member_id);
-                }}
-              >
-                Select as Leader
-              </button>
-            ),
+          actions,
         };
 
         return tb_data;
@@ -78,108 +56,37 @@ function AddLeaders({ visible, handleModal }) {
     }
   }, [nonLeaders, isSettingLeader]);
 
-  const automaticHeaders = ['id', 'activity', 'actions'];
-  const automaticSelectionData = [
-    {
-      id: 1,
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
-      activity: 'Activity 1',
-      actions: (
-        <div className="d-flex justify-content-center form-check form-switch">
-          <input
-            className="form-check-input"
-            type="checkbox"
-            role="switch"
-            id="flexSwitchCheckDefault"
-          />
-        </div>
-      ),
-    },
-  ];
+  const searchMember = (query) => {
+    const lowerCaseQuery = query.toLowerCase();
+    if (lowerCaseQuery.length === 0) {
+      setFilteredData(nonLeadersTable);
+    } else {
+      const filtered = nonLeadersTable?.filter((item) =>
+        item.name.toLowerCase().includes(lowerCaseQuery)
+      );
+      setFilteredData(filtered);
+    }
+  };
 
-  const renderManualModal = () => (
-    <Dialog
-      className="option-modal"
-      visible={showManualModal}
-      onHide={closeManualModal}
-      showHeader={false}
-    >
+  useEffect(() => {
+    searchMember(searchQuery);
+  }, [searchQuery, nonLeadersTable, nonLeaders]);
+
+  return (
+    <Dialog className="option-modal" visible={visible} onHide={handleModal} showHeader={false}>
       <div className="d-flex flex-column">
-        <button
-          aria-label="Close Modal"
-          className="btn btn-close ms-auto"
-          onClick={closeManualModal}
-        />
+        <button aria-label="Close Modal" className="btn btn-close ms-auto" onClick={handleModal} />
         <div className="d-flex align-items-center justify-content-between text-left fs-5 fw-bold">
           <span>Students List</span>
           <Search value={searchQuery} onChange={handleSearchChange} />
         </div>
-        <Table headers={manualHeaders} data={nonLeadersTable} className="mt-3" />
+        <Table headers={['id', 'name', 'actions']} data={nonLeadersTable} className="mt-3" />
       </div>
     </Dialog>
-  );
-
-  const renderAutoModal = () => (
-    <Dialog
-      className="option-modal"
-      visible={showAutomaticModal}
-      onHide={closeAutomaticModal}
-      showHeader={false}
-    >
-      <div className="d-flex flex-column h-100">
-        <button
-          aria-label="Close Modal"
-          className="btn btn-close ms-auto"
-          onClick={closeAutomaticModal}
-        />
-        <div className="d-flex align-items-center justify-content-between text-left fs-5 fw-bold">
-          <span>Activities List</span>
-          <Search value={searchQuery} onChange={handleSearchChange} />
-        </div>
-        <Table headers={automaticHeaders} data={automaticSelectionData} className="mt-3" />
-
-        <div className="mt-auto position-fixed bottom-0 start-50 translate-middle-x pb-5">
-          <button type="btn" className="btn btn-wild-primary fw-bold btn-large">
-            Start Identifying
-          </button>
-        </div>
-      </div>
-    </Dialog>
-  );
-
-  return (
-    <>
-      <Dialog
-        className="add-leaders-modal p-4"
-        visible={visible}
-        onHide={handleModal}
-        showHeader={false}
-      >
-        <div className="d-grid gap-3">
-          <button
-            aria-label="Close Modal"
-            className="btn btn-close ms-auto"
-            onClick={handleModal}
-          />
-          <button
-            type="button"
-            className="btn btn-wild-primary btn-large fw-bold fs-6"
-            onClick={openManualModal}
-          >
-            Add a Leader Manually
-          </button>
-          <button
-            type="button"
-            className="btn btn-wild-secondary btn-large fw-bold fs-6"
-            onClick={openAutomaticModal}
-          >
-            Start Automatic Leader Selection
-          </button>
-        </div>
-      </Dialog>
-      {showManualModal && renderManualModal()}
-      {showAutomaticModal && renderAutoModal()}
-    </>
   );
 }
 

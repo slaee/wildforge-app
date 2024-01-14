@@ -66,7 +66,7 @@ function ViewClassMembers() {
           tb_data = {
             id,
             name: `${first_name} ${last_name}`,
-            team: team || 'N/A',
+            team: team || 'N/A', // TO UPDATE
             status: status === GLOBALS.MEMBER_STATUS.PENDING ? 'PENDING' : 'ACCEPTED',
             role: 'Student',
           };

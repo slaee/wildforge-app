@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ClassRoomsService } from '../services';
 
 const useCreateClass = () => {
-  const [isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(true);
 
   const createClass = async ({ course_name, sections, schedule, max_teams_members, callbacks }) => {
     setIsCreating(true);
