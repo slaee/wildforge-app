@@ -42,6 +42,11 @@ const EvalsService = {
     }
   */
   assign: (id, data) => instance.post(`${BASE_URL}/${id}/assign`, data),
+
+  assigned: (class_id, cm_id) =>
+    instance.get(`${BASE_URL}/assigned/${class_id}/classmember/${cm_id}`),
+  submit_eval: (class_pe_id, cm_id) =>
+    instance.post(`${BASE_URL}/assigned/${class_pe_id}/classmember/${cm_id}/submit`),
 };
 
 export default EvalsService;

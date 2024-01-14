@@ -5,18 +5,18 @@ import { Dialog } from 'primereact/dialog';
 import jwtDecode from 'jwt-decode';
 import { useAuth } from '../../../contexts/AuthContext';
 
+import { useClassRooms, usePeerEvals } from '../../../hooks';
+
 import Sidebar from '../../../components/Sidebar';
 import Header from '../../../components/header';
 import Search from '../../../components/search';
 import Table from '../../../components/table';
-import ControlInput from '../../../components/controlinput';
 import CreatePeerEval from '../../../components/modals/create_peereval';
+import UpdatePeerEvalForm from '../../../components/modals/update_peereval';
 
 import GLOBALS from '../../../app_globals';
 
 import './index.scss';
-import { useClassRooms, usePeerEvals } from '../../../hooks';
-import UpdatePeerEvalForm from '../../../components/modals/update_peereval';
 
 function PeerEval() {
   const { accessToken } = useAuth();

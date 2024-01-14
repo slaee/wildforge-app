@@ -33,16 +33,22 @@ const SIDENAV_TEACHER = (classId) => [
 
 const SIDENAV_CLASSMEMBER = (classId) => [
   {
-    id: 2,
+    id: 1,
     label: 'Teams',
     className: 'teams',
     path: `/classes/${classId}/teams`,
   },
   {
-    id: 3,
+    id: 2,
     label: 'Members',
     className: 'members',
     path: `/classes/${classId}/members`,
+  },
+  {
+    id: 3,
+    label: 'Peer Evals',
+    className: 'peer-evals',
+    path: `/classes/${classId}/evals`,
   },
 ];
 
