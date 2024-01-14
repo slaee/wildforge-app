@@ -32,6 +32,8 @@ function StudentPeerEval() {
 
   const handleCloseViewForm = () => {
     setIsViewingForm(false);
+    setFormsLink('');
+    setPageCounter(0);
   };
 
   const handleOnChangePage = (event) => {
