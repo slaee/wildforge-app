@@ -21,10 +21,7 @@ export function AuthProvider({ children }) {
 
   const setAccessToken = (newAccessToken) => {
     if (newAccessToken) {
-      Cookies.set('access_token', newAccessToken, {
-        secure: true,
-        sameSite: 'Strict',
-      });
+      Cookies.set('access_token', newAccessToken);
     } else {
       Cookies.remove('access_token');
     }
@@ -39,10 +36,7 @@ export function AuthProvider({ children }) {
       setUuid(jti);
 
       const token = hash(newRefreshToken, jti);
-      Cookies.set('refresh_token', token, {
-        secure: true,
-        sameSite: 'Strict',
-      });
+      Cookies.set('refresh_token', token);
     } else {
       Cookies.remove('refresh_token');
       localStorage.removeItem('uuid');
