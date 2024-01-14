@@ -55,18 +55,12 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${renewedTokens.access}`;
 
         // Store the new tokens to cookies
-        Cookies.set('access_token', renewedTokens.access, {
-          secure: true,
-          sameSite: 'Strict',
-        });
+        Cookies.set('access_token', renewedTokens.access);
 
         const jti = jwtDecode(renewedTokens.refresh)?.jti;
         localStorage.setItem('uuid', jti);
 
-        Cookies.set('refresh_token', hash(renewedTokens.refresh, jti), {
-          secure: true,
-          sameSite: 'Strict',
-        });
+        Cookies.set('refresh_token', hash(renewedTokens.refresh, jti));
 
         return api(originalRequest);
       } catch (err) {
