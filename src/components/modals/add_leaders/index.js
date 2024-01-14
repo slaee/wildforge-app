@@ -84,7 +84,7 @@ function AddLeaders({ visible, handleModal }) {
           <span>Students List</span>
           <Search value={searchQuery} onChange={handleSearchChange} />
         </div>
-        <Table headers={['id', 'name', 'actions']} data={nonLeadersTable} className="mt-3" />
+        <Table headers={['id', 'name', 'actions']} data={filteredData} className="mt-3" />
       </div>
     </Dialog>
   );
